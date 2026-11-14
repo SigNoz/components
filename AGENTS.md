@@ -33,7 +33,7 @@ Canonical docs. Read the relevant one before touching that area, they are the so
 | `pnpm -F docs test` | Story render + interaction tests in Chromium (what CI runs) |
 | `pnpm -F @signozhq/ui tokens` | Regenerate CSS token JSDoc tables in `index.ts` after touching any `--{component}-*` var |
 | `pnpm -F @signozhq/ui tokens:check` | Fail if token tables are stale (also runs in lint-staged and CI) |
-| `pnpm -F @signozhq/ui react-compiler:strict-check` | React Compiler strict check for the components on the strict list |
+| `pnpm -F @signozhq/ui react-compiler:strict-check` | React Compiler strict check over every file in `packages/ui/src` |
 | `pnpm dev` | Storybook on :6006 plus `vite build --watch` on `packages/ui` |
 | `pnpm clean` | Remove every `node_modules` and `dist` |
 

@@ -25,12 +25,12 @@ afterEach(() => {
 	tokens.remove();
 });
 
-function popupHeight(): number {
-	return screen.getByRole('tooltip').getBoundingClientRect().height;
+async function popupHeight(): Promise<number> {
+	return (await screen.findByRole('tooltip')).getBoundingClientRect().height;
 }
 
 describe('Tooltip sizing', () => {
-	it('is 26px tall on one line: a 20px line, 2px padding and a 1px border on each side', () => {
+	it('is 26px tall on one line: a 20px line, 2px padding and a 1px border on each side', async () => {
 		render(
 			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
@@ -38,10 +38,10 @@ describe('Tooltip sizing', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(popupHeight()).toBe(26);
+		expect(await popupHeight()).toBe(26);
 	});
 
-	it('still takes --tooltip-padding and --tooltip-line-height from the call site', () => {
+	it('still takes --tooltip-padding and --tooltip-line-height from the call site', async () => {
 		tokens.textContent += `:root {
 			--tooltip-padding: 4px 8px;
 			--tooltip-line-height: 24px;
@@ -54,6 +54,6 @@ describe('Tooltip sizing', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(popupHeight()).toBe(34);
+		expect(await popupHeight()).toBe(34);
 	});
 });

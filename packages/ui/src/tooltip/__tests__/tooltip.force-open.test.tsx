@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { ForceOpenProvider } from '../../testing/index.js';
@@ -8,7 +8,7 @@ import { TooltipProvider } from '../subcomponents/tooltip-provider.js';
 const TITLE = 'Helpful information';
 
 describe('Tooltip under ForceOpenProvider', () => {
-	it('is open right away, without any hover', () => {
+	it('opens without any hover', async () => {
 		render(
 			<Tooltip title={TITLE}>
 				<button type="button">Hover</button>
@@ -16,7 +16,7 @@ describe('Tooltip under ForceOpenProvider', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveTextContent(TITLE);
+		expect(await screen.findByRole('tooltip')).toHaveTextContent(TITLE);
 	});
 
 	it('stays open when the pointer leaves', async () => {
@@ -28,6 +28,7 @@ describe('Tooltip under ForceOpenProvider', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 		const trigger = screen.getByRole('button');
+		await screen.findByRole('tooltip');
 
 		await user.hover(trigger);
 		await user.unhover(trigger);
@@ -35,7 +36,7 @@ describe('Tooltip under ForceOpenProvider', () => {
 		expect(screen.getByRole('tooltip')).toBeInTheDocument();
 	});
 
-	it('describes the trigger with the content', () => {
+	it('describes the trigger with the content', async () => {
 		render(
 			<Tooltip title={TITLE}>
 				<button type="button">Hover</button>
@@ -43,13 +44,13 @@ describe('Tooltip under ForceOpenProvider', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		const tooltip = screen.getByRole('tooltip');
+		const tooltip = await screen.findByRole('tooltip');
 		expect(screen.getByRole('button')).toHaveAttribute('aria-describedby', tooltip.id);
 	});
 
 	// What a snapshot of every placement at once needs: Base UI closes the open tooltip of a
 	// group as the next one opens, and one pointer can only sit on one trigger anyway.
-	it('holds every tooltip of one provider open at the same time', () => {
+	it('holds every tooltip of one provider open at the same time', async () => {
 		render(
 			<TooltipProvider>
 				<Tooltip title="First">
@@ -62,10 +63,10 @@ describe('Tooltip under ForceOpenProvider', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getAllByRole('tooltip')).toHaveLength(2);
+		await waitFor(() => expect(screen.getAllByRole('tooltip')).toHaveLength(2));
 	});
 
-	it('leaves a tooltip outside the provider to hover and focus', () => {
+	it('leaves a tooltip outside the provider to hover and focus', async () => {
 		render(
 			<>
 				<ForceOpenProvider>
@@ -79,7 +80,7 @@ describe('Tooltip under ForceOpenProvider', () => {
 			</>,
 		);
 
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('Held');
 		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
-		expect(screen.getByRole('tooltip')).toHaveTextContent('Held');
 	});
 });

@@ -1,16 +1,14 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
-import { TooltipContent } from '../subcomponents/tooltip-content.js';
-import { TooltipRoot } from '../subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
+import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 
 const TITLE = 'Helpful information';
 
 describe('Tooltip accessibility', () => {
-	it('exposes the content with role="tooltip"', () => {
+	it('exposes the content with role="tooltip"', async () => {
 		render(
 			<Tooltip title={TITLE}>
 				<button type="button">Hover</button>
@@ -18,10 +16,10 @@ describe('Tooltip accessibility', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveTextContent(TITLE);
+		expect(await screen.findByRole('tooltip')).toHaveTextContent(TITLE);
 	});
 
-	it('describes the trigger with the content, even before it opens', async () => {
+	it('describes the trigger with the content while it is open, and not before', async () => {
 		const user = userEvent.setup();
 		render(
 			<Tooltip title={TITLE}>
@@ -29,12 +27,29 @@ describe('Tooltip accessibility', () => {
 			</Tooltip>,
 		);
 		const trigger = screen.getByRole('button');
-		const describedBy = trigger.getAttribute('aria-describedby');
-		expect(describedBy).toBeTruthy();
+		expect(trigger).not.toHaveAttribute('aria-describedby');
 
 		await user.hover(trigger);
 
-		expect(await screen.findByRole('tooltip')).toHaveAttribute('id', describedBy);
+		const tooltip = await screen.findByRole('tooltip');
+		expect(tooltip.id).toBeTruthy();
+		expect(trigger).toHaveAttribute('aria-describedby', tooltip.id);
+	});
+
+	it('stops describing the trigger once the content is gone', async () => {
+		const user = userEvent.setup();
+		render(
+			<Tooltip title={TITLE}>
+				<button type="button">Hover</button>
+			</Tooltip>,
+		);
+		const trigger = screen.getByRole('button');
+
+		await user.hover(trigger);
+		await screen.findByRole('tooltip');
+		await user.unhover(trigger);
+
+		await waitFor(() => expect(trigger).not.toHaveAttribute('aria-describedby'));
 	});
 
 	it('joins the description the trigger element brings with the content', async () => {
@@ -50,6 +65,7 @@ describe('Tooltip accessibility', () => {
 			</>,
 		);
 		const trigger = screen.getByRole('button');
+		expect(trigger).toHaveAttribute('aria-describedby', 'delete-hint');
 
 		await user.hover(trigger);
 
@@ -84,14 +100,14 @@ describe('Tooltip accessibility', () => {
 			</Tooltip>,
 		);
 		const trigger = screen.getByRole('button');
-		expect(trigger).toHaveAttribute('aria-describedby', 'own-id');
 
 		await user.hover(trigger);
 
 		expect(await screen.findByRole('tooltip')).toHaveAttribute('id', 'own-id');
+		expect(trigger).toHaveAttribute('aria-describedby', 'own-id');
 	});
 
-	it('gives two tooltips two different ids', () => {
+	it('gives two tooltips two different ids', async () => {
 		render(
 			<>
 				<Tooltip title="One">
@@ -101,60 +117,63 @@ describe('Tooltip accessibility', () => {
 					<button type="button">Two</button>
 				</Tooltip>
 			</>,
+			{ wrapper: ForceOpenProvider },
 		);
 
-		const [one, two] = screen.getAllByRole('button');
-		expect(one).toHaveAttribute('aria-describedby');
-		expect(one?.getAttribute('aria-describedby')).not.toBe(two?.getAttribute('aria-describedby'));
+		await waitFor(() => expect(screen.getAllByRole('tooltip')).toHaveLength(2));
+		const [one, two] = screen.getAllByRole('tooltip');
+		const [oneTrigger, twoTrigger] = screen.getAllByRole('button');
+		expect(one?.id).not.toBe(two?.id);
+		expect(oneTrigger).toHaveAttribute('aria-describedby', one?.id);
+		expect(twoTrigger).toHaveAttribute('aria-describedby', two?.id);
 	});
 
-	it('describes the trigger through the root when the content sits inside it', () => {
+	it('describes the trigger through the anchor when the content is forced open', async () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger>Hover</TooltipTrigger>
-				<TooltipContent>{TITLE}</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content={TITLE}>
+				Hover
+			</TooltipAnchor>,
 		);
 
-		const tooltip = screen.getByRole('tooltip');
+		const tooltip = await screen.findByRole('tooltip');
 		expect(tooltip.id).toBeTruthy();
 		expect(screen.getByRole('button')).toHaveAttribute('aria-describedby', tooltip.id);
 	});
 
-	it('keeps an id the caller set on the content inside a root', () => {
+	it('keeps an id the caller set on the content of an anchor', async () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger>Hover</TooltipTrigger>
-				<TooltipContent id="own-id">{TITLE}</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content={TITLE} contentProps={{ id: 'own-id' }}>
+				Hover
+			</TooltipAnchor>,
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveAttribute('id', 'own-id');
+		expect(await screen.findByRole('tooltip')).toHaveAttribute('id', 'own-id');
+		expect(screen.getByRole('button')).toHaveAttribute('aria-describedby', 'own-id');
 	});
 
-	it('lets a trigger point at nothing with contentId={null}', () => {
+	it('lets a trigger point at nothing with aria-describedby={undefined}', async () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger contentId={null}>Hover</TooltipTrigger>
-				<TooltipContent>{TITLE}</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content={TITLE} aria-describedby={undefined}>
+				Hover
+			</TooltipAnchor>,
 		);
 
+		await screen.findByRole('tooltip');
 		expect(screen.getByRole('button')).not.toHaveAttribute('aria-describedby');
 	});
 
-	it('lets a trigger point at a content id of its own', () => {
+	it('lets a trigger point at a description of its own', async () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger contentId="elsewhere">Hover</TooltipTrigger>
-				<TooltipContent>{TITLE}</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content={TITLE} aria-describedby="elsewhere">
+				Hover
+			</TooltipAnchor>,
 		);
 
+		await screen.findByRole('tooltip');
 		expect(screen.getByRole('button')).toHaveAttribute('aria-describedby', 'elsewhere');
 	});
 
-	it('keeps the accessible name of the trigger', () => {
+	it('keeps the accessible name of the trigger', async () => {
 		render(
 			<Tooltip title={TITLE}>
 				<button type="button" aria-label="Delete">
@@ -164,6 +183,7 @@ describe('Tooltip accessibility', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
+		await screen.findByRole('tooltip');
 		expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
 	});
 });

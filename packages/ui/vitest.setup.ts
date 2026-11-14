@@ -11,6 +11,12 @@ beforeAll(async () => {
 	await cdp().send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: -1, y: -1 });
 });
 
+// The tooltip popup loads with the first tooltip that opens. Every test file runs in a new page,
+// so without this the first tooltip of each file races that load against the `findBy` timeout.
+beforeAll(async () => {
+	await import('./src/tooltip/subcomponents/tooltip-lazy-popup.js');
+});
+
 // jsdom ships neither of these. A real browser has both, so these shims install
 // only when the API is genuinely missing and browser mode exercises the real
 // implementations instead.

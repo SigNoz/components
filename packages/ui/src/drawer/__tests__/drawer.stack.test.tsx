@@ -252,7 +252,7 @@ describe('Drawer nested with stack="breadcrumb"', () => {
 
 		expect(within(panelOf('root')).queryByTestId('root-trail')).toBeNull();
 
-		const trail = screen.getByTestId('child-trail-breadcrumb');
+		const trail = await screen.findByTestId('child-trail-breadcrumb');
 		const crumbs = within(trail).getAllByRole('listitem');
 
 		expect(crumbs.map((crumb) => crumb.textContent)).toEqual(['root', 'child']);
@@ -278,7 +278,7 @@ describe('Drawer nested with stack="breadcrumb"', () => {
 		});
 		await waitForSettled();
 
-		const trail = screen.getByTestId('grandchild-trail-breadcrumb');
+		const trail = await screen.findByTestId('grandchild-trail-breadcrumb');
 		await user.click(within(trail).getByRole('button', { name: 'root' }));
 
 		await waitFor(() => {
@@ -439,7 +439,7 @@ describe('Drawer breadcrumb trail with collapsed crumbs', () => {
 		});
 		await waitForSettled();
 
-		const trail = screen.getByTestId('log-trail-breadcrumb');
+		const trail = await screen.findByTestId('log-trail-breadcrumb');
 		await browserUser.click(within(trail).getByRole('button', { name: /hidden items/ }));
 		const popup = await screen.findByRole('dialog', { name: 'Earlier steps' });
 		await browserUser.click(within(popup).getByRole('button', { name: 'node' }));

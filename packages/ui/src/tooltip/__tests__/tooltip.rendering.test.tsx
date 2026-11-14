@@ -2,8 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ForceOpenProvider } from '../../testing/index.js';
 import { Tooltip } from '../presets/tooltip.js';
-import { TooltipRoot } from '../subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
 
 describe('Tooltip trigger rendering', () => {
 	it('renders as the element it is given, instead of wrapping it', () => {
@@ -36,13 +34,11 @@ describe('Tooltip trigger rendering', () => {
 	});
 
 	it('falls back to a button for children that are not an element', () => {
-		render(
-			<TooltipRoot open={false}>
-				<TooltipTrigger>Hover</TooltipTrigger>
-			</TooltipRoot>,
-		);
+		render(<Tooltip title="Helpful information">Hover</Tooltip>);
 
-		expect(screen.getByRole('button')).toHaveTextContent('Hover');
+		const trigger = screen.getByRole('button');
+		expect(trigger).toHaveTextContent('Hover');
+		expect(trigger).toHaveAttribute('data-slot', 'tooltip-trigger');
 	});
 
 	it('renders a non-button element as the trigger too', () => {
@@ -68,7 +64,7 @@ describe('Tooltip trigger rendering', () => {
 });
 
 describe('Tooltip content rendering', () => {
-	it('marks the trigger, positioner and content with their slot', () => {
+	it('marks the trigger, positioner and content with their slot', async () => {
 		render(
 			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
@@ -76,12 +72,14 @@ describe('Tooltip content rendering', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
+		const tooltip = await screen.findByRole('tooltip');
+
 		expect(screen.getByRole('button')).toHaveAttribute('data-slot', 'tooltip-trigger');
 		expect(document.querySelector('[data-slot="tooltip-positioner"]')).toBeInTheDocument();
-		expect(screen.getByRole('tooltip')).toHaveAttribute('data-slot', 'tooltip-content');
+		expect(tooltip).toHaveAttribute('data-slot', 'tooltip-content');
 	});
 
-	it('exposes testId as data-testid on the content, not the trigger', () => {
+	it('exposes testId as data-testid on the content, not the trigger', async () => {
 		render(
 			<Tooltip title="Helpful information" testId="tooltip">
 				<button type="button">Hover</button>
@@ -89,11 +87,11 @@ describe('Tooltip content rendering', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveAttribute('data-testid', 'tooltip');
+		expect(await screen.findByRole('tooltip')).toHaveAttribute('data-testid', 'tooltip');
 		expect(screen.getByRole('button')).not.toHaveAttribute('data-testid');
 	});
 
-	it('leaves data-testid off the content when no testId is given', () => {
+	it('leaves data-testid off the content when no testId is given', async () => {
 		render(
 			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
@@ -101,10 +99,10 @@ describe('Tooltip content rendering', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).not.toHaveAttribute('data-testid');
+		expect(await screen.findByRole('tooltip')).not.toHaveAttribute('data-testid');
 	});
 
-	it('forwards data-* to the content, not to the trigger', () => {
+	it('forwards data-* to the content, not to the trigger', async () => {
 		render(
 			<Tooltip title="Helpful information" data-state-of="the world">
 				<button type="button">Hover</button>
@@ -112,11 +110,11 @@ describe('Tooltip content rendering', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveAttribute('data-state-of', 'the world');
+		expect(await screen.findByRole('tooltip')).toHaveAttribute('data-state-of', 'the world');
 		expect(screen.getByRole('button')).not.toHaveAttribute('data-state-of');
 	});
 
-	it('keeps its own slot when the call site sends a data-slot', () => {
+	it('keeps its own slot when the call site sends a data-slot', async () => {
 		render(
 			<Tooltip title="Helpful information" data-slot="mine">
 				<button type="button">Hover</button>
@@ -124,10 +122,10 @@ describe('Tooltip content rendering', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toHaveAttribute('data-slot', 'tooltip-content');
+		expect(await screen.findByRole('tooltip')).toHaveAttribute('data-slot', 'tooltip-content');
 	});
 
-	it('renders a rich title, not only text', () => {
+	it('renders a rich title, not only text', async () => {
 		render(
 			<Tooltip title={<strong data-testid="rich">Ask an admin</strong>}>
 				<button type="button">Hover</button>
@@ -135,16 +133,17 @@ describe('Tooltip content rendering', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getByRole('tooltip')).toContainElement(screen.getByTestId('rich'));
+		expect(await screen.findByRole('tooltip')).toContainElement(screen.getByTestId('rich'));
 	});
 
-	it('renders a lone title bare, without the stack wrapper', () => {
+	it('renders a lone title bare, without the stack wrapper', async () => {
 		render(
 			<Tooltip title="Helpful information">
 				<button type="button">Hover</button>
 			</Tooltip>,
 			{ wrapper: ForceOpenProvider },
 		);
+		await screen.findByRole('tooltip');
 
 		expect(document.querySelector('[data-slot="tooltip-stack"]')).toBeNull();
 		expect(document.querySelector('[data-slot="tooltip-divider"]')).toBeNull();

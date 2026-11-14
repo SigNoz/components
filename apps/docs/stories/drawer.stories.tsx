@@ -1226,6 +1226,7 @@ export const StackAsBreadcrumb: Story = {
 		await waitFor(() => expect(getNode(`drill-${last}`)).toBeVisible());
 
 		const panel = getNode(`drill-${last}`);
+		await waitFor(() => expect(getNode(`drill-${last}-trail-breadcrumb`)).toBeVisible());
 		const trail = getNode(`drill-${last}-trail-breadcrumb`);
 
 		await expect(panel).toHaveAttribute('data-nested', 'breadcrumb');
@@ -1351,6 +1352,7 @@ export const DeepLinkWithNuqs: Story = {
 		await waitFor(() => expect(getNode(`drill-${last}`)).toBeVisible());
 		await waitFor(() => expect(trailInUrl()).toBe(DRILL_DOWN_KEYS.join(',')));
 
+		await waitFor(() => expect(getNode(`drill-${last}-trail-breadcrumb`)).toBeVisible());
 		const trail = getNode(`drill-${last}-trail-breadcrumb`);
 		const backTo = within(trail).getByRole('link', { name: DRILL_DOWN[last - 2].name });
 		await expect(

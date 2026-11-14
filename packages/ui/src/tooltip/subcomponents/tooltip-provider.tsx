@@ -1,4 +1,4 @@
-import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
+import type { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import type * as React from 'react';
 import {
 	TOOLTIP_DEFAULT_CLOSE_DELAY,
@@ -59,9 +59,7 @@ export function TooltipProvider({
 			closeDelay={closeDelay}
 			timeout={timeout}
 		>
-			<TooltipPrimitive.Provider delay={delay} closeDelay={closeDelay} timeout={timeout}>
-				{children}
-			</TooltipPrimitive.Provider>
+			{children}
 		</TooltipConfigProvider>
 	);
 }

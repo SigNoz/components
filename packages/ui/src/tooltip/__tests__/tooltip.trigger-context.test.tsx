@@ -1,9 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Tooltip } from '../presets/tooltip.js';
-import { TooltipContent } from '../subcomponents/tooltip-content.js';
-import { TooltipRoot } from '../subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
+import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { useIsInsideTooltipTrigger } from '../tooltip-trigger-context.js';
 
 function Probe() {
@@ -19,14 +17,11 @@ describe('useIsInsideTooltipTrigger', () => {
 
 	it('is true inside a trigger', () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<button type="button">
-						<Probe />
-					</button>
-				</TooltipTrigger>
-				<TooltipContent>Tip</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor content="Tip">
+				<button type="button">
+					<Probe />
+				</button>
+			</TooltipAnchor>,
 		);
 
 		expect(screen.getByTestId('probe')).toHaveTextContent('true');
@@ -44,17 +39,14 @@ describe('useIsInsideTooltipTrigger', () => {
 		expect(screen.getByTestId('probe')).toHaveTextContent('true');
 	});
 
-	it('is false inside the content, which is not the trigger', () => {
+	it('is false inside the content, which is not the trigger', async () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger>Hover</TooltipTrigger>
-				<TooltipContent>
-					<Probe />
-				</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content={<Probe />}>
+				Hover
+			</TooltipAnchor>,
 		);
 
-		expect(screen.getByTestId('probe')).toHaveTextContent('false');
+		expect(await screen.findByTestId('probe')).toHaveTextContent('false');
 	});
 
 	it('is false next to a tooltip', () => {

@@ -111,7 +111,7 @@ async function renderTrail(props: Parameters<typeof Trail>[0]): Promise<HTMLElem
 	});
 	await waitForSettled();
 
-	return screen.getByTestId(`${top}-trail-breadcrumb`);
+	return screen.findByTestId(`${top}-trail-breadcrumb`);
 }
 
 const hrefFor: CrumbFor = (name) => ({ href: `#trail-${name}` });
@@ -663,7 +663,7 @@ async function renderControlled(
 	});
 	await waitForSettled();
 
-	return screen.getByTestId(`${top}-trail-breadcrumb`);
+	return screen.findByTestId(`${top}-trail-breadcrumb`);
 }
 
 describe('Drawer with a controlled trail', () => {

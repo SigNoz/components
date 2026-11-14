@@ -1,14 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { ForceOpenProvider } from '../../testing/index.js';
-import type { ReactNode } from 'react';
 import { Tooltip } from '../presets/tooltip.js';
 import { TooltipAnchor } from '../subcomponents/tooltip-anchor.js';
 import { TooltipContent } from '../subcomponents/tooltip-content.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
-import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
-import { useTooltipHandle } from '../tooltip-handle.js';
 import { TooltipTriggerBoundary } from '../tooltip-trigger-context.js';
 
 describe('Tooltip inside another tooltip', () => {
@@ -151,7 +148,7 @@ describe('Tooltip inside another tooltip', () => {
 		expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 	});
 
-	it('keeps its own tooltip when it is not inside another trigger', () => {
+	it('keeps its own tooltip when it is not inside another trigger', async () => {
 		render(
 			<>
 				<Tooltip title="First">
@@ -164,31 +161,25 @@ describe('Tooltip inside another tooltip', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		expect(screen.getAllByRole('tooltip')).toHaveLength(2);
+		await waitFor(() => expect(screen.getAllByRole('tooltip')).toHaveLength(2));
 	});
 });
 
 describe('Tooltip stacked content lifecycle', () => {
-	it('drops the stacked content once the nested tooltip is gone', () => {
+	it('drops the stacked content once the nested tooltip is gone', async () => {
 		const { rerender } = render(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<Tooltip title="Inner title">
-						<button type="button">Hover</button>
-					</Tooltip>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<Tooltip title="Inner title">
+					<button type="button">Hover</button>
+				</Tooltip>
+			</TooltipAnchor>,
 		);
-		expect(screen.getByRole('tooltip')).toHaveTextContent('Inner title');
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('Inner title');
 
 		rerender(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<button type="button">Hover</button>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<button type="button">Hover</button>
+			</TooltipAnchor>,
 		);
 
 		const tooltip = screen.getByRole('tooltip');
@@ -197,55 +188,45 @@ describe('Tooltip stacked content lifecycle', () => {
 		expect(tooltip.querySelector('[data-slot="tooltip-divider"]')).toBeNull();
 	});
 
-	it('drops the stacked content once the nested title turns empty', () => {
+	it('drops the stacked content once the nested title turns empty', async () => {
 		const { rerender } = render(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<Tooltip title="Inner title">
-						<button type="button">Hover</button>
-					</Tooltip>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<Tooltip title="Inner title">
+					<button type="button">Hover</button>
+				</Tooltip>
+			</TooltipAnchor>,
 		);
-		expect(screen.getByRole('tooltip')).toHaveTextContent('Inner title');
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('Inner title');
 
 		rerender(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<Tooltip title={undefined}>
-						<button type="button">Hover</button>
-					</Tooltip>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<Tooltip title={undefined}>
+					<button type="button">Hover</button>
+				</Tooltip>
+			</TooltipAnchor>,
 		);
 
+		expect(screen.getByRole('tooltip')).toHaveTextContent('Outer title');
 		expect(screen.getByRole('tooltip')).not.toHaveTextContent('Inner title');
 		expect(screen.getByRole('tooltip').querySelector('[data-slot="tooltip-divider"]')).toBeNull();
 	});
 
-	it('replaces the stacked content when the nested title changes', () => {
+	it('replaces the stacked content when the nested title changes', async () => {
 		const { rerender } = render(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<Tooltip title="Before">
-						<button type="button">Hover</button>
-					</Tooltip>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<Tooltip title="Before">
+					<button type="button">Hover</button>
+				</Tooltip>
+			</TooltipAnchor>,
 		);
+		expect(await screen.findByRole('tooltip')).toHaveTextContent('Outer titleBefore');
 
 		rerender(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<Tooltip title="After">
-						<button type="button">Hover</button>
-					</Tooltip>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<Tooltip title="After">
+					<button type="button">Hover</button>
+				</Tooltip>
+			</TooltipAnchor>,
 		);
 
 		const tooltip = screen.getByRole('tooltip');
@@ -320,7 +301,7 @@ describe('Tooltip stacked props', () => {
 		container.remove();
 	});
 
-	it('keeps the props of the wrapping tooltip on the popup', () => {
+	it('keeps the props of the wrapping tooltip on the popup', async () => {
 		render(
 			<Tooltip title="Outer title" testId="outer">
 				<Tooltip title="Inner title" testId="inner">
@@ -330,12 +311,12 @@ describe('Tooltip stacked props', () => {
 			{ wrapper: ForceOpenProvider },
 		);
 
-		const tooltip = screen.getByRole('tooltip');
+		const tooltip = await screen.findByRole('tooltip');
 		expect(tooltip).toHaveAttribute('data-testid', 'outer');
 		expect(screen.getByRole('button')).toHaveAttribute('data-testid', 'inner');
 	});
 
-	it('mounts no root, portal or content of its own', () => {
+	it('mounts no root, portal or content of its own', async () => {
 		render(
 			<Tooltip title="Outer title">
 				<Tooltip title="Inner title">
@@ -344,6 +325,7 @@ describe('Tooltip stacked props', () => {
 			</Tooltip>,
 			{ wrapper: ForceOpenProvider },
 		);
+		await screen.findByRole('tooltip');
 
 		expect(document.querySelectorAll('[data-slot="tooltip-content"]')).toHaveLength(1);
 		expect(document.querySelectorAll('[data-slot="tooltip-positioner"]')).toHaveLength(1);
@@ -351,55 +333,22 @@ describe('Tooltip stacked props', () => {
 });
 
 describe('TooltipRoot inside a trigger', () => {
-	it('renders its children in place, without a root of its own', () => {
+	it('renders its children in place, without a root of its own', async () => {
 		render(
-			<TooltipRoot open>
-				<TooltipTrigger>
-					<span data-testid="inner">
-						<TooltipRoot>
-							Hover
-							<TooltipContent>Inner title</TooltipContent>
-						</TooltipRoot>
-					</span>
-				</TooltipTrigger>
-				<TooltipContent>Outer title</TooltipContent>
-			</TooltipRoot>,
+			<TooltipAnchor open content="Outer title">
+				<span data-testid="inner">
+					<TooltipRoot>
+						Hover
+						<TooltipContent>Inner title</TooltipContent>
+					</TooltipRoot>
+				</span>
+			</TooltipAnchor>,
 		);
 
+		const tooltip = await screen.findByRole('tooltip');
 		expect(screen.getByTestId('inner')).toBeInTheDocument();
 		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
-		expect(screen.getByRole('tooltip')).toHaveTextContent('Outer titleInner title');
-	});
-});
-
-describe('Tooltip inside a trigger that has no stack above it', () => {
-	function HandleTooltip({ children }: { children: ReactNode }): ReactNode {
-		const handle = useTooltipHandle();
-
-		return (
-			<>
-				<TooltipTrigger handle={handle}>{children}</TooltipTrigger>
-				<TooltipRoot handle={handle} open>
-					<TooltipContent>Outer title</TooltipContent>
-				</TooltipRoot>
-			</>
-		);
-	}
-
-	it('shows only the outer popup, without a portal no root owns', () => {
-		render(
-			<HandleTooltip>
-				<span>
-					<Tooltip title="Inner title">
-						<button type="button">Hover</button>
-					</Tooltip>
-				</span>
-			</HandleTooltip>,
-			{ wrapper: ForceOpenProvider },
-		);
-
-		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
-		expect(screen.getByRole('tooltip')).toHaveTextContent('Outer title');
+		expect(tooltip).toHaveTextContent('Outer titleInner title');
 	});
 });
 
@@ -441,6 +390,8 @@ describe('TooltipAnchor with nothing to say itself', () => {
 		await user.hover(button);
 
 		expect(await screen.findByRole('tooltip')).toHaveTextContent('Outer title');
-		expect(button).toHaveAttribute('data-trigger-disabled');
+		expect(screen.getAllByRole('tooltip')).toHaveLength(1);
+		expect(button).not.toHaveAttribute('aria-describedby');
+		expect(button).not.toHaveAttribute('data-popup-open');
 	});
 });

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useTooltipConfig } from './tooltip-config-context.js';
 
 // Time the pointer has to cross from the trigger to the popup, so the popup can be hovered.
@@ -56,12 +56,19 @@ export function useTooltipLazyOpen(hasContent: boolean): TooltipLazyOpen {
 		open: false,
 	});
 	const hasContentRef = useRef(hasContent);
+	const id = useId();
 
 	useEffect(() => {
 		hasContentRef.current = hasContent;
 	}, [hasContent]);
 
-	useEffect(() => () => clearTimeout(timerRef.current), []);
+	useEffect(
+		() => () => {
+			clearTimeout(timerRef.current);
+			group?.deactivate(id);
+		},
+		[group, id],
+	);
 
 	const cancel = (): void => clearTimeout(timerRef.current);
 
@@ -85,11 +92,16 @@ export function useTooltipLazyOpen(hasContent: boolean): TooltipLazyOpen {
 		stateRef.current.open = true;
 		setAnchor(element);
 		setOpen(true);
+		group?.activate(id, () => {
+			cancel();
+			hide();
+		});
 	};
 
 	const hide = (): void => {
 		stateRef.current.open = false;
 		setOpen(false);
+		group?.deactivate(id);
 
 		if (!hasContentRef.current) {
 			setAnchor(null);
