@@ -208,7 +208,7 @@ repeats the style of the sentence and changes only `weight`.
 
 ## Typography.Link
 
-A navigation inside a sentence or next to text. It takes the style, number and layout props of
+A navigation or an inline action inside a sentence or next to text. It takes the style, number and layout props of
 `Typography` and the link props of `Callout.Link`. It draws in the link color, and the hover
 underlines it. There is no `color` and no `as`.
 
@@ -244,10 +244,24 @@ A router link goes through `render`: `render={<Link to="/settings" />}` renders 
 client-side navigation and a modified click still opens a new tab. A prop set on the `render`
 element wins, and its `onClick` runs before the one of the link.
 
-A link with neither `href` nor a destination on the `render` element renders plain text and warns on
-the console. A link with no text warns too, unless it has an `aria-label`.
+A link with an `onClick` and no destination is an action, such as a "Retry" next to an error. It
+renders a native `button`, or the `render` element when given, drawn like the anchor. A native
+button never wraps across lines, so keep the label short.
 
-Clickable text that does not navigate is a `Button` with `variant="link"`, not a link.
+```tsx
+<Typography.Link
+	variant="paragraph"
+	size="base"
+	weight="regular"
+	textOverflow="wrap"
+	onClick={retry}
+>
+	Retry
+</Typography.Link>
+```
+
+A link with neither a destination nor an `onClick` renders plain text and warns on the console. A
+link with no text warns too, unless it has an `aria-label`.
 
 ## Asserting on it
 

@@ -15,8 +15,8 @@ import {
 } from '../utils.js';
 
 /**
- * A navigation inside a sentence or next to text. Reached as `Typography.Link`, not imported on its
- * own. It takes the style, number and layout props of `Typography` and the link props of
+ * A navigation or an inline action inside a sentence or next to text. Reached as `Typography.Link`,
+ * not imported on its own. It takes the style, number and layout props of `Typography` and the link props of
  * `Callout.Link`.
  *
  * It draws in the link color, and the hover underlines it. There is no `color`, since a link reads
@@ -40,8 +40,16 @@ import {
  *
  * The `ref` reaches the rendered element, and so does a `ref` on the `render` element.
  *
- * A link with neither `href` nor a destination on the `render` element is a bug: it renders plain
- * text in the same style and warns on the console.
+ * ### Actions
+ *
+ * A link with an `onClick` and no destination, neither `href` nor one on the `render` element, is
+ * an action, such as a "Retry" or "View details" that runs code instead of navigating. It renders
+ * the `render` element when given, a native `<button type="button">` otherwise, drawn exactly like
+ * the anchor with the same class, data attributes, `testId`, `aria-*` props and `ref`. A native
+ * button never wraps across lines, so keep the label short.
+ *
+ * A link with neither a destination nor an `onClick` is a bug: it renders plain text in the same
+ * style and warns on the console.
  *
  * ### Nested in text
  *
@@ -144,6 +152,7 @@ export const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(funct
 			className: cn(styles['typography'], styles['typography__link']),
 			fallbackClassName: styles['typography'],
 			name: 'Typography.Link',
+			allowAction: true,
 			props: {
 				...getTypographyLook({
 					variant,
