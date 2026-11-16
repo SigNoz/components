@@ -169,7 +169,8 @@ export interface CardProps extends AriaAttributes {
 	 * @note The body renders while it loads, even when there are no `children`. A header or a footer
 	 * that is not loading stays interactive: a control in it that must wait for the data takes its
 	 * own `loading` or `disabled`. A header or a footer that is loading renders only when the card
-	 * has one.
+	 * has one. A part passed as `undefined` or `null`, as in `title={data?.title}`, counts while its
+	 * header or footer loads, so the skeleton is there before the data.
 	 *
 	 * @default false
 	 */

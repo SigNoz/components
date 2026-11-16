@@ -105,6 +105,16 @@ export function hasCardText(content: ReactNode): boolean {
 }
 
 /**
+ * Whether a part of the card was passed with no value yet, as `title={data?.title}` is before the
+ * data arrives. A prop that was never passed is not pending: the card does not have that part.
+ *
+ * @access private
+ */
+export function isPendingPart(props: object, name: string, value: unknown): boolean {
+	return name in props && value == null;
+}
+
+/**
  * What `loading` asks for, part by part. `body` is the node the caller passed, or `undefined` for
  * the default `Skeleton`.
  *

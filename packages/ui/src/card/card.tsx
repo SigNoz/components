@@ -13,6 +13,7 @@ import {
 	getCardStyle,
 	hasCardText,
 	isFlushBody,
+	isPendingPart,
 	resolveCardLoading,
 	splitCardSpacing,
 } from './utils.js';
@@ -22,7 +23,10 @@ const DEFAULT_LOADING_CONTENT = (
 );
 
 const CardRoot = forwardRef<HTMLDivElement, CardProps>(function Card(
-	{
+	cardProps: CardProps & RejectedProps,
+	ref,
+) {
+	const {
 		title,
 		titlePrefix,
 		titleSuffix,
@@ -43,35 +47,51 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(function Card(
 		className: _className,
 		style: _style,
 		...props
-	}: CardProps & RejectedProps,
-	ref,
-) {
+	} = cardProps;
 	const [spacing, rest] = splitCardSpacing(props);
 	const baseId = useId();
 	const controlId = `${baseId}-control`;
 	const titleId = `${baseId}-title`;
 	const descriptionId = `${baseId}-description`;
 
+	const loadingState = resolveCardLoading(loading);
+	const isLoading = loadingState.isLoading;
+	// While the header or the footer loads, a part passed as `undefined` or `null` is one that comes
+	// with the data, so it keeps its place and gets a skeleton.
+	const isHeaderPending = (name: keyof CardProps, value: unknown) =>
+		loadingState.header && isPendingPart(cardProps, name, value);
+	const isFooterPending = (name: keyof CardProps, value: unknown) =>
+		loadingState.footer && isPendingPart(cardProps, name, value);
+
 	const hasTitle = typeof title === 'string' && !isBlankText(title);
-	const hasDescription = hasCardText(description);
+	const hasDescription = hasCardText(description) || isHeaderPending('description', description);
 	const field: CardHeaderSuffixField = {
 		id: controlId,
 		'aria-labelledby': titleId,
 		...(hasDescription && { 'aria-describedby': descriptionId }),
 	};
 	const suffix = typeof headerSuffix === 'function' ? headerSuffix(field) : headerSuffix;
-	const hasSuffix = hasRenderableContent(suffix);
+	const hasSuffix = hasRenderableContent(suffix) || isHeaderPending('headerSuffix', suffix);
 
-	const hasHeader = hasTitle || hasRenderableContent(titleSuffix) || hasDescription || hasSuffix;
-	const loadingState = resolveCardLoading(loading);
-	const isLoading = loadingState.isLoading;
+	const hasHeader =
+		hasTitle ||
+		hasRenderableContent(titleSuffix) ||
+		hasDescription ||
+		hasSuffix ||
+		isHeaderPending('title', title) ||
+		isHeaderPending('titleSuffix', titleSuffix);
 	const hasSkeleton = isLoading && loadingState.body === undefined;
 	const hasBody = isLoading || hasRenderableContent(children);
-	const hasFooterPrefix = hasRenderableContent(footerPrefix);
-	const hasFooterSuffix = hasRenderableContent(footerSuffix);
+	const hasFooterPrefix =
+		hasRenderableContent(footerPrefix) || isFooterPending('footerPrefix', footerPrefix);
+	const hasFooterSuffix =
+		hasRenderableContent(footerSuffix) || isFooterPending('footerSuffix', footerSuffix);
 	const hasFooter = hasFooterPrefix || hasFooterSuffix;
 
-	useCardWarnings(hasHeader && !hasTitle, !hasHeader && !hasBody && !hasFooter);
+	useCardWarnings(
+		hasHeader && !hasTitle && !loadingState.header,
+		!hasHeader && !hasBody && !hasFooter,
+	);
 
 	return (
 		<div

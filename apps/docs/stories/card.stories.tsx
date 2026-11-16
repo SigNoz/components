@@ -1017,6 +1017,9 @@ export const CardCompositionShowcase: Story = {
 		).not.toBeInTheDocument();
 		await expect(within(headerOnly).getByRole('button', { name: 'Refresh' })).toBeEnabled();
 
+		await expect(canvas.getByTestId('loading-pending-card-header')).toHaveAttribute('data-loading');
+		await expect(canvas.getByTestId('loading-pending-card-footer')).toHaveAttribute('data-loading');
+
 		const table = canvas.getByTestId('table-card');
 		const toggle = canvas.getByTestId('toggle-loading');
 		const tableHeight = table.getBoundingClientRect().height;
@@ -1238,6 +1241,15 @@ export const CardCompositionShowcase: Story = {
 						>
 							<ServiceTable />
 						</Card>
+					</Captioned>
+					<Captioned label="loading, the header and the footer come with the data">
+						<Card
+							testId="loading-pending-card"
+							title={undefined}
+							description={undefined}
+							footerPrefix={null}
+							loading={{ header: true, footer: true }}
+						/>
 					</Captioned>
 					<Captioned label="table, the button toggles loading">
 						<LoadingTableCard />

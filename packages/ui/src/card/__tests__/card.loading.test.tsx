@@ -250,6 +250,91 @@ describe('Card loading', () => {
 			expect(slotsOf(screen.getByTestId('card'))).toEqual(['card-body']);
 		});
 
+		it('renders the header of a title passed as undefined while it loads', () => {
+			render(
+				<Card testId="card" title={undefined} description={undefined} loading={{ header: true }} />,
+			);
+
+			const header = screen.getByTestId('card-header');
+
+			expect(header).toHaveAttribute('data-loading');
+			expect(header.querySelectorAll('[data-active="true"]')).toHaveLength(2);
+			expect(screen.queryByTestId('card-header-suffix')).toBeNull();
+		});
+
+		it('draws the skeleton of a header suffix passed as null while it loads', () => {
+			render(<Card testId="card" title="Title" headerSuffix={null} loading={{ header: true }} />);
+
+			expect(screen.getByTestId('card-header-suffix')).toBeInTheDocument();
+		});
+
+		it('draws the skeleton of a header suffix function that returns nothing while it loads', () => {
+			render(
+				<Card testId="card" title="Title" headerSuffix={() => null} loading={{ header: true }} />,
+			);
+
+			expect(screen.getByTestId('card-header-suffix')).toBeInTheDocument();
+		});
+
+		it('renders the footer of parts passed as undefined while it loads', () => {
+			render(
+				<Card
+					testId="card"
+					footerPrefix={undefined}
+					footerSuffix={undefined}
+					loading={{ footer: true }}
+				/>,
+			);
+
+			const footer = screen.getByTestId('card-footer');
+
+			expect(footer).toHaveAttribute('data-loading');
+			expect(screen.getByTestId('card-footer-prefix')).toBeInTheDocument();
+			expect(screen.getByTestId('card-footer-suffix')).toBeInTheDocument();
+		});
+
+		it('does not count a part passed as undefined when that part is not loading', () => {
+			render(
+				<Card testId="card" title={undefined} footerPrefix={undefined} loading={{ footer: true }}>
+					Body
+				</Card>,
+			);
+
+			expect(slotsOf(screen.getByTestId('card'))).toEqual(['card-body', 'card-footer']);
+		});
+
+		it('drops the parts passed as undefined once it has loaded', () => {
+			const { rerender } = render(
+				<Card
+					testId="card"
+					title={undefined}
+					footerPrefix={undefined}
+					loading={{ header: true, footer: true }}
+				/>,
+			);
+
+			rerender(
+				<Card testId="card" title={undefined} footerPrefix={undefined} loading={false}>
+					Body
+				</Card>,
+			);
+
+			expect(slotsOf(screen.getByTestId('card'))).toEqual(['card-body']);
+		});
+
+		it('does not count a part passed as false or an empty string', () => {
+			render(
+				<Card
+					testId="card"
+					titleSuffix={false}
+					footerPrefix=""
+					loading={{ header: true, footer: true }}
+				/>,
+			);
+
+			expect(slotsOf(screen.getByTestId('card'))).toEqual(['card-body']);
+		});
+
 		it('shows the parts again once it has loaded', () => {
 			const { rerender } = render(
 				<Card

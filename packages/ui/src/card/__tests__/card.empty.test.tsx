@@ -51,6 +51,19 @@ describe('Card with an empty title', () => {
 		expect(warn).not.toHaveBeenCalled();
 	});
 
+	it('does not warn while the header loads, and warns once it has loaded without a title', () => {
+		const { rerender } = render(
+			<Card title={undefined} description="Description" loading={{ header: true }} />,
+		);
+
+		expect(warn).not.toHaveBeenCalled();
+
+		rerender(<Card title={undefined} description="Description" />);
+
+		expect(warn).toHaveBeenCalledTimes(1);
+		expect(warn).toHaveBeenCalledWith(expect.stringContaining('`title` is empty'));
+	});
+
 	it('does not warn for a card that has no header at all', () => {
 		render(<Card title="">Body</Card>);
 

@@ -200,7 +200,8 @@ card with `padding={0}` does not put them against the edges.
 `Skeleton` of the same shape, for a title or a footer hint that comes with the data. Set only the
 parts that wait for it: `{ header: true }` leaves the footer as it is. The header swaps its title,
 description and `headerSuffix`, the footer swaps its `footerPrefix` and `footerSuffix`, and a part
-that is not set is not rendered.
+that is not set is not rendered. A part passed as `undefined` or `null` counts while it loads, so
+`title={data?.title}` draws the title skeleton before the data arrives.
 
 ```tsx
 <Card
