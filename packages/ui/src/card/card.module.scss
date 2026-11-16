@@ -1,0 +1,302 @@
+// The size, the gap, the margin and the body padding arrive as `--card-internal-*` custom properties
+// in the inline style, and only the ones that are set. The reset keeps a card inside another one
+// from inheriting them.
+.card {
+	--card-internal-width: initial;
+	--card-internal-max-width: initial;
+	--card-internal-height: initial;
+	--card-internal-min-height: initial;
+	--card-internal-gap: initial;
+	--card-internal-body-flex: initial;
+	--card-internal-margin-top: initial;
+	--card-internal-margin-right: initial;
+	--card-internal-margin-bottom: initial;
+	--card-internal-margin-left: initial;
+	--card-internal-padding-top: initial;
+	--card-internal-padding-right: initial;
+	--card-internal-padding-bottom: initial;
+	--card-internal-padding-left: initial;
+	--card-internal-radius: var(--card-border-radius, var(--radius-2));
+	--card-internal-inner-radius: calc(
+		var(--card-internal-radius) - var(--card-border-width, 1px)
+	);
+	--card-internal-title-white-space: var(--card-title-white-space, nowrap);
+	--card-internal-title-overflow: var(--card-title-overflow, clip visible);
+	--card-internal-title-text-overflow: var(--card-title-text-overflow, ellipsis);
+	--card-internal-title-overflow-wrap: var(--card-title-overflow-wrap, normal);
+
+	display: var(--card-display, flex);
+	flex-direction: var(--card-flex-direction, column);
+	box-sizing: var(--card-box-sizing, border-box);
+	width: var(--card-width, var(--card-internal-width, auto));
+	min-width: var(--card-min-width, 0);
+	max-width: var(--card-max-width, var(--card-internal-max-width, 100%));
+	height: var(--card-height, var(--card-internal-height, auto));
+	min-height: var(--card-min-height, var(--card-internal-min-height, 0));
+	margin-top: var(--card-margin-top, var(--card-internal-margin-top, 0));
+	margin-right: var(--card-margin-right, var(--card-internal-margin-right, 0));
+	margin-bottom: var(--card-margin-bottom, var(--card-internal-margin-bottom, 0));
+	margin-left: var(--card-margin-left, var(--card-internal-margin-left, 0));
+	border-width: var(--card-border-width, 1px);
+	border-style: var(--card-border-style, solid);
+	border-color: var(--card-border-color, var(--card-border));
+	border-radius: var(--card-internal-radius);
+	background-color: var(--card-background-color, var(--card-background));
+	color: var(--card-color, var(--l1-foreground));
+	overflow: var(--card-overflow, visible);
+	font-family: var(--card-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--card-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--card-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--card-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--card-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--card-text-transform, var(--paragraph-base-400-text-transform));
+	font-variant-numeric: var(--card-font-variant-numeric, normal);
+	font-feature-settings: var(--card-font-feature-settings, 'ss01' 1);
+
+	&[data-text-overflow='wrap'] {
+		--card-internal-title-white-space: var(--card-title-wrap-white-space, normal);
+		--card-internal-title-overflow: var(--card-title-wrap-overflow, visible);
+		--card-internal-title-text-overflow: var(--card-title-wrap-text-overflow, clip);
+		--card-internal-title-overflow-wrap: var(--card-title-wrap-overflow-wrap, anywhere);
+	}
+}
+
+.card__header {
+	--card-internal-title-line-height: var(
+		--card-title-line-height,
+		var(--paragraph-base-500-line-height)
+	);
+	--card-internal-header-padding-bottom: var(--card-header-padding-bottom, 0);
+	--card-internal-header-border-width: var(--card-header-border-width, 0);
+
+	display: var(--card-header-display, flex);
+	flex: var(--card-header-flex, none);
+	align-items: var(--card-header-align-items, flex-start);
+	gap: var(--card-header-gap, var(--spacing-8));
+	box-sizing: var(--card-header-box-sizing, border-box);
+	padding-top: var(--card-header-padding-top, var(--spacing-6));
+	padding-right: var(--card-header-padding-right, var(--spacing-8));
+	padding-bottom: var(--card-internal-header-padding-bottom);
+	padding-left: var(--card-header-padding-left, var(--spacing-8));
+	border-bottom-width: var(--card-internal-header-border-width);
+	border-bottom-style: var(--card-header-border-style, solid);
+	border-bottom-color: var(--card-header-border-color, var(--card-border));
+}
+
+// A header with no body under it, the row of a setting, takes the space the body padding would give.
+.card__header:not([data-has-body]) {
+	--card-internal-header-padding-bottom: var(--card-header-no-body-padding-bottom, var(--spacing-8));
+}
+
+.card[data-header-divider] > .card__header[data-has-body] {
+	--card-internal-header-padding-bottom: var(--card-header-divider-padding-bottom, var(--spacing-6));
+	--card-internal-header-border-width: var(--card-header-divider-border-width, 1px);
+}
+
+.card__header-text {
+	display: var(--card-header-text-display, flex);
+	flex: var(--card-header-text-flex, 1 1 auto);
+	flex-direction: var(--card-header-text-flex-direction, column);
+	gap: var(--card-header-text-gap, var(--spacing-2));
+	min-width: var(--card-header-text-min-width, 0);
+}
+
+.card__title-line {
+	display: var(--card-title-line-display, flex);
+	align-items: var(--card-title-line-align-items, flex-start);
+	gap: var(--card-title-line-gap, var(--spacing-4));
+	min-width: var(--card-title-line-min-width, 0);
+}
+
+// The prefix and the title suffix are as tall as a line of the title: what is shorter sits on the
+// middle of the line, and what is taller starts at its top.
+.card__title-prefix {
+	display: var(--card-title-prefix-display, flex);
+	flex: var(--card-title-prefix-flex, none);
+	align-items: var(--card-title-prefix-align-items, center);
+	min-height: var(--card-internal-title-line-height);
+	color: var(--card-title-prefix-color, var(--l2-foreground));
+
+	& > svg {
+		inline-size: var(--card-title-prefix-size, var(--spacing-8));
+		block-size: var(--card-title-prefix-size, var(--spacing-8));
+	}
+}
+
+.card__title-suffix {
+	display: var(--card-title-suffix-display, flex);
+	flex: var(--card-title-suffix-flex, none);
+	align-items: var(--card-title-suffix-align-items, center);
+	gap: var(--card-title-suffix-gap, var(--spacing-4));
+	min-height: var(--card-internal-title-line-height);
+	white-space: var(--card-title-suffix-white-space, nowrap);
+}
+
+// The header suffix is exactly one title line tall, so a control taller than the line (a `sm`
+// Button is 24px against a 20px line) spills the same amount above and below and stays on the
+// middle of the first line, instead of starting at its top and sitting lower than the title.
+.card__header-suffix {
+	display: var(--card-header-suffix-display, flex);
+	flex: var(--card-header-suffix-flex, none);
+	align-items: var(--card-header-suffix-align-items, center);
+	gap: var(--card-header-suffix-gap, var(--spacing-4));
+	height: var(--card-header-suffix-height, var(--card-internal-title-line-height));
+}
+
+.card__title {
+	flex: var(--card-title-flex, 0 1 auto);
+	min-width: var(--card-title-min-width, 0);
+	color: var(--card-title-color, var(--l1-foreground));
+	font-family: var(--card-title-font-family, var(--paragraph-base-500-font-family));
+	font-size: var(--card-title-font-size, var(--paragraph-base-500-font-size));
+	font-weight: var(--card-title-font-weight, var(--paragraph-base-500-font-weight));
+	line-height: var(--card-internal-title-line-height);
+	letter-spacing: var(--card-title-letter-spacing, var(--paragraph-base-500-letter-spacing));
+	text-transform: var(--card-title-text-transform, var(--paragraph-base-500-text-transform));
+	white-space: var(--card-internal-title-white-space);
+	overflow: var(--card-internal-title-overflow);
+	text-overflow: var(--card-internal-title-text-overflow);
+	overflow-wrap: var(--card-internal-title-overflow-wrap);
+}
+
+.card__description {
+	min-width: var(--card-description-min-width, 0);
+	color: var(--card-description-color, var(--l2-foreground));
+	font-family: var(--card-description-font-family, var(--paragraph-base-400-font-family));
+	font-size: var(--card-description-font-size, var(--paragraph-base-400-font-size));
+	font-weight: var(--card-description-font-weight, var(--paragraph-base-400-font-weight));
+	line-height: var(--card-description-line-height, var(--paragraph-base-400-line-height));
+	letter-spacing: var(--card-description-letter-spacing, var(--paragraph-base-400-letter-spacing));
+	text-transform: var(--card-description-text-transform, var(--paragraph-base-400-text-transform));
+	white-space: var(--card-description-white-space, normal);
+	overflow-wrap: var(--card-description-overflow-wrap, anywhere);
+}
+
+.card__tooltip {
+	max-width: var(--card-tooltip-max-width, 20rem);
+	overflow-wrap: var(--card-tooltip-overflow-wrap, anywhere);
+}
+
+.card__body {
+	--card-internal-body-padding-top: var(
+		--card-body-padding-top,
+		var(--card-internal-padding-top, var(--spacing-8))
+	);
+	--card-internal-body-padding-right: var(
+		--card-body-padding-right,
+		var(--card-internal-padding-right, var(--spacing-8))
+	);
+	--card-internal-body-padding-bottom: var(
+		--card-body-padding-bottom,
+		var(--card-internal-padding-bottom, var(--spacing-8))
+	);
+	--card-internal-body-padding-left: var(
+		--card-body-padding-left,
+		var(--card-internal-padding-left, var(--spacing-8))
+	);
+
+	display: var(--card-body-display, flex);
+	flex: var(--card-body-flex, var(--card-internal-body-flex, 1 1 auto));
+	flex-direction: var(--card-body-flex-direction, column);
+	gap: var(--card-body-gap, var(--card-internal-gap, var(--spacing-8)));
+	box-sizing: var(--card-body-box-sizing, border-box);
+	min-width: var(--card-body-min-width, 0);
+	min-height: var(--card-body-min-height, 0);
+	padding-top: var(--card-internal-body-padding-top);
+	padding-right: var(--card-internal-body-padding-right);
+	padding-bottom: var(--card-internal-body-padding-bottom);
+	padding-left: var(--card-internal-body-padding-left);
+}
+
+.card__body[data-flush]:last-child {
+	overflow: var(--card-body-flush-overflow, clip);
+	border-end-start-radius: var(
+		--card-body-flush-border-end-start-radius,
+		var(--card-internal-inner-radius)
+	);
+	border-end-end-radius: var(
+		--card-body-flush-border-end-end-radius,
+		var(--card-internal-inner-radius)
+	);
+
+	&:first-child {
+		border-start-start-radius: var(
+			--card-body-flush-border-start-start-radius,
+			var(--card-internal-inner-radius)
+		);
+		border-start-end-radius: var(
+			--card-body-flush-border-start-end-radius,
+			var(--card-internal-inner-radius)
+		);
+	}
+}
+
+.card__body[data-skeleton] {
+	--card-internal-body-padding-top: var(--card-body-skeleton-padding-top, var(--spacing-8));
+	--card-internal-body-padding-right: var(--card-body-skeleton-padding-right, var(--spacing-8));
+	--card-internal-body-padding-bottom: var(--card-body-skeleton-padding-bottom, var(--spacing-8));
+	--card-internal-body-padding-left: var(--card-body-skeleton-padding-left, var(--spacing-8));
+}
+
+// `--divider-horizontal-*` are the hooks of Divider, which would otherwise fix its width at 100%.
+.card__body > [data-slot='divider'][data-orientation='horizontal'] {
+	--divider-horizontal-width: var(--card-body-divider-width, auto);
+	--divider-horizontal-max-width: var(--card-body-divider-max-width, none);
+
+	margin-left: var(
+		--card-body-divider-margin-left,
+		calc(-1 * var(--card-internal-body-padding-left))
+	);
+	margin-right: var(
+		--card-body-divider-margin-right,
+		calc(-1 * var(--card-internal-body-padding-right))
+	);
+}
+
+.card__footer {
+	display: var(--card-footer-display, flex);
+	flex: var(--card-footer-flex, none);
+	flex-wrap: var(--card-footer-flex-wrap, wrap);
+	align-items: var(--card-footer-align-items, center);
+	gap: var(--card-footer-gap, var(--spacing-4) var(--spacing-8));
+	box-sizing: var(--card-footer-box-sizing, border-box);
+	padding-top: var(--card-footer-padding-top, var(--spacing-6));
+	padding-right: var(--card-footer-padding-right, var(--spacing-8));
+	padding-bottom: var(--card-footer-padding-bottom, var(--spacing-6));
+	padding-left: var(--card-footer-padding-left, var(--spacing-8));
+	border-top-width: var(--card-footer-border-width, 1px);
+	border-top-style: var(--card-footer-border-style, solid);
+	border-top-color: var(--card-footer-border-color, var(--card-border));
+}
+
+// A block, so a hint with a link in it flows as one line of text: in a flex box, the space before
+// the link would be dropped at the edge of the text.
+.card__footer-prefix {
+	display: var(--card-footer-prefix-display, block);
+	flex: var(--card-footer-prefix-flex, 1 1 auto);
+	min-width: var(--card-footer-prefix-min-width, 0);
+	overflow-wrap: var(--card-footer-prefix-overflow-wrap, anywhere);
+}
+
+.card__footer-suffix {
+	display: var(--card-footer-suffix-display, flex);
+	flex: var(--card-footer-suffix-flex, none);
+	align-items: var(--card-footer-suffix-align-items, center);
+	gap: var(--card-footer-suffix-gap, var(--spacing-4));
+	margin-inline-start: var(--card-footer-suffix-margin-inline-start, auto);
+}
+
+// `--skeleton-title-*` are the hooks of Skeleton. The bar sits in the middle of a box as tall as the
+// line of text it stands for.
+.card__skeleton-line {
+	--skeleton-title-height: var(--card-skeleton-line-height, var(--spacing-6));
+	--skeleton-title-margin-bottom: 0;
+
+	display: var(--card-skeleton-line-display, flex);
+	align-items: var(--card-skeleton-line-align-items, center);
+	min-height: var(--card-line-height, var(--paragraph-base-400-line-height));
+
+	&[data-line='title'] {
+		min-height: var(--card-internal-title-line-height);
+	}
+}

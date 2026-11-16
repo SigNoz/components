@@ -7,6 +7,7 @@ export * from './button/index.js';
 export * from './button-group/index.js';
 export * from './calendar/index.js';
 export * from './callout/index.js';
+export * from './card/index.js';
 export * from './checkbox/index.js';
 export * from './combobox/index.js';
 export * from './command/index.js';

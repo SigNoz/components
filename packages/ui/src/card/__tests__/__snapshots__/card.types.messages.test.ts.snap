@@ -1,0 +1,58 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Card type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "loading > rejects a part built from the request state > any object loads the card, so gate the object: \`isLoading && { header: true }\`": "TS2322: Type '{ header: boolean; }' is not assignable to type 'ReactNode | CardLoadingParts'.
+    Types of property 'header' are incompatible.
+      Type 'boolean' is not assignable to type 'true'.",
+  "loading > rejects a part set to false > leave the part out, or pass \`false\` to \`loading\` when the data is in": "TS2322: Type '{ header: true; footer: false; }' is not assignable to type 'ReactNode | CardLoadingParts'.
+    Types of property 'footer' are incompatible.
+      Type 'false' is not assignable to type 'true'.",
+  "loading > rejects a part the card does not have > the body always loads, only the header and the footer are parts": "TS2353: Object literal may only specify known properties, and 'body' does not exist in type 'ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | { ...; } | { ...; }'.",
+  "loading > rejects an object with no part > an empty object loads only the body, which is \`loading={true}\`": "TS2322: Type '{}' is not assignable to type 'ReactNode | CardLoadingParts'.",
+  "loading > rejects loadingContent, which loading replaced > pass the node to \`loading\`": "TS2322: Type 'Element' is not assignable to type 'never'.",
+  "rejected parts > has no Card.Content > \`Card.Content\` is \`children\`": "TS2339: Property 'Content' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected parts > has no Card.Divider > a divider is a \`Divider\` in the body": "TS2339: Property 'Divider' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected parts > has no Card.Footer > \`Card.Footer\` is \`footerPrefix\` and \`footerSuffix\`": "TS2339: Property 'Footer' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected parts > has no Card.Grid > lay out the blocks with CSS": "TS2339: Property 'Grid' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected parts > has no Card.Header > \`Card.Header\` is \`title\` and \`headerSuffix\`": "TS2339: Property 'Header' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected parts > has no Card.Meta > compose \`Avatar\` and text in the body": "TS2339: Property 'Meta' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected parts > has no Card.Section > the section is the body": "TS2339: Property 'Section' does not exist on type '<T extends CardProps>(props: T & Record<Exclude<keyof T, keyof CardProps | keyof RefAttributes<HTMLDivElement>>, never> & RefAttributes<...>) => ReactElement<...> | null'.",
+  "rejected props > rejects a className spread > a spread is checked like written props, \`className\` is not one": "TS2322: Type '{ title: "Title"; className: "placed"; }' is not assignable to type 'Record<"className", never>'.
+    Types of property 'className' are incompatible.
+      Type '"placed"' is not assignable to type 'never'.",
+  "rejected props > rejects a style spread > a spread is checked like written props, \`style\` is not one": "TS2322: Type '{ title: "Title"; style: { readonly width: 100; }; }' is not assignable to type 'Record<"style", never>'.
+    Types of property 'style' are incompatible.
+      Type '{ readonly width: 100; }' is not assignable to type 'never'.",
+  "rejected props > rejects actions, renamed to footerSuffix > \`actions\` is \`footerSuffix\`": "TS2322: Type 'never[]' is not assignable to type 'never'.",
+  "rejected props > rejects activeTabKey, a Tab goes in the header suffix > put a \`Tab\` in \`headerSuffix\` or in the body": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects bodyStyle, the padding comes from the padding props > use the padding props": "TS2322: Type '{ padding: number; }' is not assignable to type 'never'.",
+  "rejected props > rejects bordered, the card always has its border > the border is never removed": "TS2322: Type 'false' is not assignable to type 'never'.",
+  "rejected props > rejects className > \`Card\` takes no \`className\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects classNames, the parts take no class > the parts take no class": "TS2322: Type '{ body: string; }' is not assignable to type 'never'.",
+  "rejected props > rejects cover, an image goes in the body > put the image in the body with \`padding={0}\`": "TS2322: Type 'Element' is not assignable to type 'never'.",
+  "rejected props > rejects defaultActiveTabKey, a Tab goes in the header suffix > put a \`Tab\` in \`headerSuffix\` or in the body": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects extra, renamed to headerSuffix > \`extra\` is \`headerSuffix\`": "TS2322: Type 'Element' is not assignable to type 'never'.",
+  "rejected props > rejects headStyle, the header takes no styling > the header takes no styling": "TS2322: Type '{ padding: number; }' is not assignable to type 'never'.",
+  "rejected props > rejects hoverable, the card is not interactive > the card has no hover": "TS2322: Type 'true' is not assignable to type 'never'.",
+  "rejected props > rejects onClick, the card is not interactive > put the action in a \`Button\` or a link inside the card": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects onTabChange, a Tab goes in the header suffix > put a \`Tab\` in \`headerSuffix\` or in the body": "TS2322: Type '() => void' is not assignable to type 'never'.",
+  "rejected props > rejects size, replaced by the padding props > \`size="small"\` is \`padding={6}\`": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects style > \`Card\` takes no \`style\`": "TS2322: Type '{ width: number; }' is not assignable to type 'never'.",
+  "rejected props > rejects styles, the parts take no styling > the parts take no styling": "TS2322: Type '{ body: { padding: number; }; }' is not assignable to type 'never'.",
+  "rejected props > rejects tabBarExtraContent, a Tab goes in the header suffix > put a \`Tab\` in \`headerSuffix\` or in the body": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects tabList, a Tab goes in the header suffix > put a \`Tab\` in \`headerSuffix\` or in the body": "TS2322: Type 'never[]' is not assignable to type 'never'.",
+  "rejected props > rejects tabProps, a Tab goes in the header suffix > put a \`Tab\` in \`headerSuffix\` or in the body": "TS2322: Type '{}' is not assignable to type 'never'.",
+  "rejected props > rejects type, a card in a card is not allowed > \`type="inner"\` nests a card in a card": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "rejected props > rejects variant, the card has one surface > the card has one surface": "TS2322: Type 'string' is not assignable to type 'never'.",
+  "spacing > rejects a length on margin > a length such as "8px" is not a step of the spacing scale": "TS2322: Type '"8px"' is not assignable to type 'CardMarginType | undefined'.",
+  "spacing > rejects a length on padding > a length such as "8px" is not a step of the spacing scale": "TS2322: Type 'string' is not assignable to type 'CardSpacingType | undefined'.",
+  "spacing > rejects a number between two steps on gap > \`9\` is not a step of the spacing scale": "TS2322: Type '9' is not assignable to type 'CardSpacingType | undefined'.",
+  "spacing > rejects a number between two steps on padding > \`9\` is not a step of the spacing scale": "TS2322: Type '9' is not assignable to type 'CardSpacingType | undefined'.",
+  "spacing > rejects auto on gap > only the margin props take \`auto\`": "TS2322: Type 'string' is not assignable to type 'CardSpacingType | undefined'.",
+  "spacing > rejects auto on padding > only the margin props take \`auto\`": "TS2322: Type 'string' is not assignable to type 'CardSpacingType | undefined'.",
+  "textOverflow > rejects a value outside the two > \`clip\` and \`visible\` are not choices of a card title": "TS2322: Type '"clip"' is not assignable to type 'CardTextOverflowType | undefined'.",
+  "title > rejects a node, the title is text > the title names the \`headerSuffix\` control, so it is a string": "TS2322: Type 'Element' is not assignable to type 'string'.",
+  "title > rejects text in titlePrefix > \`titlePrefix\` takes an element, such as an icon": "TS2322: Type 'string' is not assignable to type 'ReactElement<any, string | JSXElementConstructor<any>>'.",
+}
+`;
