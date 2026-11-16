@@ -1,3 +1,4 @@
+import { flushSync } from 'react-dom';
 import { commandScore } from '../lib/command-score.js';
 import { toSearchText } from '../lib/search-text.js';
 import type { CommandActionItemType, CommandGroupItemType, CommandItemType } from './types.js';
@@ -292,6 +293,9 @@ export function replayKey(input: HTMLInputElement, key: NavigationKey, times = 1
 		const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
 		replayedEvents.add(event);
 		input.dispatchEvent(event);
+		// Base UI reads the highlighted row from the last commit, so a press that lands before the
+		// previous one has committed starts from the old row and every press moves one row.
+		flushSync(() => undefined);
 	}
 
 	input.setSelectionRange(selectionStart, selectionEnd, selectionDirection ?? undefined);

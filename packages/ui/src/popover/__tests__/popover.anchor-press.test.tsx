@@ -101,9 +101,13 @@ describe('Popover anchored to something that is not its trigger', () => {
 		const onOpenChange = vi.fn();
 		const user = userEvent.setup();
 		render(<Suggestions onOpenChange={onOpenChange} />);
+		const field = screen.getByRole('textbox', { name: 'Query' });
 
-		await user.click(screen.getByRole('textbox', { name: 'Query' }));
+		await user.click(field);
 		await screen.findByRole('dialog');
+		// Base UI ignores the press that opened the popup, so it is a second press on the anchor
+		// that reaches `onOpenChange`.
+		await user.click(field);
 
 		const cancelled = onOpenChange.mock.calls.find(([open]) => open === false);
 		expect(cancelled?.[1].isCanceled).toBe(true);

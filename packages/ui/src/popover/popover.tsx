@@ -127,8 +127,8 @@ const PopoverImpl = forwardRef<HTMLButtonElement, PopoverProps<unknown> & Reject
 				onOpenChange={(nextOpen, eventDetails) => {
 					// A press or a focus move that stays inside the element the handle was shown
 					// at is not outside the popover: it is the field a typeahead belongs to, or
-					// the row a card follows. Without this the popup closes on the very press
-					// that opened it, since the anchor is neither the trigger nor the popup.
+					// the row a card follows. Without this the next press on the anchor closes
+					// the popup, since the anchor is neither the trigger nor the popup.
 					//
 					// A focus-out names the element losing focus, which is the anchor itself, so
 					// it is `relatedTarget` that says where focus actually went.

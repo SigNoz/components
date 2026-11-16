@@ -238,9 +238,7 @@ describe('Resizable accessibility', () => {
 		expect(separator).toHaveAttribute('aria-valuemax', '70');
 	});
 
-	// `react-resizable-panels` works out the limits of every handle by moving the first one. Needs a
-	// fix upstream.
-	it.fails('reports the limits of the panel before a handle after the first', () => {
+	it('reports the limits of the panel before a handle after the first', () => {
 		renderResizable({
 			items: [
 				{ value: 'a', label: 'A', defaultSize: '30%', children: 'a' },
