@@ -118,6 +118,10 @@ const StepsRoot = forwardRef<HTMLOListElement, StepsProps>(function Steps(
 			<ol
 				{...props}
 				ref={ref}
+				// Safari drops the list role from a list with `list-style: none`, which would lose the
+				// count of steps for VoiceOver.
+				// oxlint-disable-next-line jsx-a11y/no-redundant-roles
+				role="list"
 				data-slot="steps"
 				data-current={currentStep}
 				className={styles.steps}

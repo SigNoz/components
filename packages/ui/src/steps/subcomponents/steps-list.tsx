@@ -94,6 +94,10 @@ export const StepsList = forwardRef<HTMLDivElement, StepsListProps>(function Ste
 			{hasItems && (
 				<ol
 					{...list}
+					// Safari drops the list role from a list with `list-style: none`, which would lose the
+					// count of steps for VoiceOver.
+					// oxlint-disable-next-line jsx-a11y/no-redundant-roles
+					role="list"
 					data-slot="steps-list-items"
 					className={styles['steps-list__items']}
 					data-testid={partTestId(testId, 'items')}

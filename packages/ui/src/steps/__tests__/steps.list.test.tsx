@@ -34,6 +34,7 @@ describe('Steps.List root', () => {
 		expect(root.tagName).toBe('DIV');
 		expect(root).toHaveAttribute('data-slot', 'steps-list');
 		expect(list.tagName).toBe('OL');
+		expect(list).toHaveAttribute('role', 'list');
 		expect(list).toHaveAttribute('data-slot', 'steps-list-items');
 		expect(list.parentElement).toBe(root);
 		expect(listItems('funnel')).toHaveLength(3);

@@ -11,6 +11,7 @@ describe('Steps accessibility', () => {
 		const list = screen.getByRole('list');
 
 		expect(list.tagName).toBe('OL');
+		expect(list).toHaveAttribute('role', 'list');
 		expect(within(list).getAllByRole('listitem')).toHaveLength(3);
 		expect(Array.from(list.children).map((child) => child.tagName)).toEqual(['LI', 'LI', 'LI']);
 	});
