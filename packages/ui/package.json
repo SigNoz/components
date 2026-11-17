@@ -167,6 +167,16 @@
 				"require": "./dist/command/index.cjs"
 			}
 		},
+		"./date-picker": {
+			"import": {
+				"types": "./dist/date-picker/index.d.ts",
+				"import": "./dist/date-picker/index.mjs"
+			},
+			"require": {
+				"types": "./dist/date-picker/index.d.cts",
+				"require": "./dist/date-picker/index.cjs"
+			}
+		},
 		"./dialog": {
 			"import": {
 				"types": "./dist/dialog/index.d.ts",
