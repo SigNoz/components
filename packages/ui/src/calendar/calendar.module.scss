@@ -218,7 +218,10 @@
 	width: 100%;
 }
 
+// A `th` carries 1px of padding from the browser, and a host page may have no box-sizing reset to
+// keep it inside the width the week-number column below it has.
 .calendar__week-number-header {
+	box-sizing: var(--calendar-week-number-header-box-sizing, border-box);
 	user-select: none;
 	width: var(--calendar-internal-cell-size);
 }

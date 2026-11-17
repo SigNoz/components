@@ -104,6 +104,7 @@
  * | `--tabs-list-viewport-scroll-behavior` | `smooth` |
  * | `--tabs-list-viewport-scrollbar-display` | `none` |
  * | `--tabs-list-viewport-scrollbar-width` | `none` |
+ * | `--tabs-list-wrapper-box-sizing` | `border-box` |
  * | `--tabs-list-wrapper-flex-direction` | `row` |
  * | `--tabs-list-wrapper-primary-align-items` | `center` |
  * | `--tabs-list-wrapper-primary-display` | `flex` |

@@ -7,6 +7,7 @@
  * |-------|---------|
  * | `--spinner-border-radius` | `50%` |
  * | `--spinner-border-style` | `solid` |
+ * | `--spinner-box-sizing` | `border-box` |
  * | `--spinner-duration` | `0.7s` |
  * | `--spinner-flex-shrink` | `0` |
  * | `--spinner-head-color` | `color-mix(in srgb, currentColor 88%, transparent)` |

@@ -405,7 +405,11 @@
   gap: var(--dropdown-search-gap, var(--spacing-4));
   flex-shrink: var(--dropdown-search-flex-shrink, 0);
 
-  padding: var(--dropdown-search-padding, var(--spacing-5) var(--spacing-6));
+  // The row reads as the field, as tall as an `lg` Input: 40px with its divider, whatever the field
+  // inside measures. Border-box, so a host page with no box-sizing reset gets the same 40px.
+  box-sizing: var(--dropdown-search-box-sizing, border-box);
+  block-size: var(--dropdown-search-block-size, var(--spacing-20));
+  padding: var(--dropdown-search-padding, 0 var(--spacing-6));
 
   border-block-end-width: var(--dropdown-search-border-width, 1px);
   border-block-end-style: var(--dropdown-search-border-style, solid);
@@ -511,9 +515,13 @@
 .dropdown__search-input {
   flex-grow: var(--dropdown-search-input-flex-grow, 1);
   min-inline-size: var(--dropdown-search-input-min-inline-size, 0);
-  // A floor of its own: the search row's height is a question of its own, not settled by the 34px
-  // rows, and the label line height of 1 would shrink the field to its font.
-  min-block-size: var(--dropdown-search-input-min-block-size, var(--spacing-10));
+  // The label line height of 1 would shrink the field to its font. The row sets the 40px, so this
+  // only has to keep the text box usable.
+  min-block-size: var(--dropdown-search-input-min-block-size, var(--spacing-12));
+  // The browser's own input padding differs between engines, and a host page may have no box-sizing
+  // reset, so neither is left to decide the field's size.
+  box-sizing: var(--dropdown-search-input-box-sizing, border-box);
+  padding: var(--dropdown-search-input-padding, 0);
 
   border: var(--dropdown-search-input-border, none);
   background-color: var(--dropdown-search-input-background-color, transparent);

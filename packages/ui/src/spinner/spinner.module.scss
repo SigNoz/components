@@ -1,4 +1,7 @@
 .spinner {
+	// `--spinner-size` is the outer diameter, ring included, and a host page may have no box-sizing
+	// reset.
+	box-sizing: var(--spinner-box-sizing, border-box);
 	inline-size: var(--spinner-size, 12px);
 	block-size: var(--spinner-size, 12px);
 	flex-shrink: var(--spinner-flex-shrink, 0);

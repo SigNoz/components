@@ -14,6 +14,7 @@ import type { TabsItemProps } from '../types.js';
 const TOKENS = {
 	'--spacing-3': '6px',
 	'--spacing-4': '8px',
+	'--spacing-6': '12px',
 	'--spacing-16': '32px',
 	'--tabs-border': 'rgb(1, 2, 3)',
 	'--label-base-400-line-height': '1',
@@ -56,6 +57,27 @@ describe('Tabs trigger height', () => {
 		);
 
 		expect(heights()).toEqual([34, 34, 34]);
+	});
+});
+
+describe('Tabs bar width', () => {
+	it('keeps the primary bar inside the component, its inline padding included', () => {
+		renderInFrame(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="start"
+				items={ITEMS}
+				width={400}
+			/>,
+		);
+
+		const bar = screen
+			.getByRole('tablist')
+			.closest<HTMLElement>('[data-slot="tabs-list-wrapper"]') as HTMLElement;
+
+		expect(getComputedStyle(bar).paddingInlineStart).toBe('12px');
+		expect(bar.getBoundingClientRect().width).toBe(400);
 	});
 });
 

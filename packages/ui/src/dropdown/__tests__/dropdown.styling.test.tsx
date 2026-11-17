@@ -181,6 +181,7 @@ describe('Dropdown row size', () => {
 			--spacing-10: 20px;
 			--spacing-12: 24px;
 			--spacing-16: 32px;
+			--spacing-20: 40px;
 			--label-base-400-font-size: 13px;
 			--label-base-400-line-height: 1;
 			--uppercase-small-600-font-size: 11px;
@@ -314,7 +315,7 @@ describe('Dropdown row size', () => {
 	});
 
 	// The search row's height is not settled by the rows, so a row line height leaves it alone.
-	it('keeps the search field on its own line height', async () => {
+	it('keeps the search field on its own line height, in a 40px row', async () => {
 		sizes.textContent += `:root { --dropdown-item-line-height: 16px; }`;
 		renderDropdown([{ type: 'item', value: 'rename', label: 'Rename' }], {
 			searchInputProps: { placeholder: 'Find' },
@@ -325,9 +326,11 @@ describe('Dropdown row size', () => {
 		const style = getComputedStyle(search);
 
 		expect(style.lineHeight).toBe('13px');
+		expect(search.getBoundingClientRect().height).toBe(24);
+		// As tall as an `lg` Input, its divider included, with no box-sizing reset on the page.
 		expect(
-			search.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom),
-		).toBe(20);
+			search.closest<HTMLElement>('[data-slot="dropdown-search"]')?.getBoundingClientRect().height,
+		).toBe(40);
 
 		sizes.textContent += `:root { --dropdown-search-input-line-height: 24px; }`;
 

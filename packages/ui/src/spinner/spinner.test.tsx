@@ -10,6 +10,14 @@ describe('Spinner', () => {
 		expect(screen.getByTestId('spinner')).toHaveStyle({ '--spinner-size': '24px' });
 	});
 
+	it('keeps the ring inside the size, with no box-sizing reset on the page', () => {
+		render(<Spinner testId="spinner" size={24} />);
+
+		const { width, height } = screen.getByTestId('spinner').getBoundingClientRect();
+
+		expect([width, height]).toEqual([24, 24]);
+	});
+
 	it('takes a size with its own unit', () => {
 		render(<Spinner testId="spinner" size="2rem" />);
 
