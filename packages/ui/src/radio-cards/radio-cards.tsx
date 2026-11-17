@@ -10,7 +10,8 @@ import { RadioCardsTextOverflow } from './constants.js';
 import { RadioCardsItem } from './subcomponents/radio-cards-item.js';
 import { RadioCardsMultiple } from './subcomponents/radio-cards-multiple.js';
 import type { RadioCardsMultipleProps, RadioCardsProps, ValidateRadioCardsProps } from './types.js';
-import { hasCheckedCard, NO_VALUES, useRadioCardsField, useRadioCardsGroup } from './utils.js';
+import { useRadioCardsField } from './use-radio-cards-field.js';
+import { hasCheckedCard, NO_VALUES, useRadioCardsGroup } from './utils.js';
 
 const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function RadioCards(
 	{

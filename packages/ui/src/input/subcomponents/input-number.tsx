@@ -6,8 +6,9 @@ import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../input.module.scss';
 import type { InputNumberProps } from '../types.js';
+import { useFieldControl } from '../use-field-control.js';
 import { useInputFocusVisible } from '../use-input-focus-visible.js';
-import { getReasonTooltip, splitAttributes, useFieldControl } from '../utils.js';
+import { getReasonTooltip, splitAttributes } from '../utils.js';
 import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
 
 /**

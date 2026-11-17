@@ -388,6 +388,10 @@ export const Groups: Story = {
 			'aria-invalid',
 			'true',
 		);
+		await expect(canvas.getByRole('combobox', { name: 'Unit' })).toHaveAttribute(
+			'aria-invalid',
+			'true',
+		);
 	},
 };
 

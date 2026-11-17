@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { createRef, forwardRef } from 'react';
 import { describe, expect, it } from 'vitest';
-import { useFieldControl } from '../../input/utils.js';
+import { useFieldControl } from '../../input/use-field-control.js';
 import { RadioGroup } from '../../radio-group/radio-group.js';
 import { createFieldShorthand } from '../field-shorthand.js';
 import { FieldGroup } from '../subcomponents/field-group.js';

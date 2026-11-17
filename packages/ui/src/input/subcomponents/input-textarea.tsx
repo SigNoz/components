@@ -2,7 +2,9 @@ import { forwardRef } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../input.module.scss';
 import type { InputTextAreaProps } from '../types.js';
-import { getReasonTooltip, splitAttributes, useFieldControl, useNativeValue } from '../utils.js';
+import { useFieldControl } from '../use-field-control.js';
+import { useNativeValue } from '../use-native-value.js';
+import { getReasonTooltip, splitAttributes } from '../utils.js';
 import { InputFrame } from './input-frame.js';
 
 /**
