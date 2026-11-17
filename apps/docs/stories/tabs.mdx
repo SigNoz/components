@@ -155,18 +155,8 @@ full text in a tooltip, many tabs scroll.
 
 ## Label width
 
-A label is capped at `--tabs-label-max-inline-size`, 120px by default, so one long label cannot
-take the whole bar. Override it per call site, or set it to `none` to let a tab size to its label:
-
-```tsx
-<Tabs
-	variant="primary"
-	orientation="horizontal"
-	alignment="start"
-	items={items}
-	style={{ '--tabs-label-max-inline-size': '200px' } as CSSProperties}
-/>
-```
+A label is capped at 120px by default, so one long label cannot take the whole bar. Past the cap it
+truncates and shows its full text in a tooltip.
 
 ## No content padding
 

@@ -1,7 +1,7 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect, type ReactElement, type RefAttributes } from 'react';
 import { usePopupContainer } from '../lib/popup-container.js';
-import { partTestId } from '../lib/utils.js';
+import { partTestId, type RejectedProps } from '../lib/utils.js';
 import { DEFAULT_LIMIT, DEFAULT_TIMEOUT, TOAST_POSITIONS, ToastPosition } from './constants.js';
 import { ToastList } from './subcomponents/toast-list.js';
 import { ToastViewport } from './subcomponents/toast-viewport.js';
@@ -9,12 +9,70 @@ import { persistedToastManagers, usePersistToasts } from './persist-toasts.js';
 import { forgetVisibleToasts, setDefaultPosition, toastManagers } from './toast.js';
 import type { ToasterProps } from './types.js';
 
+const ToasterRoot = forwardRef<HTMLDivElement, ToasterProps>(function Toaster(
+	{
+		position = ToastPosition.TopRight,
+		limit = DEFAULT_LIMIT,
+		timeout = DEFAULT_TIMEOUT,
+		container,
+		testId,
+		'data-testid': dataTestId,
+		id,
+		className: _className,
+		style: _style,
+		...props
+	}: ToasterProps & RejectedProps,
+	ref,
+) {
+	const popupContainer = usePopupContainer();
+	const persist = usePersistToasts();
+	const managers = persist ? persistedToastManagers : toastManagers;
+	// A raw `data-testid` is suffixed per position like `testId`, so no two viewports share one.
+	const viewportTestId = testId ?? (typeof dataTestId === 'string' ? dataTestId : undefined);
+
+	useEffect(() => forgetVisibleToasts(), []);
+	useEffect(() => setDefaultPosition(position), [position]);
+
+	// The stack of `position` first, so it is the first `[data-slot="toaster"]` in the document.
+	const positions = [position, ...TOAST_POSITIONS.filter((other) => other !== position)];
+
+	return (
+		<>
+			{positions.map((stack) => {
+				const isDefault = stack === position;
+
+				return (
+					<ToastPrimitive.Provider
+						key={stack}
+						toastManager={managers[stack]}
+						limit={persist ? Number.POSITIVE_INFINITY : limit}
+						timeout={persist ? 0 : timeout}
+					>
+						<ToastPrimitive.Portal container={container === undefined ? popupContainer : container}>
+							<ToastViewport
+								ref={isDefault ? ref : undefined}
+								id={isDefault ? id : undefined}
+								position={stack}
+								isDefault={isDefault}
+								testId={isDefault ? viewportTestId : partTestId(viewportTestId, stack)}
+								{...props}
+							>
+								<ToastList position={stack} testId={testId} />
+							</ToastViewport>
+						</ToastPrimitive.Portal>
+					</ToastPrimitive.Provider>
+				);
+			})}
+		</>
+	);
+});
+
 /**
  * Renders every toast raised through `toast` (Base UI `Toast`). Mount it once, at the app root,
  * with no children.
  *
- * Only `id`, `className`, `style`, `aria-*` and `data-*` are forwarded, to the viewport. `id` and
- * the `ref` go to the viewport of `position` only.
+ * Only `id`, `aria-*` and `data-*` are forwarded, to the viewport. `id` and the `ref` go to the
+ * viewport of `position` only.
  * The toasts are drawn by the component and take no props of their own: raise them with `toast`.
  *
  * Visual values are `--toast-*` custom properties, defaults in the `css-tokens` region of
@@ -110,58 +168,11 @@ import type { ToasterProps } from './types.js';
  * />
  * ```
  */
-export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster(
-	{
-		position = ToastPosition.TopRight,
-		limit = DEFAULT_LIMIT,
-		timeout = DEFAULT_TIMEOUT,
-		container,
-		testId,
-		'data-testid': dataTestId,
-		id,
-		...props
-	},
-	ref,
-) {
-	const popupContainer = usePopupContainer();
-	const persist = usePersistToasts();
-	const managers = persist ? persistedToastManagers : toastManagers;
-	// A raw `data-testid` is suffixed per position like `testId`, so no two viewports share one.
-	const viewportTestId = testId ?? (typeof dataTestId === 'string' ? dataTestId : undefined);
-
-	useEffect(() => forgetVisibleToasts(), []);
-	useEffect(() => setDefaultPosition(position), [position]);
-
-	// The stack of `position` first, so it is the first `[data-slot="toaster"]` in the document.
-	const positions = [position, ...TOAST_POSITIONS.filter((other) => other !== position)];
-
-	return (
-		<>
-			{positions.map((stack) => {
-				const isDefault = stack === position;
-
-				return (
-					<ToastPrimitive.Provider
-						key={stack}
-						toastManager={managers[stack]}
-						limit={persist ? Number.POSITIVE_INFINITY : limit}
-						timeout={persist ? 0 : timeout}
-					>
-						<ToastPrimitive.Portal container={container === undefined ? popupContainer : container}>
-							<ToastViewport
-								ref={isDefault ? ref : undefined}
-								id={isDefault ? id : undefined}
-								position={stack}
-								isDefault={isDefault}
-								testId={isDefault ? viewportTestId : partTestId(viewportTestId, stack)}
-								{...props}
-							>
-								<ToastList position={stack} testId={testId} />
-							</ToastViewport>
-						</ToastPrimitive.Portal>
-					</ToastPrimitive.Provider>
-				);
-			})}
-		</>
-	);
-});
+export const Toaster = ToasterRoot as unknown as <T extends ToasterProps>(
+	props: T &
+		// `T` is inferred from the call site, so `T extends ToasterProps` alone never runs excess
+		// property checks, and a spread of props held in a variable would carry a `className`
+		// through. Every key outside the props is pinned to `never` instead.
+		Record<Exclude<keyof T, keyof ToasterProps | keyof RefAttributes<HTMLDivElement>>, never> &
+		RefAttributes<HTMLDivElement>,
+) => ReactElement | null;

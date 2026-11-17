@@ -257,7 +257,7 @@ describe('Tabs rendering', () => {
 		);
 	});
 
-	it('forwards id, className, style, aria and data attributes to the root', () => {
+	it('forwards id, aria and data attributes to the root', () => {
 		render(
 			<Tabs
 				variant="primary"
@@ -266,8 +266,6 @@ describe('Tabs rendering', () => {
 				items={ITEMS}
 				testId="tabs"
 				id="views"
-				className="custom"
-				style={{ gap: '10px' }}
 				aria-label="Views"
 				data-analytics="views-tabs"
 			/>,
@@ -275,10 +273,27 @@ describe('Tabs rendering', () => {
 
 		const root = screen.getByTestId('tabs');
 		expect(root).toHaveAttribute('id', 'views');
-		expect(root).toHaveClass('custom');
-		expect(root).toHaveStyle({ gap: '10px' });
 		expect(root).toHaveAttribute('aria-label', 'Views');
 		expect(root).toHaveAttribute('data-analytics', 'views-tabs');
+	});
+
+	it('drops className and style that get past the types', () => {
+		render(
+			<Tabs
+				variant="primary"
+				orientation="horizontal"
+				alignment="start"
+				items={ITEMS}
+				testId="tabs"
+				width={320}
+				{...({ className: 'custom', style: { marginLeft: '4px' } } as object)}
+			/>,
+		);
+
+		const root = screen.getByTestId('tabs');
+		expect(root).not.toHaveClass('custom');
+		expect(root.style.marginLeft).toBe('');
+		expect(root.style.getPropertyValue('--tabs-internal-inline-size')).toBe('320px');
 	});
 
 	it('renders a navigating tab as the element its item asks for', () => {

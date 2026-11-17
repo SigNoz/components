@@ -63,23 +63,6 @@ describe('Pill width', () => {
 		expect(style.getPropertyValue('--pill-internal-width')).toBe('');
 		expect(style.getPropertyValue('--pill-internal-max-width')).toBe('');
 	});
-
-	it('keeps the caller style alongside the custom properties', () => {
-		render(
-			<Pill
-				variant="outlined"
-				color="primary"
-				width="10rem"
-				style={{ color: 'red', marginTop: '4px' }}
-			>
-				Active
-			</Pill>,
-		);
-
-		const pill = screen.getByRole('button');
-		expect(pill).toHaveStyle({ color: 'rgb(255, 0, 0)', marginTop: '4px' });
-		expect(pill.style.getPropertyValue('--pill-internal-width')).toBe('10rem');
-	});
 });
 
 describe('Pill.Closeable width', () => {
@@ -107,17 +90,5 @@ describe('Pill.Closeable width', () => {
 				.getByRole('button', { name: 'env:prod' })
 				.style.getPropertyValue('--pill-internal-width'),
 		).toBe('200px');
-	});
-
-	it('keeps the caller style alongside the custom properties', () => {
-		render(
-			<Pill.Closeable onClose={() => {}} maxWidth="20rem" style={{ marginTop: '4px' }}>
-				env:prod
-			</Pill.Closeable>,
-		);
-
-		const body = screen.getByRole('button', { name: 'env:prod' });
-		expect(body).toHaveStyle({ marginTop: '4px' });
-		expect(body.style.getPropertyValue('--pill-internal-max-width')).toBe('20rem');
 	});
 });

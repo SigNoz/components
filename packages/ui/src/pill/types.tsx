@@ -8,7 +8,7 @@ export type PillColorType = (typeof PillColor)[keyof typeof PillColor];
 export type PillTextOverflowType = (typeof PillTextOverflow)[keyof typeof PillTextOverflow];
 export type PillTextTransformType = (typeof PillTextTransform)[keyof typeof PillTextTransform];
 
-export type PillProps = Pick<OriginalButtonProps, 'className' | 'id' | 'style'> & {
+export type PillProps = Pick<OriginalButtonProps, 'id'> & {
 	/**
 	 * Forwarded to the rendered element as `data-testid`.
 	 */
@@ -59,7 +59,7 @@ export type PillProps = Pick<OriginalButtonProps, 'className' | 'id' | 'style'> 
 	textOverflow?: PillTextOverflowType;
 	/**
 	 * The width of this pill. Written as the `--pill-internal-width` custom property, so it
-	 * composes with the tokens instead of overwriting `style.width`. Numbers are written as `px`.
+	 * composes with the tokens. Numbers are written as `px`.
 	 */
 	width?: CSSProperties['width'];
 	/**

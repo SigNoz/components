@@ -1,7 +1,15 @@
 import { X } from '@signozhq/icons';
-import { forwardRef, useId, type ForwardedRef, type KeyboardEvent, type MouseEvent } from 'react';
+import {
+	forwardRef,
+	useId,
+	type ForwardedRef,
+	type KeyboardEvent,
+	type MouseEvent,
+	type ReactElement,
+	type RefAttributes,
+} from 'react';
 import { BadgeRoot } from '../../badge/subcomponents/badge-root.js';
-import { cn } from '../../lib/utils.js';
+import { cn, type RejectedProps } from '../../lib/utils.js';
 import styles from '../pill.module.scss';
 import { PillTextTransform } from '../constants.js';
 import type { PillProps } from '../types.js';
@@ -37,6 +45,94 @@ export type PillCloseableProps = Omit<PillProps, 'variant' | 'color' | 'onClick'
 	 */
 	closeAriaLabel?: string;
 };
+
+const PillCloseableRoot = forwardRef<HTMLSpanElement, PillCloseableProps>(function PillCloseable(
+	{
+		textTransform = PillTextTransform.None,
+		textOverflow,
+		testId,
+		width,
+		maxWidth,
+		onClick,
+		onClose,
+		closeAriaLabel,
+		disabled,
+		children,
+		className: _className,
+		style: _style,
+		...props
+	}: PillCloseableProps & RejectedProps,
+	ref,
+) {
+	const labelId = useId();
+	const removeLabel =
+		closeAriaLabel ?? (typeof children === 'string' ? `Remove ${children}` : 'Remove');
+	// `disabled` is a real attribute on the close `<button>`, but the body is a `<span
+	// role="button">`, which has no such attribute: gate its click/keyboard handling by hand.
+	const bodyOnClick = disabled ? undefined : onClick;
+
+	function handleKeyDown(event: KeyboardEvent<HTMLSpanElement>): void {
+		// Ignore keydowns that bubbled up from the nested close button.
+		if (event.target !== event.currentTarget) {
+			return;
+		}
+		if (disabled) {
+			return;
+		}
+		if (event.key === 'Backspace' || event.key === 'Delete') {
+			event.preventDefault();
+			onClose(event);
+			return;
+		}
+		if (event.key !== 'Enter' && event.key !== ' ') {
+			return;
+		}
+		event.preventDefault();
+		bodyOnClick?.(event);
+	}
+
+	return (
+		<BadgeRoot
+			as="span"
+			slot="pill"
+			// eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- a native <button> cannot contain the nested close <button>.
+			role="button"
+			tabIndex={disabled ? -1 : 0}
+			labelId={labelId}
+			aria-labelledby={labelId}
+			aria-disabled={disabled || undefined}
+			data-disabled={disabled || undefined}
+			ref={ref as ForwardedRef<HTMLSpanElement | HTMLButtonElement>}
+			textTransform={textTransform}
+			textOverflow={textOverflow}
+			testId={testId}
+			style={pillSizeStyle(width, maxWidth)}
+			onClick={bodyOnClick}
+			onKeyDown={handleKeyDown}
+			interactiveSuffix
+			suffix={
+				<button
+					type="button"
+					data-slot="pill-close"
+					className={styles['pill__close']}
+					aria-label={removeLabel}
+					disabled={disabled}
+					onClick={(event) => {
+						event.stopPropagation();
+						onClose(event);
+					}}
+				>
+					<X aria-hidden="true" />
+				</button>
+			}
+			className={cn(styles['pill'], styles['pill-closeable'])}
+			{...props}
+		>
+			{children}
+		</BadgeRoot>
+	);
+});
+PillCloseableRoot.displayName = 'Pill.Closeable';
 
 /**
  * A dismissible `Pill`: fixed neutral fill, no `variant`/`color` to pick. Reached as
@@ -93,90 +189,14 @@ export type PillCloseableProps = Omit<PillProps, 'variant' | 'color' | 'onClick'
  * </Pill.Closeable>
  * ```
  */
-export const PillCloseable = forwardRef<HTMLSpanElement, PillCloseableProps>(function PillCloseable(
-	{
-		className,
-		textTransform = PillTextTransform.None,
-		textOverflow,
-		testId,
-		width,
-		maxWidth,
-		style,
-		onClick,
-		onClose,
-		closeAriaLabel,
-		disabled,
-		children,
-		...props
-	},
-	ref,
-) {
-	const labelId = useId();
-	const removeLabel =
-		closeAriaLabel ?? (typeof children === 'string' ? `Remove ${children}` : 'Remove');
-	// `disabled` is a real attribute on the close `<button>`, but the body is a `<span
-	// role="button">`, which has no such attribute: gate its click/keyboard handling by hand.
-	const bodyOnClick = disabled ? undefined : onClick;
-
-	function handleKeyDown(event: KeyboardEvent<HTMLSpanElement>): void {
-		// Ignore keydowns that bubbled up from the nested close button.
-		if (event.target !== event.currentTarget) {
-			return;
-		}
-		if (disabled) {
-			return;
-		}
-		if (event.key === 'Backspace' || event.key === 'Delete') {
-			event.preventDefault();
-			onClose(event);
-			return;
-		}
-		if (event.key !== 'Enter' && event.key !== ' ') {
-			return;
-		}
-		event.preventDefault();
-		bodyOnClick?.(event);
-	}
-
-	return (
-		<BadgeRoot
-			as="span"
-			slot="pill"
-			// eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- a native <button> cannot contain the nested close <button>.
-			role="button"
-			tabIndex={disabled ? -1 : 0}
-			labelId={labelId}
-			aria-labelledby={labelId}
-			aria-disabled={disabled || undefined}
-			data-disabled={disabled || undefined}
-			ref={ref as ForwardedRef<HTMLSpanElement | HTMLButtonElement>}
-			textTransform={textTransform}
-			textOverflow={textOverflow}
-			testId={testId}
-			style={pillSizeStyle(style, width, maxWidth)}
-			onClick={bodyOnClick}
-			onKeyDown={handleKeyDown}
-			interactiveSuffix
-			suffix={
-				<button
-					type="button"
-					data-slot="pill-close"
-					className={styles['pill__close']}
-					aria-label={removeLabel}
-					disabled={disabled}
-					onClick={(event) => {
-						event.stopPropagation();
-						onClose(event);
-					}}
-				>
-					<X aria-hidden="true" />
-				</button>
-			}
-			className={cn(styles['pill'], styles['pill-closeable'], className)}
-			{...props}
-		>
-			{children}
-		</BadgeRoot>
-	);
-});
-PillCloseable.displayName = 'Pill.Closeable';
+export const PillCloseable = PillCloseableRoot as unknown as <T extends PillCloseableProps>(
+	props: T &
+		// `T` is inferred from the call site, so `T extends PillCloseableProps` alone never runs
+		// excess property checks, and a spread of props held in a variable would carry a `className`
+		// through. Every key outside the props is pinned to `never` instead.
+		Record<
+			Exclude<keyof T, keyof PillCloseableProps | keyof RefAttributes<HTMLSpanElement>>,
+			never
+		> &
+		RefAttributes<HTMLSpanElement>,
+) => ReactElement | null;

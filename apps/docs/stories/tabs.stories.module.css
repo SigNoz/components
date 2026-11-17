@@ -50,20 +50,6 @@
 	right: 4px;
 }
 
-/* Both `order` vars set to the list's own order put a content block back beside
- * the list instead of on the bar's edge. */
-.contentNearList {
-	--tabs-bar-content-start-order: 2;
-	--tabs-bar-content-end-order: 2;
-}
-
-/* The free space next to the list belongs to a spacer. Handing it to the content
- * block instead is two vars: the block grows, the spacer stops. */
-.contentGrows {
-	--tabs-extra-content-end-flex-grow: 1;
-	--tabs-border-spacer-grow-flex-grow: 0;
-}
-
 /* Tight enough that the strip cannot fit. Applied on top of the width frame. */
 .overflowFrame {
 	width: 420px;
@@ -77,11 +63,6 @@
 
 .overflowFrame::after {
 	content: 'frame end';
-}
-
-/* Doubles the label cap, so the same tabs are shown against a raised limit. */
-.wideLabels {
-	--tabs-label-max-inline-size: 240px;
 }
 
 /* The state matrix: a label column, then one column per state. */

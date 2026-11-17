@@ -107,11 +107,6 @@ const meta: Meta<typeof Pill> = {
 			description: 'Forwarded to the rendered element as `data-testid`.',
 			table: { category: 'Testing' },
 		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for custom styling.',
-			table: { category: 'Styling' },
-		},
 		id: {
 			control: 'text',
 			table: { category: 'Accessibility' },

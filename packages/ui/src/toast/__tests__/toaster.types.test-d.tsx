@@ -18,6 +18,12 @@ import { Toaster } from '../toaster.js';
 
 declare const offset: ToastOffset;
 
+// Props held in a variable and spread skip the excess property check a literal attribute gets, so
+// these catch a rejected prop that reaches the toaster through a spread.
+const declaredSpread = { position: 'top-right', limit: 5, offset: 32 } as const;
+const classNameSpread = { position: 'top-right', className: 'stack' } as const;
+const styleSpread = { position: 'top-right', style: { top: 8 } } as const;
+
 describe('offset', () => {
 	test('accepts a number or a string, for every edge', () => {
 		assertType(<Toaster offset={32} />);
@@ -46,5 +52,31 @@ describe('offset', () => {
 		assertType(<Toaster offset={{ top: null }} />);
 		// @ts-expect-error - an array is not a distance
 		assertType(<Toaster offset={[8, 8]} />);
+	});
+});
+
+describe('rejected props', () => {
+	test('rejects className, the stack has a fixed place and size', () => {
+		// @ts-expect-error - the stack is placed by `position` and `offset`
+		assertType(<Toaster className="stack" />);
+	});
+
+	test('rejects style, the stack has a fixed place and size', () => {
+		// @ts-expect-error - the stack is placed by `position` and `offset`
+		assertType(<Toaster style={{ top: 8 }} />);
+	});
+
+	test('accepts a spread of the props it declares', () => {
+		assertType(<Toaster {...declaredSpread} />);
+	});
+
+	test('rejects a className spread', () => {
+		// @ts-expect-error - a spread is checked like written props, `className` is not one
+		assertType(<Toaster {...classNameSpread} />);
+	});
+
+	test('rejects a style spread', () => {
+		// @ts-expect-error - a spread is checked like written props, `style` is not one
+		assertType(<Toaster {...styleSpread} />);
 	});
 });

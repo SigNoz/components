@@ -297,14 +297,11 @@ describe('Tabs overflow', () => {
 		renderInFrame(
 			// The rule resolves `--tabs-border`, which the theme owns and a test page does not load.
 			// Without a value the whole border declaration is invalid and every element reports `0px`,
-			// which would make the comparison below pass while proving nothing.
-			<Tabs
-				variant="secondary"
-				orientation="horizontal"
-				alignment="start"
-				items={MANY_ITEMS}
-				style={{ '--tabs-border': 'rgb(1, 2, 3)' } as CSSProperties}
-			/>,
+			// which would make the comparison below pass while proving nothing. The bar takes no
+			// `style`, so the value sits on a wrapper and reaches it by inheritance.
+			<div style={{ '--tabs-border': 'rgb(1, 2, 3)' } as CSSProperties}>
+				<Tabs variant="secondary" orientation="horizontal" alignment="start" items={MANY_ITEMS} />
+			</div>,
 			{ size: 320 },
 		);
 

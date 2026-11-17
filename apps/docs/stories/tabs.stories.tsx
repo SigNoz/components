@@ -122,11 +122,6 @@ const meta: Meta<typeof Tabs> = {
 			description: 'A unique identifier for the tab bar.',
 			table: { category: 'Accessibility' },
 		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes for the root.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
 		testId: {
 			control: 'text',
 			description: 'Forwarded to the root as `data-testid`. Also names every tab.',
@@ -381,7 +376,6 @@ function LabelledTabs({
 	label,
 	variant,
 	alignment,
-	className,
 	items = defaultItems,
 	overflow = false,
 	tabBarStartContent,
@@ -390,7 +384,6 @@ function LabelledTabs({
 	label: string;
 	variant: TabsVariantType;
 	alignment: TabsAlignmentType;
-	className?: string;
 	items?: TabsItemProps[];
 	overflow?: boolean;
 	tabBarStartContent?: ReactNode;
@@ -416,7 +409,6 @@ function LabelledTabs({
 					orientation="horizontal"
 					alignment={alignment}
 					defaultValue={items[0]?.key}
-					className={className}
 					tabBarStartContent={tabBarStartContent}
 					tabBarEndContent={tabBarEndContent}
 				/>
@@ -567,53 +559,6 @@ function TabsShowcase(): ReactElement {
 				</div>
 			</Section>
 
-			<Section title="Content beside the list">
-				<div className={styles.exampleStack}>
-					<LabelledTabs
-						label="Primary, default: content on the bar's edges"
-						variant="primary"
-						alignment="start"
-						tabBarStartContent={filterButton}
-						tabBarEndContent={addViewButton}
-					/>
-					<LabelledTabs
-						label="Primary, both bar-content order vars: 2"
-						variant="primary"
-						alignment="start"
-						className={styles.contentNearList}
-						tabBarStartContent={filterButton}
-						tabBarEndContent={addViewButton}
-					/>
-					<LabelledTabs
-						label="Secondary, both bar-content order vars: 2"
-						variant="secondary"
-						alignment="start"
-						className={styles.contentNearList}
-						tabBarStartContent={filterButton}
-						tabBarEndContent={addViewButton}
-					/>
-				</div>
-			</Section>
-
-			<Section title="Content that takes the free space">
-				<div className={styles.exampleStack}>
-					<LabelledTabs
-						label="Primary, --tabs-extra-content-end-flex-grow: 1, spacer grow: 0"
-						variant="primary"
-						alignment="start"
-						className={styles.contentGrows}
-						tabBarEndContent={addViewButton}
-					/>
-					<LabelledTabs
-						label="Secondary, the same two vars"
-						variant="secondary"
-						alignment="start"
-						className={styles.contentGrows}
-						tabBarEndContent={addViewButton}
-					/>
-				</div>
-			</Section>
-
 			<Section title="Start and end content, every alignment">
 				<div className={styles.exampleStack}>
 					<AlignmentGroup
@@ -631,8 +576,6 @@ function TabsShowcase(): ReactElement {
 				</div>
 			</Section>
 
-			{/* No prop drives any of this. The third example is the one to read: the bar content
-			    keeps its size and the strip is what gives way. */}
 			<Section title="Label width">
 				<div className={styles.exampleStack}>
 					<LabelledTabs
@@ -640,13 +583,6 @@ function TabsShowcase(): ReactElement {
 						variant="primary"
 						alignment="start"
 						items={longLabelItems}
-					/>
-					<LabelledTabs
-						label="Primary, --tabs-label-max-inline-size: 240px"
-						variant="primary"
-						alignment="start"
-						items={longLabelItems}
-						className={styles.wideLabels}
 					/>
 					<LabelledTabs
 						label="Secondary, default cap of 120px"

@@ -36,6 +36,12 @@ const NAV_ITEM = { key: 'overview', label: 'Overview', render: <a href="/overvie
 const noop = (): void => {};
 const tabsRef = createRef<HTMLDivElement>();
 
+// Props held in a variable and spread skip the excess property check a literal attribute gets, so
+// these catch a rejected prop that reaches the tab bar through a spread.
+const declaredSpread = { ...BASE, items: ITEMS, id: 'views', noTabContentPadding: true } as const;
+const classNameSpread = { ...BASE, items: ITEMS, className: 'views' } as const;
+const styleSpread = { ...BASE, items: ITEMS, style: { flex: 1 } } as const;
+
 describe('items', () => {
 	test('is required', () => {
 		// @ts-expect-error - a tab bar with nothing to show is not allowed
@@ -302,5 +308,29 @@ describe('unknown props', () => {
 	test('rejects a misspelled prop', () => {
 		// @ts-expect-error - `onChage` is not a prop, a generic `T extends TabsProps` would let it through
 		assertType(<Tabs {...BASE} items={ITEMS} onChage={noop} />);
+	});
+
+	test('rejects className, the look comes from `variant` and the size from `width`', () => {
+		// @ts-expect-error - use `variant` for the look, `width` and `maxWidth` for the size
+		assertType(<Tabs {...BASE} items={ITEMS} className="views" />);
+	});
+
+	test('rejects style, the look comes from `variant` and the size from `width`', () => {
+		// @ts-expect-error - use `variant` for the look, `width` and `maxWidth` for the size
+		assertType(<Tabs {...BASE} items={ITEMS} style={{ flex: 1 }} />);
+	});
+
+	test('accepts a spread of the props it declares', () => {
+		assertType(<Tabs {...declaredSpread} />);
+	});
+
+	test('rejects a className spread', () => {
+		// @ts-expect-error - a spread is checked like written props, `className` is not one
+		assertType(<Tabs {...classNameSpread} />);
+	});
+
+	test('rejects a style spread', () => {
+		// @ts-expect-error - a spread is checked like written props, `style` is not one
+		assertType(<Tabs {...styleSpread} />);
 	});
 });

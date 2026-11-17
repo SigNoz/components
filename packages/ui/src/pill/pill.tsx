@@ -1,11 +1,48 @@
-import { forwardRef, type ForwardedRef } from 'react';
+import { forwardRef, type ForwardedRef, type ReactElement, type RefAttributes } from 'react';
 import { BadgeRoot } from '../badge/subcomponents/badge-root.js';
-import { cn } from '../lib/utils.js';
+import type { RejectedProps } from '../lib/utils.js';
 import { PillCloseable } from './subcomponents/pill-closeable.js';
 import styles from './pill.module.scss';
 import { PillTextTransform } from './constants.js';
 import type { PillProps } from './types.js';
 import { pillSizeStyle } from './utils.js';
+
+const PillRoot = forwardRef<HTMLButtonElement, PillProps>(function Pill(
+	{
+		variant,
+		color,
+		textTransform = PillTextTransform.None,
+		textOverflow,
+		testId,
+		width,
+		maxWidth,
+		onClick,
+		children,
+		className: _className,
+		style: _style,
+		...props
+	}: PillProps & RejectedProps,
+	ref,
+) {
+	return (
+		<BadgeRoot
+			as="button"
+			slot="pill"
+			ref={ref as ForwardedRef<HTMLSpanElement | HTMLButtonElement>}
+			variant={variant}
+			color={color}
+			textTransform={textTransform}
+			textOverflow={textOverflow}
+			testId={testId}
+			style={pillSizeStyle(width, maxWidth)}
+			onClick={onClick}
+			className={styles['pill']}
+			{...props}
+		>
+			{children}
+		</BadgeRoot>
+	);
+});
 
 /**
  * Renders a native `<button>`, the interactive sibling of `Badge`. Composes `Badge`'s rendering
@@ -60,41 +97,14 @@ import { pillSizeStyle } from './utils.js';
  * </Pill>
  * ```
  */
-const PillRoot = forwardRef<HTMLButtonElement, PillProps>(function Pill(
-	{
-		className,
-		variant,
-		color,
-		textTransform = PillTextTransform.None,
-		textOverflow,
-		testId,
-		width,
-		maxWidth,
-		style,
-		onClick,
-		children,
-		...props
-	},
-	ref,
-) {
-	return (
-		<BadgeRoot
-			as="button"
-			slot="pill"
-			ref={ref as ForwardedRef<HTMLSpanElement | HTMLButtonElement>}
-			variant={variant}
-			color={color}
-			textTransform={textTransform}
-			textOverflow={textOverflow}
-			testId={testId}
-			style={pillSizeStyle(style, width, maxWidth)}
-			onClick={onClick}
-			className={cn(styles['pill'], className)}
-			{...props}
-		>
-			{children}
-		</BadgeRoot>
-	);
-});
-
-export const Pill = Object.assign(PillRoot, { Closeable: PillCloseable });
+export const Pill = Object.assign(
+	PillRoot as unknown as <T extends PillProps>(
+		props: T &
+			// `T` is inferred from the call site, so `T extends PillProps` alone never runs excess
+			// property checks, and a spread of props held in a variable would carry a `className`
+			// through. Every key outside the props is pinned to `never` instead.
+			Record<Exclude<keyof T, keyof PillProps | keyof RefAttributes<HTMLButtonElement>>, never> &
+			RefAttributes<HTMLButtonElement>,
+	) => ReactElement | null,
+	{ Closeable: PillCloseable },
+);

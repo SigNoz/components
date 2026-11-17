@@ -133,14 +133,6 @@ describe('toast stack', () => {
 			const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
 			expect(getComputedStyle(slot('toaster') as HTMLElement).top).toBe(`${3 * rem}px`);
 		});
-
-		it('keeps the inline style of the caller next to it', () => {
-			render(<Toaster offset={8} style={{ opacity: 0.99 }} />);
-
-			const viewport = slot('toaster') as HTMLElement;
-			expect(viewport).toHaveStyle({ opacity: '0.99' });
-			expect(getComputedStyle(viewport).top).toBe('8px');
-		});
 	});
 
 	describe('offset per edge', () => {
@@ -276,14 +268,6 @@ describe('toast stack', () => {
 					`${window.innerWidth - 20}px`,
 				);
 			});
-		});
-
-		it('keeps the inline style of the caller next to it', () => {
-			render(<Toaster offset={{ top: 8 }} style={{ opacity: 0.99 }} />);
-
-			const viewport = slot('toaster') as HTMLElement;
-			expect(viewport).toHaveStyle({ opacity: '0.99' });
-			expect(getComputedStyle(viewport).top).toBe('8px');
 		});
 	});
 });

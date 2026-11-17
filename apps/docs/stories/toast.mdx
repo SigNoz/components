@@ -7,8 +7,8 @@ import * as ToastStories from './toast.stories';
 
 Short, transient feedback about something that just happened, rendered through Base UI's `Toast`.
 It comes in two parts: `toast` raises a toast from anywhere, and `Toaster` draws every toast raised.
-`Toaster` forwards `className`, `style` and every `aria-*` and `data-*` attribute to its viewports,
-one per position, and `id` to the viewport of its `position`. A toast takes no props of its own: everything it shows comes from the `toast` call.
+`Toaster` forwards every `aria-*` and `data-*` attribute to its viewports, one per position, and
+`id` to the viewport of its `position`. A toast takes no props of its own: everything it shows comes from the `toast` call.
 
 A toast closes on its own and can be missed. If the user has to read it or act on it, it is not a
 toast: reach for `Callout`, `AlertStrip` or a `Dialog`, or an `AlertDialog` when the user has to

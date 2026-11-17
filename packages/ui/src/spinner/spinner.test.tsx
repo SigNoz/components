@@ -16,6 +16,33 @@ describe('Spinner', () => {
 		expect(screen.getByTestId('spinner')).toHaveStyle({ '--spinner-size': '2rem' });
 	});
 
+	it('drops className and style that get past the types', () => {
+		render(
+			<Spinner
+				testId="spinner"
+				size={24}
+				{...({ className: 'cell', style: { marginLeft: '4px' } } as object)}
+			/>,
+		);
+		const root = screen.getByTestId('spinner');
+
+		expect(root).not.toHaveClass('cell');
+		expect(root.style.marginLeft).toBe('');
+		expect(root.style.getPropertyValue('--spinner-size')).toBe('24px');
+	});
+
+	it('writes no inline style without size, even when a style gets past the types', () => {
+		render(<Spinner testId="spinner" {...({ style: { marginLeft: '4px' } } as object)} />);
+
+		expect(screen.getByTestId('spinner')).not.toHaveAttribute('style');
+	});
+
+	it('forwards the id to the root', () => {
+		render(<Spinner testId="spinner" id="results-spinner" />);
+
+		expect(screen.getByTestId('spinner')).toHaveAttribute('id', 'results-spinner');
+	});
+
 	it('says nothing on its own, the busy element announces it', () => {
 		render(<Spinner testId="spinner" />);
 

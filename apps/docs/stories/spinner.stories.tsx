@@ -33,16 +33,6 @@ const meta: Meta<typeof Spinner> = {
 			description: 'Test ID for the spinner.',
 			table: { category: 'Testing', type: { summary: 'string' } },
 		},
-		className: {
-			control: 'text',
-			description: 'Additional CSS classes.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		style: {
-			control: false,
-			description: 'Inline styles, the place to set the `--spinner-*` custom properties.',
-			table: { category: 'Styling', type: { summary: 'CSSProperties' } },
-		},
 	},
 };
 

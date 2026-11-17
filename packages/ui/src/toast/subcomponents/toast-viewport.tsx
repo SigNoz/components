@@ -25,7 +25,7 @@ export type ToastViewportProps = Omit<
  * @access private
  */
 export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(function ToastViewport(
-	{ className, style, position, isDefault, offset, testId, ...props },
+	{ position, isDefault, offset, testId, ...props },
 	ref,
 ) {
 	const spread = usePersistToasts();
@@ -38,11 +38,8 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 		<ToastPrimitive.Viewport
 			ref={ref}
 			aria-label="Notifications"
-			className={cn(styles['toaster'], spread && styles['toaster--spread'], className)}
-			style={{
-				...style,
-				...viewportOffsetStyle(offset),
-			}}
+			className={cn(styles['toaster'], spread && styles['toaster--spread'])}
+			style={viewportOffsetStyle(offset)}
 			data-testid={testId}
 			{...props}
 			{...(!isLandmark && { role: undefined, 'aria-label': undefined })}
