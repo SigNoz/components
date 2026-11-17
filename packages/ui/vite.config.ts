@@ -16,6 +16,7 @@ export const entries: Record<string, string> = {
 	'callout/index': 'src/callout/index.ts',
 	'card/index': 'src/card/index.ts',
 	'checkbox/index': 'src/checkbox/index.ts',
+	'collapse/index': 'src/collapse/index.ts',
 	'combobox/index': 'src/combobox/index.ts',
 	'command/index': 'src/command/index.ts',
 	'dialog/index': 'src/dialog/index.ts',
