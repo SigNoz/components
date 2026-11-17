@@ -134,6 +134,27 @@ describe('Button with a Kbd suffix', () => {
 
 			expect(getComputedStyle(face('key')).color).toBe(themed);
 		});
+
+		it('keeps the key colors set inside the suffix', () => {
+			const themed = 'rgb(1, 2, 3)';
+
+			render(
+				<Button
+					size="md"
+					variant={ButtonVariant.Outlined}
+					color={ButtonColor.Secondary}
+					suffix={
+						<span style={{ '--kbd-foreground': themed } as CSSProperties}>
+							<Kbd value="Enter" testId="key" />
+						</span>
+					}
+				>
+					Run
+				</Button>,
+			);
+
+			expect(getComputedStyle(face('key')).color).toBe(themed);
+		});
 	});
 
 	describe.each(['sm', 'md'] as const)('in a disabled outlined %s button', (size) => {

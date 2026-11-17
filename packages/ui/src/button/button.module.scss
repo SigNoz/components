@@ -443,7 +443,9 @@
 // The neutral key does not read on a saturated fill, so it takes the button's label color. Every
 // solid color but `secondary` is one, so a color added later gets this without being listed here.
 // The button holds the key's colors and the key reads them, so a key inside a nested button takes
-// the look of the button closest to it. Elsewhere the button passes on the `--kbd-*` it inherits.
+// the look of the button closest to it. Any other button passes on the `--kbd-*` it inherits.
+// Only keys under a colored solid button get these declarations. Under any other button the key
+// inherits, so a `--kbd-*` set on an element between the button and the key still applies.
 .button {
 	--button-internal-kbd-foreground: var(--kbd-foreground);
 	--button-internal-kbd-background: var(--kbd-background);
@@ -458,7 +460,7 @@
 	--button-internal-kbd-pressed-background: var(--button-kbd-pressed-background, color-mix(in srgb, currentColor 20%, transparent));
 }
 
-.button [data-slot='kbd'] {
+.button[data-variant='solid']:not([data-color='secondary']) [data-slot='kbd'] {
 	--kbd-foreground: var(--button-internal-kbd-foreground);
 	--kbd-background: var(--button-internal-kbd-background);
 	--kbd-border-color: var(--button-internal-kbd-border-color);
