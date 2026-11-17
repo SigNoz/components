@@ -714,4 +714,68 @@ describe('DatePicker form reset', () => {
 			expect(getTrigger()).toHaveTextContent('2026-11-06');
 		});
 	});
+
+	it('listens to a form it names that mounts after it', async () => {
+		function LateForm() {
+			const [showForm, setShowForm] = useState(false);
+
+			return (
+				<>
+					<DatePicker
+						placeholder="Select date"
+						aria-label="Expiry"
+						name="expiry"
+						form="settings"
+						defaultValue={NOV_6_2026}
+						allowClear
+						testId="dp"
+					/>
+					<button type="button" onClick={() => setShowForm(true)}>
+						Show form
+					</button>
+					{showForm && (
+						<form id="settings" data-testid="form">
+							<button type="reset">Reset</button>
+						</form>
+					)}
+				</>
+			);
+		}
+		render(<LateForm />);
+		await userEvent.click(screen.getByRole('button', { name: 'Show form' }));
+		await userEvent.click(screen.getByTestId('dp-clear'));
+
+		await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+
+		await waitFor(() => {
+			expect(getTrigger()).toHaveTextContent('2026-11-06');
+		});
+	});
+
+	it('ignores the reset of a form it does not belong to', async () => {
+		render(
+			<>
+				<form data-testid="other">
+					<button type="reset">Reset</button>
+				</form>
+				<form data-testid="form">
+					<DatePicker
+						placeholder="Select date"
+						aria-label="Expiry"
+						name="expiry"
+						defaultValue={NOV_6_2026}
+						allowClear
+						testId="dp"
+					/>
+				</form>
+			</>,
+		);
+		await userEvent.click(screen.getByTestId('dp-clear'));
+
+		await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+		// The reset is read after the event, on a timer.
+		await act(() => new Promise((resolve) => setTimeout(resolve, 0)));
+
+		expect(getTrigger()).toHaveTextContent('Select date');
+	});
 });
