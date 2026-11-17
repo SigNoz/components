@@ -115,7 +115,6 @@
  * | `--calendar-week-number-font-family` | `var(--label-small-600-font-family)` |
  * | `--calendar-week-number-font-size` | `var(--label-small-600-font-size)` |
  * | `--calendar-week-number-font-weight` | `var(--label-small-600-font-weight)` |
- * | `--calendar-week-number-header-box-sizing` | `border-box` |
  * | `--calendar-week-number-label` | `-` |
  * | `--calendar-week-number-letter-spacing` | `var(--label-small-600-letter-spacing)` |
  * | `--calendar-week-number-line-height` | `var(--label-small-600-line-height)` |

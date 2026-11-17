@@ -62,19 +62,31 @@ describe('Calendar styling', () => {
 		expect(weekNumber?.getBoundingClientRect().width).toBe(40);
 	});
 
-	it('keeps the week-number header as wide as the column under it', () => {
-		render(
-			<div style={GRID_TRACKS}>
-				<Calendar mode="single" defaultMonth={JUNE_11_2025} showWeekNumber />
-			</div>,
-		);
+	it.each([
+		['no box-sizing reset', ''],
+		['a box-sizing reset', '*, *::before, *::after { box-sizing: border-box; }'],
+	])(
+		'lines the weekdays up with the days beside week numbers, with %s on the page',
+		(_name, css) => {
+			render(
+				<div style={GRID_TRACKS}>
+					<style>{css}</style>
+					<Calendar mode="single" defaultMonth={JUNE_11_2025} showWeekNumber />
+				</div>,
+			);
 
-		const header = screen.getByLabelText('Week Number');
-		const weekNumber = document.querySelector('[data-slot="calendar-week-number"]');
+			const header = screen.getByLabelText('Week Number');
+			const rowHeader = document
+				.querySelector('[data-slot="calendar-week-number"]')
+				?.closest('th') as HTMLElement;
+			const firstWeekday = header.nextElementSibling as HTMLElement;
+			const firstDay = rowHeader.nextElementSibling as HTMLElement;
 
-		expect(header.getBoundingClientRect().width).toBe(32);
-		expect(weekNumber?.getBoundingClientRect().width).toBe(32);
-	});
+			expect(header.getBoundingClientRect().width).toBe(32);
+			expect(rowHeader.getBoundingClientRect().width).toBe(32);
+			expect(firstWeekday.getBoundingClientRect().left).toBe(firstDay.getBoundingClientRect().left);
+		},
+	);
 
 	it('sizes the chevron apart from the arrow it sits in', () => {
 		render(
