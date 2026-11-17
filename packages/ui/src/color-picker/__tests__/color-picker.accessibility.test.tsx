@@ -78,7 +78,6 @@ describe('ColorPicker trigger', () => {
 					aria-label="Background color"
 					aria-describedby="hint"
 				>
-					{/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- the picker forwards its aria-label to the trigger */}
 					<button type="button" />
 				</ColorPicker>
 			</>,

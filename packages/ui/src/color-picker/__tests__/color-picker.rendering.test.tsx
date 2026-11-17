@@ -276,7 +276,6 @@ describe('ColorPicker rendering', () => {
 				aria-label="Series color for cpu.user, #3a2a63"
 				data-series="cpu.user"
 			>
-				{/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- the picker forwards its aria-label to the trigger */}
 				<button type="button" />
 			</ColorPicker>,
 		);

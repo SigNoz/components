@@ -50,15 +50,14 @@ export function ColorPickerTextInput({
 	const isInvalid = text !== null && text !== '' && !isValid(text);
 
 	function handleKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
-		if (isReadOnly) {
-			return;
-		}
-
 		if (event.key === 'Enter') {
-			// So `Enter` does not also submit a form the popup sits in.
+			// So `Enter` does not also submit a form the popup sits in. A read-only input still
+			// submits it, so this runs before the read-only check.
 			event.preventDefault();
-			onCommit(true);
-		} else if (event.key === 'Escape') {
+			if (!isReadOnly) {
+				onCommit(true);
+			}
+		} else if (event.key === 'Escape' && !isReadOnly) {
 			// Before the popup closes on the same key, so the blur that follows has nothing to commit.
 			onDrop();
 		}

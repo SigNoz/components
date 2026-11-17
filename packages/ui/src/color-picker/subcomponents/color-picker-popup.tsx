@@ -132,7 +132,12 @@ export function ColorPickerPopup({
 				<ColorPickerPreview isEmpty={panelHex === undefined} testId={testId} />
 			</div>
 			{/* The group names the switch: `ToggleGroup` writes `aria-label` on a root with no role. */}
-			<div role="group" aria-label={COLOR_PICKER_LABELS.format} data-slot="color-picker-format">
+			<div
+				// eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- a fieldset would carry form semantics of its own, and its border and legend.
+				role="group"
+				aria-label={COLOR_PICKER_LABELS.format}
+				data-slot="color-picker-format"
+			>
 				<ToggleGroup
 					type="single"
 					variant="outlined"

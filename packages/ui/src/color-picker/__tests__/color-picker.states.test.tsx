@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useRef } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent as browserUserEvent } from 'vitest/browser';
 import { queryOpenTooltip } from '../../__tests__/test-utils.js';
@@ -326,6 +327,37 @@ describe('ColorPicker readOnly', () => {
 		await openPicker();
 
 		expect(getRed()).toHaveValue('128');
+	});
+
+	it('does not submit the form its popup sits in on Enter', async () => {
+		const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault());
+		function PickerInForm() {
+			const formRef = useRef<HTMLFormElement>(null);
+			return (
+				<form ref={formRef} onSubmit={onSubmit}>
+					<ColorPicker
+						nativeButton
+						side="bottom"
+						align="start"
+						value={MID_RED}
+						readOnly
+						container={formRef}
+					>
+						<button type="button">Color</button>
+					</ColorPicker>
+					<button type="submit">Save</button>
+				</form>
+			);
+		}
+		render(<PickerInForm />);
+		await openPicker();
+		getHexField().focus();
+
+		// A real key press: the browser, not user-event, decides on the implicit submission.
+		await browserUserEvent.keyboard('{Enter}');
+
+		expect(onSubmit).not.toHaveBeenCalled();
+		expect(screen.getByRole('dialog')).toBeInTheDocument();
 	});
 
 	it('renders no clear button and ignores Delete and Backspace on the trigger', async () => {
