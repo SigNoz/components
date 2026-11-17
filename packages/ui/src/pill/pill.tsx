@@ -1,6 +1,6 @@
 import { forwardRef, type ForwardedRef } from 'react';
 import { BadgeRoot } from '../badge/subcomponents/badge-root.js';
-import { cn } from '../lib/utils.js';
+import type { RejectedProps } from '../lib/utils.js';
 import { PillCloseable } from './subcomponents/pill-closeable.js';
 import styles from './pill.module.scss';
 import { PillTextTransform } from './constants.js';
@@ -62,7 +62,6 @@ import { pillSizeStyle } from './utils.js';
  */
 const PillRoot = forwardRef<HTMLButtonElement, PillProps>(function Pill(
 	{
-		className,
 		variant,
 		color,
 		textTransform = PillTextTransform.None,
@@ -70,11 +69,12 @@ const PillRoot = forwardRef<HTMLButtonElement, PillProps>(function Pill(
 		testId,
 		width,
 		maxWidth,
-		style,
 		onClick,
 		children,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: PillProps & RejectedProps,
 	ref,
 ) {
 	return (
@@ -87,9 +87,9 @@ const PillRoot = forwardRef<HTMLButtonElement, PillProps>(function Pill(
 			textTransform={textTransform}
 			textOverflow={textOverflow}
 			testId={testId}
-			style={pillSizeStyle(style, width, maxWidth)}
+			style={pillSizeStyle(width, maxWidth)}
 			onClick={onClick}
-			className={cn(styles['pill'], className)}
+			className={styles['pill']}
 			{...props}
 		>
 			{children}

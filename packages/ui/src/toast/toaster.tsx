@@ -1,7 +1,7 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import { forwardRef, useEffect } from 'react';
 import { usePopupContainer } from '../lib/popup-container.js';
-import { partTestId } from '../lib/utils.js';
+import { partTestId, type RejectedProps } from '../lib/utils.js';
 import { DEFAULT_LIMIT, DEFAULT_TIMEOUT, TOAST_POSITIONS, ToastPosition } from './constants.js';
 import { ToastList } from './subcomponents/toast-list.js';
 import { ToastViewport } from './subcomponents/toast-viewport.js';
@@ -13,8 +13,8 @@ import type { ToasterProps } from './types.js';
  * Renders every toast raised through `toast` (Base UI `Toast`). Mount it once, at the app root,
  * with no children.
  *
- * Only `id`, `className`, `style`, `aria-*` and `data-*` are forwarded, to the viewport. `id` and
- * the `ref` go to the viewport of `position` only.
+ * Only `id`, `aria-*` and `data-*` are forwarded, to the viewport. `id` and the `ref` go to the
+ * viewport of `position` only.
  * The toasts are drawn by the component and take no props of their own: raise them with `toast`.
  *
  * Visual values are `--toast-*` custom properties, defaults in the `css-tokens` region of
@@ -119,8 +119,10 @@ export const Toaster = forwardRef<HTMLDivElement, ToasterProps>(function Toaster
 		testId,
 		'data-testid': dataTestId,
 		id,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: ToasterProps & RejectedProps,
 	ref,
 ) {
 	const popupContainer = usePopupContainer();

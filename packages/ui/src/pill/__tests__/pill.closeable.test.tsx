@@ -86,16 +86,22 @@ describe('Pill.Closeable rendering', () => {
 		expect(screen.getByTestId('filter-pill')).toHaveAttribute('data-slot', 'pill');
 	});
 
-	it('keeps the component class next to a custom className', () => {
+	it('drops className and style that get past the types', () => {
 		render(
-			<Pill.Closeable onClose={vi.fn()} className="custom-class">
+			<Pill.Closeable
+				onClose={vi.fn()}
+				maxWidth="20rem"
+				testId="filter-pill"
+				{...({ className: 'custom-class', style: { marginTop: '4px' } } as object)}
+			>
 				env:prod
 			</Pill.Closeable>,
 		);
+		const body = screen.getByTestId('filter-pill');
 
-		const body = screen.getByRole('button', { name: 'env:prod' });
-		expect(body).toHaveClass('custom-class');
-		expect(body.className.split(' ').length).toBeGreaterThan(1);
+		expect(body).not.toHaveClass('custom-class');
+		expect(body.style.marginTop).toBe('');
+		expect(body.style.getPropertyValue('--pill-internal-max-width')).toBe('20rem');
 	});
 });
 

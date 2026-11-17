@@ -13,23 +13,24 @@ describe('Toaster rendering', () => {
 		expect(toasts()).toHaveLength(0);
 	});
 
-	it('forwards id, className, style, aria-* and data-* to the viewport', () => {
-		render(
-			<Toaster
-				id="my-id"
-				className="my-class"
-				style={{ opacity: 0.99 }}
-				aria-describedby="x"
-				data-foo="bar"
-			/>,
-		);
+	it('forwards id, aria-* and data-* to the viewport', () => {
+		render(<Toaster id="my-id" aria-describedby="x" data-foo="bar" />);
 
 		const viewport = slot('toaster');
 		expect(viewport).toHaveAttribute('id', 'my-id');
-		expect(viewport).toHaveClass('my-class');
-		expect(viewport).toHaveStyle({ opacity: '0.99' });
 		expect(viewport).toHaveAttribute('aria-describedby', 'x');
 		expect(viewport).toHaveAttribute('data-foo', 'bar');
+	});
+
+	it('drops className and style that get past the types', () => {
+		render(
+			<Toaster offset={8} {...({ className: 'my-class', style: { opacity: 0.99 } } as object)} />,
+		);
+
+		const viewport = slot('toaster') as HTMLElement;
+		expect(viewport).not.toHaveClass('my-class');
+		expect(viewport.style.opacity).toBe('');
+		expect(viewport.style.getPropertyValue('--toast-internal-viewport-offset')).toBe('8px');
 	});
 
 	it('keeps data-slot and data-position out of the caller reach', () => {

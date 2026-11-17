@@ -26,8 +26,7 @@ export interface ToastOffset {
 	left?: number | string;
 }
 
-export interface ToasterProps
-	extends Pick<ComponentPropsWithoutRef<'div'>, 'id' | 'className' | 'style'>, AriaAttributes {
+export interface ToasterProps extends Pick<ComponentPropsWithoutRef<'div'>, 'id'>, AriaAttributes {
 	/**
 	 * Where a toast raised with no `position` stacks. Each position keeps a stack of its own.
 	 *

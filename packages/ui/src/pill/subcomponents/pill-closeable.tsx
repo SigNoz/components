@@ -1,7 +1,7 @@
 import { X } from '@signozhq/icons';
 import { forwardRef, useId, type ForwardedRef, type KeyboardEvent, type MouseEvent } from 'react';
 import { BadgeRoot } from '../../badge/subcomponents/badge-root.js';
-import { cn } from '../../lib/utils.js';
+import { cn, type RejectedProps } from '../../lib/utils.js';
 import styles from '../pill.module.scss';
 import { PillTextTransform } from '../constants.js';
 import type { PillProps } from '../types.js';
@@ -95,20 +95,20 @@ export type PillCloseableProps = Omit<PillProps, 'variant' | 'color' | 'onClick'
  */
 export const PillCloseable = forwardRef<HTMLSpanElement, PillCloseableProps>(function PillCloseable(
 	{
-		className,
 		textTransform = PillTextTransform.None,
 		textOverflow,
 		testId,
 		width,
 		maxWidth,
-		style,
 		onClick,
 		onClose,
 		closeAriaLabel,
 		disabled,
 		children,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: PillCloseableProps & RejectedProps,
 	ref,
 ) {
 	const labelId = useId();
@@ -153,7 +153,7 @@ export const PillCloseable = forwardRef<HTMLSpanElement, PillCloseableProps>(fun
 			textTransform={textTransform}
 			textOverflow={textOverflow}
 			testId={testId}
-			style={pillSizeStyle(style, width, maxWidth)}
+			style={pillSizeStyle(width, maxWidth)}
 			onClick={bodyOnClick}
 			onKeyDown={handleKeyDown}
 			interactiveSuffix
@@ -172,7 +172,7 @@ export const PillCloseable = forwardRef<HTMLSpanElement, PillCloseableProps>(fun
 					<X aria-hidden="true" />
 				</button>
 			}
-			className={cn(styles['pill'], styles['pill-closeable'], className)}
+			className={cn(styles['pill'], styles['pill-closeable'])}
 			{...props}
 		>
 			{children}

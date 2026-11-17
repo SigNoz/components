@@ -303,4 +303,14 @@ describe('unknown props', () => {
 		// @ts-expect-error - `onChage` is not a prop, a generic `T extends TabsProps` would let it through
 		assertType(<Tabs {...BASE} items={ITEMS} onChage={noop} />);
 	});
+
+	test('rejects className, the look comes from `variant` and the size from `width`', () => {
+		// @ts-expect-error - use `variant` for the look, `width` and `maxWidth` for the size
+		assertType(<Tabs {...BASE} items={ITEMS} className="views" />);
+	});
+
+	test('rejects style, the look comes from `variant` and the size from `width`', () => {
+		// @ts-expect-error - use `variant` for the look, `width` and `maxWidth` for the size
+		assertType(<Tabs {...BASE} items={ITEMS} style={{ flex: 1 }} />);
+	});
 });

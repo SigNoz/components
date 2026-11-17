@@ -25,12 +25,7 @@ export default function MyComponent({ isLoading }: { isLoading: boolean }) {
 The ring always turns. Mount it only while the work runs, or freeze it from the outside with
 `animation-play-state: paused` when it has to stay in the layout, which is what `Button` does.
 
-Size, thickness and both ring colours are `--spinner-*` custom properties. The colours derive from
-`currentColor`, so the spinner takes the colour of whatever it sits in:
-
-```tsx
-<Spinner size={24} style={{ '--spinner-thickness': '2px' }} />
-```
+The colours derive from `currentColor`, so the spinner takes the colour of whatever it sits in.
 
 Under `prefers-reduced-motion` the rotation slows to `--spinner-reduced-motion-duration` instead of
 stopping, because it is the only signal that anything is happening.

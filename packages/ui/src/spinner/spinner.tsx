@@ -1,10 +1,9 @@
 import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement } from 'react';
 import { forwardRef } from 'react';
-import { cn } from '../lib/utils.js';
+import type { RejectedProps } from '../lib/utils.js';
 import styles from './spinner.module.scss';
 
-export interface SpinnerProps
-	extends Pick<ComponentProps<'div'>, 'className' | 'id' | 'style' | 'role'>, AriaAttributes {
+export interface SpinnerProps extends Pick<ComponentProps<'div'>, 'id' | 'role'>, AriaAttributes {
 	/**
 	 * Diameter of the ring, written to `--spinner-size`. A number is read as pixels.
 	 * @default 12px
@@ -19,8 +18,8 @@ export interface SpinnerProps
 /**
  * Renders a `<div>` drawn as a ring, rotating while work is in flight.
  *
- * Only the props in {@link SpinnerProps} are forwarded: `className`, `id`, `style`, `role` and
- * any `aria-*`. Other native `<div>` attributes are not.
+ * Only the props in {@link SpinnerProps} are forwarded: `id`, `role` and any `aria-*`. Other
+ * native `<div>` attributes are not.
  *
  * Visual values are `--spinner-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts). Both ring colours derive from `currentColor`, so it takes the
@@ -44,10 +43,7 @@ export interface SpinnerProps
  *
  * ### Size
  *
- * `size` is written as an inline `--spinner-size`, so it composes with the tokens instead of
- * overwriting `style.width`. Numbers are written as `px`.
- *
- * Any `style` you pass is kept, and a `--spinner-size` in it wins over the prop.
+ * `size` is written as an inline `--spinner-size`. Numbers are written as `px`.
  *
  * ### Reduced motion
  *
@@ -75,21 +71,18 @@ export interface SpinnerProps
  * ```
  */
 export const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(function Spinner(
-	{ className, size, style, testId, ...props },
+	{ size, testId, className: _className, style: _style, ...props }: SpinnerProps & RejectedProps,
 	ref,
 ): ReactElement {
 	return (
 		<div
 			ref={ref}
 			data-slot="spinner"
-			className={cn(styles.spinner, className)}
+			className={styles.spinner}
 			style={
 				size === undefined
-					? style
-					: ({
-							'--spinner-size': typeof size === 'number' ? `${size}px` : size,
-							...style,
-						} as CSSProperties)
+					? undefined
+					: ({ '--spinner-size': typeof size === 'number' ? `${size}px` : size } as CSSProperties)
 			}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}

@@ -71,13 +71,11 @@ describe('Pill.Closeable invalid', () => {
 		render(
 			<>
 				{/* A danger pill on the invalid colour tints it the way the chip should. */}
-				<Pill
-					variant="outlined"
-					color="danger"
-					style={{ '--pill-danger-background': INVALID_BACKGROUND } as CSSProperties}
-				>
-					danger
-				</Pill>
+				<div style={{ '--pill-danger-background': INVALID_BACKGROUND } as CSSProperties}>
+					<Pill variant="outlined" color="danger">
+						danger
+					</Pill>
+				</div>
 				<Pill.Closeable onClose={vi.fn()} aria-invalid>
 					env:prod
 				</Pill.Closeable>
@@ -121,9 +119,7 @@ describe('Pill.Closeable invalid', () => {
 
 	it('takes the invalid overrides over the token defaults', () => {
 		render(
-			<Pill.Closeable
-				onClose={vi.fn()}
-				aria-invalid
+			<div
 				style={
 					{
 						'--pill-invalid-background-color': 'rgb(10, 10, 10)',
@@ -131,8 +127,10 @@ describe('Pill.Closeable invalid', () => {
 					} as CSSProperties
 				}
 			>
-				env:prod
-			</Pill.Closeable>,
+				<Pill.Closeable onClose={vi.fn()} aria-invalid>
+					env:prod
+				</Pill.Closeable>
+			</div>,
 		);
 
 		expect(background(screen.getByRole('button', { name: 'env:prod' }))).toBe('rgb(10, 10, 10)');
@@ -165,13 +163,11 @@ describe('Pill spacing tokens', () => {
 				<Pill.Closeable onClose={vi.fn()} testId="default">
 					env:prod
 				</Pill.Closeable>
-				<Pill.Closeable
-					onClose={vi.fn()}
-					testId="large"
-					style={{ '--pill-close-icon-size': '16px' } as CSSProperties}
-				>
-					env:prod
-				</Pill.Closeable>
+				<div style={{ '--pill-close-icon-size': '16px' } as CSSProperties}>
+					<Pill.Closeable onClose={vi.fn()} testId="large">
+						env:prod
+					</Pill.Closeable>
+				</div>
 			</>,
 		);
 
@@ -183,17 +179,12 @@ describe('Pill spacing tokens', () => {
 	it('takes the close side padding, tracking and single-character padding from --pill-*', () => {
 		render(
 			<>
-				<Pill.Closeable
-					onClose={vi.fn()}
-					testId="chip"
-					style={{ '--pill-closeable-padding-inline-end': '6px' } as CSSProperties}
-				>
-					env:prod
-				</Pill.Closeable>
-				<Pill
-					variant="outlined"
-					color="secondary"
-					testId="one"
+				<div style={{ '--pill-closeable-padding-inline-end': '6px' } as CSSProperties}>
+					<Pill.Closeable onClose={vi.fn()} testId="chip">
+						env:prod
+					</Pill.Closeable>
+				</div>
+				<div
 					style={
 						{
 							'--pill-letter-spacing': '2px',
@@ -201,8 +192,10 @@ describe('Pill spacing tokens', () => {
 						} as CSSProperties
 					}
 				>
-					5
-				</Pill>
+					<Pill variant="outlined" color="secondary" testId="one">
+						5
+					</Pill>
+				</div>
 			</>,
 		);
 

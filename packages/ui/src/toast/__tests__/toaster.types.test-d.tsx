@@ -48,3 +48,15 @@ describe('offset', () => {
 		assertType(<Toaster offset={[8, 8]} />);
 	});
 });
+
+describe('rejected props', () => {
+	test('rejects className, the stack has a fixed place and size', () => {
+		// @ts-expect-error - the stack is placed by `position` and `offset`
+		assertType(<Toaster className="stack" />);
+	});
+
+	test('rejects style, the stack has a fixed place and size', () => {
+		// @ts-expect-error - the stack is placed by `position` and `offset`
+		assertType(<Toaster style={{ top: 8 }} />);
+	});
+});

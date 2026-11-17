@@ -1,7 +1,6 @@
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { CSSProperties } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from 'vitest';
 import { PersistToastsProvider } from '../../testing/index.js';
 import { toast } from '../toast.js';
 import { Toaster } from '../toaster.js';
@@ -113,11 +112,12 @@ describe('Toaster under PersistToastsProvider', () => {
 		expect(toasts().filter((item) => item.hasAttribute('data-limited'))).toHaveLength(0);
 	});
 
-	// The stack gap is a design token, which the tests do not load, so the test sets its own.
+	// The stack gap is a design token, which the tests do not load, so the test sets its own. The
+	// viewport is portalled into `body`, so a token reaches it only from there.
 	it('spreads the stack without a hover', async () => {
-		render(<Toaster style={{ '--toast-stack-gap': '8px' } as CSSProperties} />, {
-			wrapper: PersistToastsProvider,
-		});
+		document.body.style.setProperty('--toast-stack-gap', '8px');
+		onTestFinished(() => document.body.style.removeProperty('--toast-stack-gap'));
+		render(<Toaster />, { wrapper: PersistToastsProvider });
 		raise(() => {
 			toast.info('Old', {
 				description: 'Two lines, so it is taller than the newest toast.',

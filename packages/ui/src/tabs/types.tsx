@@ -186,7 +186,7 @@ export type ValidateTabsProps<T> = (T extends { 'data-testid': unknown }
 			: unknown
 		: unknown);
 
-export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'> &
+export type TabsProps = Pick<ComponentProps<'div'>, 'id'> &
 	AriaAttributes & {
 		/**
 		 * The tabs, in the order they are rendered. The component owns the bar's markup, so the tabs
@@ -267,8 +267,8 @@ export type TabsProps = Pick<ComponentProps<'div'>, 'id' | 'className' | 'style'
 		noTabContentPadding?: boolean;
 		/**
 		 * The width of the whole component, the bar and its panels. Written as the
-		 * `--tabs-internal-inline-size` custom property, so it composes with the tokens instead of
-		 * overwriting `style.width`. Numbers are written as `px`.
+		 * `--tabs-internal-inline-size` custom property, so it composes with the tokens. Numbers are
+		 * written as `px`.
 		 *
 		 * @note Sizes no single tab: a tab holds its own size and the strip scrolls instead.
 		 *

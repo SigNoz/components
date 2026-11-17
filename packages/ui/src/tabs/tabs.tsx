@@ -1,5 +1,6 @@
 import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
 import {
+	type CSSProperties,
 	forwardRef,
 	type MouseEventHandler,
 	type ReactElement,
@@ -9,7 +10,7 @@ import {
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
-import { cn } from '../lib/utils.js';
+import { cn, type RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
 import { TabsScrollButton } from './subcomponents/tabs-scroll-button.js';
 import { TabsTrigger } from './subcomponents/tabs-trigger.js';
@@ -21,7 +22,6 @@ import { hideHoverSlider, moveHoverSlider } from './utils.js';
 const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 	{
 		children,
-		className,
 		items,
 		variant,
 		orientation,
@@ -35,9 +35,10 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 		testId,
 		width,
 		maxWidth,
-		style,
+		className: _className,
+		style: _style,
 		...props
-	},
+	}: TabsProps & RejectedProps,
 	ref,
 ) {
 	const listRef = useRef<HTMLDivElement>(null);
@@ -81,16 +82,15 @@ const TabsImpl = forwardRef<HTMLDivElement, TabsProps>(function Tabs(
 	};
 
 	const tabsStyle = {
-		...style,
 		...(width != null && { '--tabs-internal-inline-size': toCssLength(width) }),
 		...(maxWidth != null && { '--tabs-internal-max-inline-size': toCssLength(maxWidth) }),
-	};
+	} as CSSProperties;
 
 	return (
 		<TabsPrimitive.Root
 			ref={ref}
 			data-slot="tabs"
-			className={cn(styles.tabs, className)}
+			className={styles.tabs}
 			style={tabsStyle}
 			value={value}
 			defaultValue={defaultValue ?? items[0]?.key}

@@ -85,22 +85,4 @@ describe('Tabs width', () => {
 		expect(style.getPropertyValue('--tabs-internal-inline-size')).toBe('');
 		expect(style.getPropertyValue('--tabs-internal-max-inline-size')).toBe('');
 	});
-
-	it('keeps the caller style alongside the custom properties', () => {
-		render(
-			<Tabs
-				variant="primary"
-				orientation="horizontal"
-				alignment="start"
-				items={ITEMS}
-				width="40rem"
-				style={{ color: 'red', marginTop: '4px' }}
-			/>,
-		);
-
-		const { style } = getRoot();
-		expect(style.color).toBe('red');
-		expect(style.marginTop).toBe('4px');
-		expect(style.getPropertyValue('--tabs-internal-inline-size')).toBe('40rem');
-	});
 });

@@ -93,16 +93,6 @@ const meta: Meta<ToastStoryArgs> = {
 			description: 'Id of the viewport.',
 			table: { category: 'Accessibility', type: { summary: 'string' } },
 		},
-		className: {
-			control: false,
-			description: 'Merged onto the viewport. Avoid it: the stack has a fixed place and size.',
-			table: { category: 'Styling', type: { summary: 'string' } },
-		},
-		style: {
-			control: false,
-			description: 'Inline styles on the viewport. Avoid it, for exceptional overrides only.',
-			table: { category: 'Styling', type: { summary: 'CSSProperties' } },
-		},
 		testId: {
 			control: 'text',
 			description:

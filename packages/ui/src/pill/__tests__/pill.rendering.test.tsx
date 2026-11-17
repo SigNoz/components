@@ -120,16 +120,23 @@ describe('Pill rendering', () => {
 		expect(pill).toHaveAttribute('data-analytics-id', 'env-filter');
 	});
 
-	it('keeps the component class next to a custom className', () => {
+	it('drops className and style that get past the types', () => {
 		render(
-			<Pill variant="outlined" color="primary" className="custom-class">
+			<Pill
+				variant="outlined"
+				color="primary"
+				width="10rem"
+				testId="pill"
+				{...({ className: 'custom-class', style: { marginTop: '4px' } } as object)}
+			>
 				Active
 			</Pill>,
 		);
+		const pill = screen.getByTestId('pill');
 
-		const pill = screen.getByRole('button');
-		expect(pill).toHaveClass('custom-class');
-		expect(pill.className.split(' ').length).toBeGreaterThan(1);
+		expect(pill).not.toHaveClass('custom-class');
+		expect(pill.style.marginTop).toBe('');
+		expect(pill.style.getPropertyValue('--pill-internal-width')).toBe('10rem');
 	});
 
 	it('renders element children inside the label slot', () => {
