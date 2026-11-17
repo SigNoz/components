@@ -14,7 +14,7 @@ import {
 } from '@signozhq/ui';
 import { PersistToastsProvider } from '@signozhq/ui/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { type ReactElement, useEffect, useState } from 'react';
+import { type ComponentType, type ReactElement, useEffect, useState } from 'react';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './toast.stories.module.css';
@@ -34,7 +34,8 @@ type ToastStoryArgs = ToasterProps & {
 
 const meta: Meta<ToastStoryArgs> = {
 	title: 'Primitive Components/Toast',
-	component: Toaster,
+	// The exact-props `Toaster` rejects the story-only args, and Storybook reads it only for the props table.
+	component: Toaster as unknown as ComponentType<ToasterProps>,
 	argTypes: {
 		position: {
 			control: 'select',
@@ -170,6 +171,8 @@ function ToastPlayground({
 	title,
 	description,
 	actionLabel,
+	count: _count,
+	callTimeout: _callTimeout,
 	...toasterProps
 }: ToastStoryArgs): ReactElement {
 	const { position } = toasterProps;
@@ -231,9 +234,11 @@ function raiseManyToasts({ count = 20, ...args }: ToastStoryArgs): void {
 
 function ManyToastsDemo({
 	variant,
+	title: _title,
 	description,
 	actionLabel,
 	count,
+	callTimeout: _callTimeout,
 	...toasterProps
 }: ToastStoryArgs): ReactElement {
 	return (

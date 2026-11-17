@@ -1,5 +1,13 @@
 import { X } from '@signozhq/icons';
-import { forwardRef, useId, type ForwardedRef, type KeyboardEvent, type MouseEvent } from 'react';
+import {
+	forwardRef,
+	useId,
+	type ForwardedRef,
+	type KeyboardEvent,
+	type MouseEvent,
+	type ReactElement,
+	type RefAttributes,
+} from 'react';
 import { BadgeRoot } from '../../badge/subcomponents/badge-root.js';
 import { cn, type RejectedProps } from '../../lib/utils.js';
 import styles from '../pill.module.scss';
@@ -38,62 +46,7 @@ export type PillCloseableProps = Omit<PillProps, 'variant' | 'color' | 'onClick'
 	closeAriaLabel?: string;
 };
 
-/**
- * A dismissible `Pill`: fixed neutral fill, no `variant`/`color` to pick. Reached as
- * `Pill.Closeable`, not imported on its own.
- *
- * Composes `Badge` (`as="span"`, `role="button"`) for the label and its truncation tooltip, same
- * as `Pill`. The close icon rides through `Badge`'s `suffix` slot, made focusable instead of the
- * usual decorative `aria-hidden`.
- *
- * ### Close vs click
- *
- * The close icon is its own control: activating it calls `onClose` and never `onClick`, and it
- * stops the click from reaching the body (now load-bearing, not just defensive: the close button
- * is a DOM descendant of the body, so a click on it would otherwise bubble into the body's own
- * `onClick`).
- *
- * ### Keyboard
- *
- * With the body focused: Enter and Space call `onClick`, `Backspace` and `Delete` call `onClose`,
- * so a chip is removable without tabbing to its close icon. Keydowns that bubble up from the close
- * button are ignored, it handles its own.
- *
- * ### Naming
- *
- * The body is named by its label through `aria-labelledby`, so the nested close button's own
- * `aria-label` never sweeps into it, whatever type `children` is. Override the close button's
- * name with `closeAriaLabel`.
- *
- * ### Disabled
- *
- * The body is a `<span role="button">`, not a real button: `disabled` sets `aria-disabled`, drops
- * it from the tab order (`tabIndex={-1}`), and blocks its click/keyboard handling by hand. The
- * close button is a real `<button>` and gets the native attribute instead.
- *
- * ### Invalid
- *
- * `aria-invalid="true"` repaints the border, the label and the close icon with the invalid colour,
- * and swaps the neutral fill for a tint of the invalid background. Override them with
- * `--pill-invalid-background-color`, `--pill-invalid-hover-background-color`,
- * `--pill-invalid-close-color` and `--pill-invalid-close-hover-color`.
- *
- * ### Asserting on it
- *
- * | `data-slot` | rendered |
- * |---|---|
- * | `pill` | the outer element, also the clickable body, carries `testId` |
- * | `pill-label` | the label, which names the body |
- * | `pill-close` | the close icon button |
- *
- * @example
- * ```tsx
- * <Pill.Closeable onClick={openFilter} onClose={() => removeFilter('env')}>
- *   env:prod
- * </Pill.Closeable>
- * ```
- */
-export const PillCloseable = forwardRef<HTMLSpanElement, PillCloseableProps>(function PillCloseable(
+const PillCloseableRoot = forwardRef<HTMLSpanElement, PillCloseableProps>(function PillCloseable(
 	{
 		textTransform = PillTextTransform.None,
 		textOverflow,
@@ -179,4 +132,71 @@ export const PillCloseable = forwardRef<HTMLSpanElement, PillCloseableProps>(fun
 		</BadgeRoot>
 	);
 });
-PillCloseable.displayName = 'Pill.Closeable';
+PillCloseableRoot.displayName = 'Pill.Closeable';
+
+/**
+ * A dismissible `Pill`: fixed neutral fill, no `variant`/`color` to pick. Reached as
+ * `Pill.Closeable`, not imported on its own.
+ *
+ * Composes `Badge` (`as="span"`, `role="button"`) for the label and its truncation tooltip, same
+ * as `Pill`. The close icon rides through `Badge`'s `suffix` slot, made focusable instead of the
+ * usual decorative `aria-hidden`.
+ *
+ * ### Close vs click
+ *
+ * The close icon is its own control: activating it calls `onClose` and never `onClick`, and it
+ * stops the click from reaching the body (now load-bearing, not just defensive: the close button
+ * is a DOM descendant of the body, so a click on it would otherwise bubble into the body's own
+ * `onClick`).
+ *
+ * ### Keyboard
+ *
+ * With the body focused: Enter and Space call `onClick`, `Backspace` and `Delete` call `onClose`,
+ * so a chip is removable without tabbing to its close icon. Keydowns that bubble up from the close
+ * button are ignored, it handles its own.
+ *
+ * ### Naming
+ *
+ * The body is named by its label through `aria-labelledby`, so the nested close button's own
+ * `aria-label` never sweeps into it, whatever type `children` is. Override the close button's
+ * name with `closeAriaLabel`.
+ *
+ * ### Disabled
+ *
+ * The body is a `<span role="button">`, not a real button: `disabled` sets `aria-disabled`, drops
+ * it from the tab order (`tabIndex={-1}`), and blocks its click/keyboard handling by hand. The
+ * close button is a real `<button>` and gets the native attribute instead.
+ *
+ * ### Invalid
+ *
+ * `aria-invalid="true"` repaints the border, the label and the close icon with the invalid colour,
+ * and swaps the neutral fill for a tint of the invalid background. Override them with
+ * `--pill-invalid-background-color`, `--pill-invalid-hover-background-color`,
+ * `--pill-invalid-close-color` and `--pill-invalid-close-hover-color`.
+ *
+ * ### Asserting on it
+ *
+ * | `data-slot` | rendered |
+ * |---|---|
+ * | `pill` | the outer element, also the clickable body, carries `testId` |
+ * | `pill-label` | the label, which names the body |
+ * | `pill-close` | the close icon button |
+ *
+ * @example
+ * ```tsx
+ * <Pill.Closeable onClick={openFilter} onClose={() => removeFilter('env')}>
+ *   env:prod
+ * </Pill.Closeable>
+ * ```
+ */
+export const PillCloseable = PillCloseableRoot as unknown as <T extends PillCloseableProps>(
+	props: T &
+		// `T` is inferred from the call site, so `T extends PillCloseableProps` alone never runs
+		// excess property checks, and a spread of props held in a variable would carry a `className`
+		// through. Every key outside the props is pinned to `never` instead.
+		Record<
+			Exclude<keyof T, keyof PillCloseableProps | keyof RefAttributes<HTMLSpanElement>>,
+			never
+		> &
+		RefAttributes<HTMLSpanElement>,
+) => ReactElement | null;

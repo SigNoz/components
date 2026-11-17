@@ -1,4 +1,10 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	ReactElement,
+	RefAttributes,
+} from 'react';
 import { forwardRef } from 'react';
 import type { RejectedProps } from '../lib/utils.js';
 import styles from './spinner.module.scss';
@@ -14,6 +20,26 @@ export interface SpinnerProps extends Pick<ComponentProps<'div'>, 'id' | 'role'>
 	 */
 	testId?: string;
 }
+
+const SpinnerRoot = forwardRef<HTMLDivElement, SpinnerProps>(function Spinner(
+	{ size, testId, className: _className, style: _style, ...props }: SpinnerProps & RejectedProps,
+	ref,
+): ReactElement {
+	return (
+		<div
+			ref={ref}
+			data-slot="spinner"
+			className={styles.spinner}
+			style={
+				size === undefined
+					? undefined
+					: ({ '--spinner-size': typeof size === 'number' ? `${size}px` : size } as CSSProperties)
+			}
+			{...props}
+			{...(testId === undefined ? {} : { 'data-testid': testId })}
+		/>
+	);
+});
 
 /**
  * Renders a `<div>` drawn as a ring, rotating while work is in flight.
@@ -70,22 +96,11 @@ export interface SpinnerProps extends Pick<ComponentProps<'div'>, 'id' | 'role'>
  * <Spinner size={24} />
  * ```
  */
-export const Spinner = forwardRef<HTMLDivElement, SpinnerProps>(function Spinner(
-	{ size, testId, className: _className, style: _style, ...props }: SpinnerProps & RejectedProps,
-	ref,
-): ReactElement {
-	return (
-		<div
-			ref={ref}
-			data-slot="spinner"
-			className={styles.spinner}
-			style={
-				size === undefined
-					? undefined
-					: ({ '--spinner-size': typeof size === 'number' ? `${size}px` : size } as CSSProperties)
-			}
-			{...props}
-			{...(testId === undefined ? {} : { 'data-testid': testId })}
-		/>
-	);
-});
+export const Spinner = SpinnerRoot as unknown as <T extends SpinnerProps>(
+	props: T &
+		// `T` is inferred from the call site, so `T extends SpinnerProps` alone never runs excess
+		// property checks, and a spread of props held in a variable would carry a `className`
+		// through. Every key outside the props is pinned to `never` instead.
+		Record<Exclude<keyof T, keyof SpinnerProps | keyof RefAttributes<HTMLDivElement>>, never> &
+		RefAttributes<HTMLDivElement>,
+) => ReactElement | null;

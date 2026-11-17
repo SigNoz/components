@@ -18,6 +18,12 @@ import { Spinner } from '../spinner.js';
 
 const spinnerRef = createRef<HTMLDivElement>();
 
+// Props held in a variable and spread skip the excess property check a literal attribute gets, so
+// these catch a rejected prop that reaches the spinner through a spread.
+const declaredSpread = { size: 24, role: 'status', 'aria-label': 'Loading' } as const;
+const classNameSpread = { size: 24, className: 'cell' } as const;
+const styleSpread = { size: 24, style: { marginLeft: 4 } } as const;
+
 describe('accepted props', () => {
 	test('needs no prop', () => {
 		assertType(<Spinner />);
@@ -48,5 +54,19 @@ describe('rejected props', () => {
 	test('rejects style', () => {
 		// @ts-expect-error - `style` is not a prop, wrap the spinner to place it
 		assertType(<Spinner style={{ marginLeft: 4 }} />);
+	});
+
+	test('accepts a spread of the props it declares', () => {
+		assertType(<Spinner {...declaredSpread} />);
+	});
+
+	test('rejects a className spread', () => {
+		// @ts-expect-error - a spread is checked like written props, `className` is not one
+		assertType(<Spinner {...classNameSpread} />);
+	});
+
+	test('rejects a style spread', () => {
+		// @ts-expect-error - a spread is checked like written props, `style` is not one
+		assertType(<Spinner {...styleSpread} />);
 	});
 });
