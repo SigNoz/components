@@ -1,4 +1,5 @@
-import { createContext, type RefCallback, useContext } from 'react';
+import { type AriaAttributes, createContext, type RefCallback, useContext } from 'react';
+import { joinIdRefs } from './utils.js';
 
 /**
  * What a `Field` or a `Field.Group` hands the control inside it. The control reads these as
@@ -78,4 +79,28 @@ export function fieldInvalidDataProps(
 	field: FieldContextValue | null,
 ): { 'data-invalid': '' } | undefined {
 	return field?.status === 'danger' ? { 'data-invalid': '' } : undefined;
+}
+
+type GroupTriggerAria = Pick<AriaAttributes, 'aria-describedby' | 'aria-invalid'>;
+
+/**
+ * What a `Field.Group` hands the trigger of a Select or a Combobox: the group's description and
+ * message ids in `aria-describedby`, and `aria-invalid` while the group is in `danger`. Inside a
+ * `Field` the trigger takes both from Base UI's field, which a group does not render, so this is
+ * `undefined` there and outside any field. The trigger's own attributes win.
+ *
+ * @access private
+ */
+export function fieldGroupTriggerAria(
+	field: FieldContextValue | null,
+	own: GroupTriggerAria,
+): GroupTriggerAria | undefined {
+	if (field?.kind !== 'group') {
+		return undefined;
+	}
+
+	return {
+		'aria-describedby': joinIdRefs(own['aria-describedby'], field.describedBy),
+		'aria-invalid': own['aria-invalid'] ?? (field.status === 'danger' ? true : undefined),
+	};
 }

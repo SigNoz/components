@@ -15,7 +15,7 @@ import {
 import { toCssLength } from '../lib/css-length.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
-import { useFieldContext } from '../lib/field-context.js';
+import { fieldGroupTriggerAria, useFieldContext } from '../lib/field-context.js';
 import { useControlBlur } from '../lib/use-control-blur.js';
 import { useLabelFor } from '../lib/use-label-for.js';
 import { useSelectionValue } from '../lib/use-selection-value.js';
@@ -299,7 +299,11 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 					>
 						<ComboboxTrigger
 							ref={triggerRef}
-							forwardedProps={{ ...fieldRequiredProps, ...triggerProps }}
+							forwardedProps={{
+								...fieldRequiredProps,
+								...triggerProps,
+								...fieldGroupTriggerAria(field, triggerProps),
+							}}
 							id={id}
 							accessibleName={accessibleName}
 							labelledBy={labelledBy}
@@ -442,6 +446,10 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
  * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
  * runs before the browser's. The combobox's own `required` wins, and keeps the native one. The
  * search row keeps its own name. `ComboboxField` renders the pair from one object.
+ *
+ * In a `Field.Group` the legend names the group, not the combobox, so the combobox needs its own
+ * `aria-label`. The group's description and message still reach `aria-describedby`, and a
+ * `danger` group sets `aria-invalid`.
  *
  * ### Truncation
  *

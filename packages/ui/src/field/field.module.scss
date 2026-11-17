@@ -152,7 +152,7 @@ legend.field__label {
 	// SolidAlertCircle cuts its glyph out of the disc path and gives the path no stroke, so it
 	// inherits the `currentColor` stroke the icon wrapper sets on `<svg>`, which fills the cut-out.
 	svg [fill='#fff']:not([stroke]) {
-		stroke: none;
+		stroke: var(--field-message-icon-disc-stroke, none);
 	}
 
 	svg [stroke='#fff'] {

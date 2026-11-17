@@ -842,3 +842,86 @@ describe('Combobox inside a hand-written Field', () => {
 		expect(await screen.findByRole('dialog', { name: 'Framework' })).toBeInTheDocument();
 	});
 });
+
+describe('Combobox inside a Field.Group', () => {
+	it.each([false, true])(
+		'takes the description, the message and danger from the group (multiple: %s)',
+		async (multiple) => {
+			render(
+				<Field.Group
+					label="Retention period"
+					description="How long the data is kept."
+					error="Enter an amount."
+				>
+					<Combobox
+						aria-label="Unit"
+						multiple={multiple}
+						placeholder="Pick one"
+						searchInputProps={SEARCH}
+						items={FRAMEWORKS}
+					/>
+				</Field.Group>,
+			);
+
+			const unit = await screen.findByRole('combobox', { name: 'Unit' });
+
+			expect(unit).toHaveAttribute('aria-invalid', 'true');
+			expect(unit).toHaveAccessibleDescription('Enter an amount.');
+		},
+	);
+
+	it('describes the trigger with the group description while it is valid', () => {
+		render(
+			<Field.Group label="Retention period" description="How long the data is kept.">
+				<Combobox
+					aria-label="Unit"
+					placeholder="Pick one"
+					searchInputProps={SEARCH}
+					items={FRAMEWORKS}
+				/>
+			</Field.Group>,
+		);
+
+		const unit = screen.getByRole('combobox', { name: 'Unit' });
+
+		expect(unit).not.toHaveAttribute('aria-invalid');
+		expect(unit).toHaveAccessibleDescription('How long the data is kept.');
+	});
+
+	it('keeps its own aria-invalid and aria-describedby ahead of the group', () => {
+		render(
+			<>
+				<span id="unit-hint">Days or weeks.</span>
+				<Field.Group label="Retention period" error="Enter an amount.">
+					<Combobox
+						aria-label="Unit"
+						aria-invalid={false}
+						aria-describedby="unit-hint"
+						placeholder="Pick one"
+						searchInputProps={SEARCH}
+						items={FRAMEWORKS}
+					/>
+				</Field.Group>
+			</>,
+		);
+
+		const unit = screen.getByRole('combobox', { name: 'Unit' });
+
+		expect(unit).toHaveAttribute('aria-invalid', 'false');
+		expect(unit).toHaveAccessibleDescription('Days or weeks. Enter an amount.');
+	});
+
+	it('lists the description of a Field once, through Base UI', () => {
+		render(
+			<Field label="Framework" description="The one the team builds with.">
+				<Combobox placeholder="Pick one" searchInputProps={SEARCH} items={FRAMEWORKS} />
+			</Field>,
+		);
+
+		const control = screen.getByRole('combobox', { name: 'Framework' });
+		const describedBy = control.getAttribute('aria-describedby') ?? '';
+
+		expect(describedBy.split(' ')).toHaveLength(new Set(describedBy.split(' ')).size);
+		expect(control).toHaveAccessibleDescription('The one the team builds with.');
+	});
+});

@@ -10,7 +10,7 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
-import { useFieldContext } from '../lib/field-context.js';
+import { fieldGroupTriggerAria, useFieldContext } from '../lib/field-context.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { useControlBlur } from '../lib/use-control-blur.js';
@@ -185,7 +185,11 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					>
 						<SelectTrigger
 							ref={triggerRef}
-							forwardedProps={{ ...fieldRequiredProps, ...triggerProps }}
+							forwardedProps={{
+								...fieldRequiredProps,
+								...triggerProps,
+								...fieldGroupTriggerAria(field, triggerProps),
+							}}
 							id={id}
 							accessibleName={accessibleName}
 							labelledBy={labelledBy}
@@ -292,6 +296,11 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
  * runs before the browser's. The select's own `required` wins, and keeps the native one.
  * `SelectField` writes the two together.
+ *
+ * In a `Field.Group` the legend names the group, not the select, so the select needs its own
+ * `aria-label`. The group's description and message still reach `aria-describedby`, and a
+ * `danger` group sets `aria-invalid`, so a select beside an input in an amount-and-unit group
+ * turns red with it.
  *
  * Only `danger` tints the border. `warning` and `success` reach the label and the message alone.
  *

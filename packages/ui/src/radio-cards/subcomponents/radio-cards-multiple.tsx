@@ -8,7 +8,8 @@ import { TooltipProviderIfMissing } from '../../tooltip/subcomponents/tooltip-pr
 import { TooltipTriggerBoundary } from '../../tooltip/tooltip-trigger-context.js';
 import { RadioCardsTextOverflow } from '../constants.js';
 import type { RadioCardsItemType, RadioCardsMultipleProps } from '../types.js';
-import { hasCheckedCard, NO_VALUES, useRadioCardsField, useRadioCardsGroup } from '../utils.js';
+import { useRadioCardsField } from '../use-radio-cards-field.js';
+import { hasCheckedCard, NO_VALUES, useRadioCardsGroup } from '../utils.js';
 import { RadioCardsItem } from './radio-cards-item.js';
 
 // Base UI appends a checked value to the end of the list, so the list would follow the clicks. It

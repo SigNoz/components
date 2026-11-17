@@ -70,6 +70,7 @@
  * | `--field-legend-padding` | `0` |
  * | `--field-message-icon-color` | `var(--field-label-icon)` |
  * | `--field-message-icon-disc-color` | `currentcolor` |
+ * | `--field-message-icon-disc-stroke` | `none` |
  * | `--field-message-icon-display` | `inline-flex` |
  * | `--field-message-icon-flex-shrink` | `0` |
  * | `--field-message-icon-glyph-color` | `var(--l1-background)` |
