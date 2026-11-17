@@ -128,6 +128,9 @@
  * | `--toast-viewport-padding` | `0` |
  * | `--toast-viewport-pointer-events` | `none` |
  * | `--toast-viewport-position` | `fixed` |
+ * | `--toast-viewport-transition-duration` | `240ms` |
+ * | `--toast-viewport-transition-property` | `right` |
+ * | `--toast-viewport-transition-timing-function` | `cubic-bezier(0.2, 0, 0, 1)` |
  * | `--toast-viewport-z-index` | `999999999` |
  * | `--toast-warning-icon` | `-` |
  * | `--toast-warning-icon-color` | `var(--toast-warning-icon)` |

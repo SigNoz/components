@@ -1,5 +1,6 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import { forwardRef, type ReactNode } from 'react';
+import { useRightEdgeCover } from '../../lib/right-edge-cover.js';
 import { cn } from '../../lib/utils.js';
 import { usePersistToasts } from '../persist-toasts.js';
 import styles from '../toast.module.scss';
@@ -29,6 +30,7 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 	ref,
 ) {
 	const spread = usePersistToasts();
+	const rightEdgeCover = useRightEdgeCover();
 	const { toasts } = ToastPrimitive.useToastManager();
 	// One landmark per position would list six for one `Toaster`. The other stacks become one only
 	// while they hold a toast. Each stays a live region either way, so its first toast is announced.
@@ -39,7 +41,11 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 			ref={ref}
 			aria-label="Notifications"
 			className={cn(styles['toaster'], spread && styles['toaster--spread'])}
-			style={viewportOffsetStyle(offset)}
+			style={{
+				...viewportOffsetStyle(offset),
+				// Only the right stacks read it.
+				...(rightEdgeCover > 0 && { '--toast-internal-right-edge-cover': `${rightEdgeCover}px` }),
+			}}
 			data-testid={testId}
 			{...props}
 			{...(!isLandmark && { role: undefined, 'aria-label': undefined })}
