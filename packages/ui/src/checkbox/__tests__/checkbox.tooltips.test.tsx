@@ -156,6 +156,11 @@ describe('Checkbox tooltip stacking', () => {
 			</Checkbox>,
 		);
 
+		// The label is measured by a ResizeObserver after mount. Hovering before that callback
+		// opens a tooltip with the reason alone, which is what CI caught on a slow runner.
+		const label = screen.getByText('A label far too long for a one hundred and twenty pixel row');
+		await waitFor(() => expect(label).toHaveAttribute('data-truncated', 'true'));
+
 		await user.hover(screen.getByTestId('checkbox'));
 
 		const tooltip = await screen.findByRole('tooltip');
