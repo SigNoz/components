@@ -624,6 +624,7 @@ describe('DatePicker rendering', () => {
 			);
 
 			expect(screen.getByTestId('start')).toBe(getTrigger());
+			expect(screen.getByTestId('start-root')).toBe(rootOf());
 			expect(screen.getByTestId('start-clear')).toHaveAttribute('data-slot', 'date-picker-clear');
 
 			await openDatePicker();
@@ -660,6 +661,7 @@ describe('DatePicker rendering', () => {
 				...document.querySelectorAll('[data-slot="date-picker"] [data-testid]'),
 			].filter((element) => element.tagName.toLowerCase() !== 'svg');
 
+			expect(rootOf()).not.toHaveAttribute('data-testid');
 			expect(getTrigger()).not.toHaveAttribute('data-testid');
 			expect(popup).not.toHaveAttribute('data-testid');
 			expect(named.map((element) => element.getAttribute('data-testid'))).toEqual([]);

@@ -284,6 +284,7 @@ const DatePickerImpl = forwardRef<HTMLButtonElement, DatePickerImplProps & Rejec
 						data-popup-open={open || undefined}
 						className={styles['date-picker']}
 						style={rootStyle}
+						{...(testId === undefined ? {} : { 'data-testid': partTestId(testId, 'root') })}
 					>
 						<DatePickerTrigger
 							ref={triggerRef}
@@ -495,7 +496,7 @@ export function createDatePicker<TDate>(
  * ### Asserting on it
  *
  * `testId` is `data-testid` on the trigger, and it names everything else: the parts are
- * `` `${testId}-clear` ``, `-popup`, `-calendar`, `-time-hours`, `-time-minutes`, `-time-seconds`,
+ * `` `${testId}-root` ``, `-clear`, `-popup`, `-calendar`, `-time-hours`, `-time-minutes`, `-time-seconds`,
  * `-timezone` and `-apply`. The calendar names its own parts from `` `${testId}-calendar` ``, eg:
  * `` `${testId}-calendar-button-06-11-2026` ``. Otherwise use the data attributes, never the
  * hashed class names.
