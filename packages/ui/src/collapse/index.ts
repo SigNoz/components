@@ -42,9 +42,12 @@
  * | `--collapse-header-padding-block` | `calc( (var(--collapse-internal-header-min-heigh...` |
  * | `--collapse-header-padding-inline` | `var(--spacing-4)` |
  * | `--collapse-header-suffix-align-items` | `center` |
+ * | `--collapse-header-suffix-align-self` | `var(--collapse-internal-header-suffix-align-self)` |
+ * | `--collapse-header-suffix-box-sizing` | `border-box` |
  * | `--collapse-header-suffix-display` | `flex` |
  * | `--collapse-header-suffix-flex-shrink` | `0` |
  * | `--collapse-header-suffix-gap` | `var(--spacing-2)` |
+ * | `--collapse-header-suffix-min-height` | `var(--collapse-internal-header-min-height)` |
  * | `--collapse-header-suffix-padding-block` | `var(--spacing-2)` |
  * | `--collapse-heading-display` | `flex` |
  * | `--collapse-heading-flex` | `1 1 auto` |
@@ -99,7 +102,7 @@
  * | `--collapse-title-text-overflow` | `ellipsis` |
  * | `--collapse-title-text-transform` | `var(--label-base-500-text-transform)` |
  * | `--collapse-title-white-space` | `nowrap` |
- * | `--collapse-title-wrap-line-height` | `var(--paragraph-base-400-line-height)` |
+ * | `--collapse-title-wrap-line-height` | `var(--paragraph-base-500-line-height)` |
  * | `--collapse-toggle-align-items` | `var(--collapse-internal-toggle-align-items)` |
  * | `--collapse-toggle-background` | `transparent` |
  * | `--collapse-toggle-border` | `none` |
