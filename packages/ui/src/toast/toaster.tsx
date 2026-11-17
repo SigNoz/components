@@ -34,6 +34,11 @@ import type { ToasterProps } from './types.js';
  * and on focus inside it, and its timers pause meanwhile. Swiping a toast toward the edge it sits
  * against dismisses it.
  *
+ * While a `Drawer` is open, the right stacks move left of it, so they do not cover its header or
+ * its footer, and move back as it closes. Where a toast does not fit beside it, the stack stops
+ * `offset` from the left edge of the window. The left and center stacks do not move, so a moved
+ * stack can meet one of them on a narrow page.
+ *
  * The viewport of `position` is a landmark. Another one is a landmark only while it holds a toast,
  * so an empty corner does not show up in the landmark list.
  *
