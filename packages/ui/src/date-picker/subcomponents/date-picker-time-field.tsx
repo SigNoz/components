@@ -46,6 +46,19 @@ export const DatePickerTimeField = forwardRef<HTMLInputElement, DatePickerTimeFi
 				return;
 			}
 
+			// The separator finishes a field left at one digit, so `1:30` reads as `01:30`. With no digit
+			// typed it does nothing: after `9` the focus already moved on, and `9:30` must not skip minutes.
+			if (event.key === ':') {
+				event.preventDefault();
+
+				if (hasFirstDigit) {
+					setHasFirstDigit(false);
+					onComplete();
+				}
+
+				return;
+			}
+
 			if (/^\d$/.test(event.key) && !event.ctrlKey && !event.metaKey && !event.altKey) {
 				event.preventDefault();
 

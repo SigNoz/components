@@ -464,8 +464,10 @@ export function createDatePicker<TDate>(
  * clear the value with `allowClear`. In the grid, the arrows move one day or one week, `Home` and
  * `End` move to the ends of the week, `PageUp` and `PageDown` one month, with `Shift` one year. A
  * disabled day takes the focus and cannot be picked. In a time field the arrows step and wrap,
- * digits replace the value, the second digit moves to the next field, and `Enter` applies. `Esc`
- * closes the popup and returns the focus to the trigger.
+ * digits replace the value, the second digit moves to the next field, and so does a first digit no
+ * second one can follow (`9` in hours), so `930` types `09:30`. A `:` after one digit moves on too,
+ * so `1:30` types `01:30`. `Enter` applies. `Esc` closes the popup and returns the focus to the
+ * trigger.
  *
  * ### Time zone
  *

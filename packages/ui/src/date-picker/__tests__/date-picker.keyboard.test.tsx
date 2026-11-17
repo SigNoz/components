@@ -380,11 +380,8 @@ describe('DatePicker time field keys', () => {
 	});
 
 	it.each([
-		['Hours', '99', '23:30:15'],
 		['Hours', '25', '23:30:15'],
-		['Minutes', '75', '09:59:15'],
-		['Seconds', '60', '09:30:59'],
-		['Seconds', '99', '09:30:59'],
+		['Hours', '29', '23:30:15'],
 	] as const)('writes the maximum for %s typed as %s', async (unit, digits, expected) => {
 		renderTime();
 		await openDatePicker();
@@ -392,6 +389,69 @@ describe('DatePicker time field keys', () => {
 		await typeInTimeField(unit, digits);
 
 		expect(readTimeRow()).toBe(expected);
+	});
+
+	it.each([
+		['Hours', '3', 3, 'Minutes'],
+		['Hours', '9', 9, 'Minutes'],
+		['Minutes', '6', 6, 'Seconds'],
+		['Minutes', '9', 9, 'Seconds'],
+	] as const)(
+		'moves past %s on a first digit %s that no second digit can follow',
+		async (unit, digit, value, next) => {
+			renderTime();
+			await openDatePicker();
+
+			await typeInTimeField(unit, digit);
+
+			expect((timeField(unit) as HTMLInputElement).value).toBe(`0${value}`);
+			expect(timeField(next)).toHaveFocus();
+		},
+	);
+
+	it('waits for a second digit after a first digit that can start a valid number', async () => {
+		renderTime();
+		await openDatePicker();
+
+		await typeInTimeField('Hours', '2');
+
+		expect((timeField('Hours') as HTMLInputElement).value).toBe('02');
+		expect(timeField('Hours')).toHaveFocus();
+
+		await typeInTimeField('Minutes', '5');
+
+		expect((timeField('Minutes') as HTMLInputElement).value).toBe('05');
+		expect(timeField('Minutes')).toHaveFocus();
+	});
+
+	it.each([
+		['930', '09:30:00'],
+		['0930', '09:30:00'],
+		['93045', '09:30:45'],
+		['2359', '23:59:00'],
+		['7', '07:00:00'],
+		['9:30', '09:30:00'],
+		['1:30', '01:30:00'],
+		['1:5:7', '01:05:07'],
+		['12:34:56', '12:34:56'],
+		[':', '00:00:00'],
+	] as const)('reads %s typed from the hours as %s', async (keys, expected) => {
+		renderTime(new Date(2026, 10, 6, 0, 0, 0));
+		await openDatePicker();
+
+		await typeInTimeField('Hours', keys);
+
+		expect(readTimeRow()).toBe(expected);
+	});
+
+	it('stays in the field on a separator typed before any digit', async () => {
+		renderTime();
+		await openDatePicker();
+
+		await typeInTimeField('Minutes', ':');
+
+		expect(readTimeRow()).toBe('09:30:15');
+		expect(timeField('Minutes')).toHaveFocus();
 	});
 
 	it('writes the maximum itself and the smallest number as typed', async () => {

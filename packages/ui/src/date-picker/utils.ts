@@ -183,8 +183,10 @@ export function stepTimeValue(value: number, delta: number, max: number): number
 /**
  * The value of a time field after a digit is typed, and whether the field is complete.
  *
- * The first digit replaces the value. The second one is appended to it, a number above `max` is
- * written as `max`, and the field is complete.
+ * The first digit replaces the value. When no second digit can follow it without passing `max`
+ * (`3` to `9` for hours, `6` to `9` for minutes), the field is complete right away, the way the
+ * browser's own time input does, so `930` reads as `09:30` and not `23:00`. Otherwise the second
+ * digit is appended, a number above `max` is written as `max`, and the field is complete.
  *
  * @access private
  */
@@ -195,7 +197,7 @@ export function typeTimeDigit(
 	max: number,
 ): { value: number; complete: boolean } {
 	if (!hasFirstDigit) {
-		return { value: digit, complete: false };
+		return { value: digit, complete: digit * 10 > max };
 	}
 
 	return { value: Math.min(value * 10 + digit, max), complete: true };
