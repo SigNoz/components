@@ -357,6 +357,16 @@
 				"require": "./dist/spinner/index.cjs"
 			}
 		},
+		"./steps": {
+			"import": {
+				"types": "./dist/steps/index.d.ts",
+				"import": "./dist/steps/index.mjs"
+			},
+			"require": {
+				"types": "./dist/steps/index.d.cts",
+				"require": "./dist/steps/index.cjs"
+			}
+		},
 		"./switch": {
 			"import": {
 				"types": "./dist/switch/index.d.ts",

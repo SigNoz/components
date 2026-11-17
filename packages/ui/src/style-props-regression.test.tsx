@@ -17,6 +17,7 @@ import { Progress } from './progress/progress.js';
 import { RadioGroup } from './radio-group/radio-group.js';
 import { Select } from './select/index.js';
 import { Slider } from './slider/index.js';
+import { Steps } from './steps/index.js';
 import { Switch } from './switch/switch.js';
 import { ForceOpenProvider } from './testing/index.js';
 import { ToggleGroup } from './toggle-group/index.js';
@@ -269,6 +270,37 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByTestId('slider'));
 		expectNoStrayStyle(screen.getByTestId('range'));
+	});
+
+	it('do not reach Steps nor Steps.List, nor a step of either', () => {
+		render(
+			<>
+				<Steps
+					current={1}
+					items={[
+						{ label: 'One', description: 'a', ...STRAY },
+						{ label: 'Two', ...STRAY },
+					]}
+					testId="steps"
+					{...STRAY}
+				/>
+				<Steps.List
+					items={[
+						{ label: 'One', children: 'a', ...STRAY },
+						{ children: 'b', ...STRAY },
+					]}
+					testId="list"
+					{...STRAY}
+				/>
+			</>,
+		);
+
+		expectNoStrayStyle(screen.getByTestId('steps'));
+		expectNoStrayStyle(screen.getByTestId('list'));
+		for (const element of document.querySelectorAll<HTMLElement>('[data-slot]')) {
+			expectNoStrayStyle(element);
+		}
+		expect(document.querySelector('.stray')).toBeNull();
 	});
 
 	it('do not reach RadioGroup', () => {
