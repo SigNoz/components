@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 .alert-strip {
 	display: var(--alert-strip-display, flex);
 	justify-content: var(--alert-strip-justify-content, center);
@@ -93,6 +95,55 @@
 	}
 }
 
+// The left slant after Figma, in the 54 by 24 units of an end: from its foot on the bar, up the
+// curve and the straight line, round the top corner to the top edge. The curves are sampled into
+// short lines.
+$slant: (
+	11 24,
+	12.34 23.9,
+	13.73 23.59,
+	15.13 23.11,
+	16.55 22.46,
+	17.97 21.67,
+	19.38 20.74,
+	20.76 19.7,
+	22.11 18.55,
+	23.4 17.33,
+	24.64 16.04,
+	36.8 1.44,
+	37.43 0.83,
+	38.18 0.38,
+	39 0.1,
+	39.87 0
+);
+
+// The outline of the region as one polygon: the bar, both slants and the top edge, so the fill is
+// painted once and no seam shows between its parts. A unit is 1/54 of the end across and 1/24 of
+// the height above the bar down, so the slant stretches with the height of the strip and keeps its
+// width. `$side` is the edge the bar runs along. The corners of the bar sit 1px past the box, so
+// the box draws its edges.
+@function region-outline($side) {
+	$end: var(--alert-strip-internal-end-inline-size);
+	$bar: var(--alert-strip-internal-bar-height);
+	$edge: calc(100% + 1px);
+	$bar-edge: calc(100% - #{$bar});
+	@if $side == top {
+		$edge: -1px;
+		$bar-edge: $bar;
+	}
+	$left: (-1px $edge, -1px $bar-edge);
+	$right: (calc(100% + 1px) $bar-edge, calc(100% + 1px) $edge);
+	@each $x, $y in $slant {
+		$from-bar: calc((100% - #{$bar}) * #{$y} / 24);
+		@if $side == top {
+			$from-bar: calc(100% - (100% - #{$bar}) * #{$y} / 24);
+		}
+		$left: list.append($left, calc(#{$end} * #{$x} / 54) $from-bar, comma);
+		$right: list.join((calc(100% - #{$end} * #{$x} / 54) $from-bar,), $right, comma);
+	}
+	@return polygon(list.join($left, $right, comma));
+}
+
 // The content sits between the two tapered ends, centered, and shrinks with a narrower parent.
 .alert-strip__region {
 	position: var(--alert-strip-region-position, relative);
@@ -103,108 +154,18 @@
 
 	// The fill of the region: the tapered ends, the body between them and the bar under them, cut
 	// out of one box, so a translucent fill is painted once.
-	//
-	// The outline is one polygon, so no seam shows between its parts: the bar, both slants and the
-	// top edge. A unit is 1/54 of the end across and 1/24 of the height above the bar down, so the
-	// slant stretches with the height of the strip and keeps its width. The corners of the bar sit
-	// 1px past the box, so the box draws its edges.
-	//
-	// The left slant is after Figma, in the 54 by 24 units of an end: from its foot on the bar, up the
-	// curve and the straight line, round the top corner to the top edge. The curves are sampled into
-	// short lines. The polygon runs along the left slant, then back down the mirrored one on the
-	// right.
 	&::before {
 		content: '';
 		position: var(--alert-strip-region-before-position, absolute);
 		inset: var(--alert-strip-region-before-inset, 0);
 		z-index: var(--alert-strip-region-before-z-index, -1);
 		background: var(--alert-strip-internal-background);
-		clip-path: var(
-			--alert-strip-region-before-clip-path,
-			polygon(
-				-1px calc(100% + 1px),
-				-1px calc(100% - var(--alert-strip-internal-bar-height)),
-				calc(var(--alert-strip-internal-end-inline-size) * 11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 39 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 39 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
-				calc(100% + 1px) calc(100% - var(--alert-strip-internal-bar-height)),
-				calc(100% + 1px) calc(100% + 1px)
-			)
-		);
+		clip-path: var(--alert-strip-region-before-clip-path, region-outline(bottom));
 	}
 
 	// At the top of the page the bar runs along the top edge, and the ends hang from it upside down.
 	.alert-strip[data-side='top'] &::before {
-		clip-path: var(
-			--alert-strip-region-before-top-clip-path,
-			polygon(
-				-1px -1px,
-				-1px var(--alert-strip-internal-bar-height),
-				calc(var(--alert-strip-internal-end-inline-size) * 11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 39 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
-				calc(var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 39 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
-				calc(100% - var(--alert-strip-internal-end-inline-size) * 11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
-				calc(100% + 1px) var(--alert-strip-internal-bar-height),
-				calc(100% + 1px) -1px
-			)
-		);
+		clip-path: var(--alert-strip-region-before-top-clip-path, region-outline(top));
 	}
 }
 

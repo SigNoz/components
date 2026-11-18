@@ -20,6 +20,10 @@ const SERVES_A_VARIABLE = new Set([
 	'skeleton/skeleton.module.scss ::after width',
 ]);
 
+// Written out, the clip path of AlertStrip is 34 points of nested `calc()`. Sass builds it from the
+// Figma curve instead; its public variable still replaces it whole.
+const SASS_ALLOWED = new Set(['alert-strip/alert-strip.module.scss']);
+
 // Arithmetic around a variable read is not a value: `calc(-1 * var(--x))`, `calc(1 - var(--x))`.
 // A math function with no variable read inside, such as `calc(0.5)`, is a hardcoded value.
 const MATH_FUNCTIONS = new Set(['calc', 'min', 'max', 'clamp']);
@@ -142,6 +146,7 @@ describe('every declaration reads a CSS variable', () => {
 			const found: string[] = [];
 			root.walkDecls((decl) => {
 				if (decl.prop.startsWith('$')) {
+					if (SASS_ALLOWED.has(path)) return;
 					found.push(`${path}:${decl.source?.start?.line} Sass variable ${decl.prop}`);
 					return;
 				}

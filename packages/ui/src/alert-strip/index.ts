@@ -114,10 +114,10 @@
  * | `--alert-strip-primary-foreground-color` | `var(--alert-strip-primary-foreground)` |
  * | `--alert-strip-primary-link-hover` | `-` |
  * | `--alert-strip-primary-link-hover-color` | `var(--alert-strip-primary-link-hover)` |
- * | `--alert-strip-region-before-clip-path` | `polygon( -1px calc(100% + 1px), -1px calc(100% ...` |
+ * | `--alert-strip-region-before-clip-path` | `region-outline(bottom)` |
  * | `--alert-strip-region-before-inset` | `0` |
  * | `--alert-strip-region-before-position` | `absolute` |
- * | `--alert-strip-region-before-top-clip-path` | `polygon( -1px -1px, -1px var(--alert-strip-inte...` |
+ * | `--alert-strip-region-before-top-clip-path` | `region-outline(top)` |
  * | `--alert-strip-region-before-z-index` | `-1` |
  * | `--alert-strip-region-display` | `flex` |
  * | `--alert-strip-region-flex` | `0 1 942px` |
