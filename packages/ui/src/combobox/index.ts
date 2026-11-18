@@ -76,6 +76,8 @@
  * | `--combobox-empty-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--combobox-empty-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--combobox-empty-text-transform` | `var(--paragraph-base-400-text-transform)` |
+ * | `--combobox-font-feature-settings` | `'ss01' 1` |
+ * | `--combobox-font-variant-numeric` | `normal` |
  * | `--combobox-footer-border-color` | `var(--combobox-search-border)` |
  * | `--combobox-footer-border-style` | `solid` |
  * | `--combobox-footer-border-width` | `1px` |
@@ -151,7 +153,9 @@
  * | `--combobox-item-display` | `flex` |
  * | `--combobox-item-focus-outline` | `none` |
  * | `--combobox-item-font-family` | `var(--label-base-400-font-family)` |
+ * | `--combobox-item-font-feature-settings` | `'ss01' 1` |
  * | `--combobox-item-font-size` | `var(--label-base-400-font-size)` |
+ * | `--combobox-item-font-variant-numeric` | `normal` |
  * | `--combobox-item-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--combobox-item-gap` | `var(--spacing-2)` |
  * | `--combobox-item-highlighted-background-color` | `var(--combobox-item-background-hover)` |
@@ -216,6 +220,8 @@
  * | `--combobox-popup-display` | `flex` |
  * | `--combobox-popup-flex-direction` | `column` |
  * | `--combobox-popup-focus-visible-outline` | `none` |
+ * | `--combobox-popup-font-feature-settings` | `'ss01' 1` |
+ * | `--combobox-popup-font-variant-numeric` | `normal` |
  * | `--combobox-popup-max-block-size` | `var(--available-height, none)` |
  * | `--combobox-popup-max-inline-size` | `var(--combobox-internal-max-inline-size, 15.75rem)` |
  * | `--combobox-popup-min-inline-size` | `12rem` |
@@ -246,6 +252,8 @@
  * | `--combobox-search-input-flex-grow` | `1` |
  * | `--combobox-search-input-focus-visible-outline` | `none` |
  * | `--combobox-search-input-font-family` | `var(--label-base-400-font-family)` |
+ * | `--combobox-search-input-font-feature-settings` | `'ss01' 1` |
+ * | `--combobox-search-input-font-variant-numeric` | `normal` |
  * | `--combobox-search-input-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--combobox-search-input-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--combobox-search-input-line-height` | `var(--label-base-400-line-height)` |
@@ -287,7 +295,9 @@
  * | `--combobox-trigger-focus-ring` | `-` |
  * | `--combobox-trigger-focus-ring-color` | `var(--combobox-trigger-focus-ring)` |
  * | `--combobox-trigger-font-family` | `var(--label-base-400-font-family)` |
+ * | `--combobox-trigger-font-feature-settings` | `'ss01' 1` |
  * | `--combobox-trigger-font-size` | `var(--label-base-400-font-size)` |
+ * | `--combobox-trigger-font-variant-numeric` | `normal` |
  * | `--combobox-trigger-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--combobox-trigger-gap` | `var(--spacing-4)` |
  * | `--combobox-trigger-hover-border-color` | `var(--combobox-trigger-border-hover)` |
@@ -300,6 +310,7 @@
  * | `--combobox-trigger-margin` | `0` |
  * | `--combobox-trigger-min-block-size` | `2rem` |
  * | `--combobox-trigger-min-inline-size` | `0` |
+ * | `--combobox-trigger-outline-color` | `transparent` |
  * | `--combobox-trigger-padding-block` | `var(--spacing-2)` |
  * | `--combobox-trigger-padding-inline-end` | `var(--spacing-4)` |
  * | `--combobox-trigger-padding-inline-start` | `var(--spacing-6)` |
@@ -327,13 +338,17 @@
  * | `--combobox-viewport-overflow-x` | `hidden` |
  * | `--combobox-viewport-overflow-y` | `auto` |
  * | `--combobox-viewport-overscroll-behavior` | `contain` |
+ * | `--combobox-viewport-scroll-end-mask-image` | `linear-gradient( to top, transparent 0, black v...` |
  * | `--combobox-viewport-scroll-padding-block` | `var(--combobox-scroll-fade-size, var(--spacing-...` |
+ * | `--combobox-viewport-scroll-start-mask-image` | `linear-gradient( to bottom, transparent 0, blac...` |
+ * | `--combobox-viewport-scroll-start-scroll-end-mask-image` | `linear-gradient( to bottom, transparent 0, blac...` |
  * | `--combobox-viewport-scrollbar-width` | `thin` |
  * | `--combobox-virtual-list-inline-size` | `100%` |
  * | `--combobox-virtual-list-position` | `relative` |
  * | `--combobox-virtual-row-box-sizing` | `border-box` |
  * | `--combobox-virtual-row-inset-block-start` | `0` |
  * | `--combobox-virtual-row-inset-inline` | `0` |
+ * | `--combobox-virtual-row-last-padding-block-end` | `0` |
  * | `--combobox-virtual-row-position` | `absolute` |
  * | `--combobox-width` | `var(--combobox-internal-width, 100%)` |
  * | `--combobox-z-index` | `50` |
