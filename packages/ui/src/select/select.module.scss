@@ -21,8 +21,8 @@
   inline-size: var(--select-width, var(--select-internal-width, 100%));
   max-inline-size: var(--select-max-width, var(--select-internal-max-width, 100%));
 
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--select-font-variant-numeric, normal);
+  font-feature-settings: var(--select-font-feature-settings, 'ss01' 1);
 }
 
 .select__trigger {
@@ -53,8 +53,8 @@
   line-height: var(--select-trigger-line-height, var(--label-base-400-line-height));
   letter-spacing: var(--select-trigger-letter-spacing, var(--label-base-400-letter-spacing));
   text-transform: var(--select-trigger-text-transform, var(--label-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--select-trigger-font-variant-numeric, normal);
+  font-feature-settings: var(--select-trigger-font-feature-settings, 'ss01' 1);
   text-align: var(--select-trigger-text-align, start);
 
   cursor: var(--select-trigger-cursor, pointer);
@@ -63,7 +63,7 @@
   // instead of popping. An `outline-style` change cannot be interpolated.
   outline-width: var(--select-trigger-focus-outline-width, 1px);
   outline-style: var(--select-trigger-focus-outline-style, solid);
-  outline-color: transparent;
+  outline-color: var(--select-trigger-outline-color, transparent);
   outline-offset: var(--select-trigger-focus-outline-offset, 1px);
 
   transition-property: var(--select-trigger-transition-property, border-color, opacity, outline-color);
@@ -286,8 +286,8 @@
   padding-block: var(--select-popup-padding-block, 0);
   padding-inline: var(--select-popup-padding-inline, 0);
 
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--select-popup-font-variant-numeric, normal);
+  font-feature-settings: var(--select-popup-font-feature-settings, 'ss01' 1);
 
   border-width: var(--select-popup-border-width, 1px);
   border-style: var(--select-popup-border-style, solid);
@@ -329,30 +329,39 @@
     outline: var(--select-list-focus-visible-outline, none);
   }
 
-  // A mask reads alpha only: keep the opaque stop `#000`, a translucent token would dim every row.
+  // A mask reads alpha only: keep the opaque stop `black`, a translucent token would dim every row.
   &[data-scroll-start] {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 var(--select-scroll-fade-size, var(--spacing-10))
+    mask-image: var(
+      --select-list-scroll-start-mask-image,
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--select-scroll-fade-size, var(--spacing-10))
+      )
     );
   }
 
   &[data-scroll-end] {
-    mask-image: linear-gradient(
-      to top,
-      transparent 0,
-      #000 var(--select-scroll-fade-size, var(--spacing-10))
+    mask-image: var(
+      --select-list-scroll-end-mask-image,
+      linear-gradient(
+        to top,
+        transparent 0,
+        black var(--select-scroll-fade-size, var(--spacing-10))
+      )
     );
   }
 
   &[data-scroll-start][data-scroll-end] {
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0,
-      #000 var(--select-scroll-fade-size, var(--spacing-10)),
-      #000 calc(100% - var(--select-scroll-fade-size, var(--spacing-10))),
-      transparent 100%
+    mask-image: var(
+      --select-list-scroll-start-scroll-end-mask-image,
+      linear-gradient(
+        to bottom,
+        transparent 0,
+        black var(--select-scroll-fade-size, var(--spacing-10)),
+        black calc(100% - var(--select-scroll-fade-size, var(--spacing-10))),
+        transparent 100%
+      )
     );
   }
 }

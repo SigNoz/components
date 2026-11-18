@@ -60,6 +60,8 @@
  * | `--select-empty-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
  * | `--select-empty-line-height` | `var(--paragraph-base-400-line-height)` |
  * | `--select-empty-text-transform` | `var(--paragraph-base-400-text-transform)` |
+ * | `--select-font-feature-settings` | `'ss01' 1` |
+ * | `--select-font-variant-numeric` | `normal` |
  * | `--select-group-display` | `flex` |
  * | `--select-group-flex-direction` | `column` |
  * | `--select-group-label` | `-` |
@@ -170,7 +172,10 @@
  * | `--select-list-overflow-x` | `hidden` |
  * | `--select-list-overflow-y` | `auto` |
  * | `--select-list-overscroll-behavior` | `contain` |
+ * | `--select-list-scroll-end-mask-image` | `linear-gradient( to top, transparent 0, black v...` |
  * | `--select-list-scroll-padding-block` | `var(--select-scroll-fade-size, var(--spacing-10))` |
+ * | `--select-list-scroll-start-mask-image` | `linear-gradient( to bottom, transparent 0, blac...` |
+ * | `--select-list-scroll-start-scroll-end-mask-image` | `linear-gradient( to bottom, transparent 0, blac...` |
  * | `--select-list-scrollbar-width` | `thin` |
  * | `--select-loading-align-items` | `center` |
  * | `--select-loading-color` | `var(--select-loading-label)` |
@@ -197,6 +202,8 @@
  * | `--select-popup-display` | `flex` |
  * | `--select-popup-flex-direction` | `column` |
  * | `--select-popup-focus-visible-outline` | `none` |
+ * | `--select-popup-font-feature-settings` | `'ss01' 1` |
+ * | `--select-popup-font-variant-numeric` | `normal` |
  * | `--select-popup-max-block-size` | `var(--available-height, none)` |
  * | `--select-popup-max-inline-size` | `var(--select-internal-max-inline-size, 15.75rem)` |
  * | `--select-popup-min-inline-size` | `12rem` |
@@ -239,7 +246,9 @@
  * | `--select-trigger-focus-ring` | `-` |
  * | `--select-trigger-focus-ring-color` | `var(--select-trigger-focus-ring)` |
  * | `--select-trigger-font-family` | `var(--label-base-400-font-family)` |
+ * | `--select-trigger-font-feature-settings` | `'ss01' 1` |
  * | `--select-trigger-font-size` | `var(--label-base-400-font-size)` |
+ * | `--select-trigger-font-variant-numeric` | `normal` |
  * | `--select-trigger-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--select-trigger-gap` | `var(--spacing-4)` |
  * | `--select-trigger-hover-border-color` | `var(--select-trigger-border-hover)` |
@@ -251,6 +260,7 @@
  * | `--select-trigger-margin` | `0` |
  * | `--select-trigger-min-block-size` | `2rem` |
  * | `--select-trigger-min-inline-size` | `0` |
+ * | `--select-trigger-outline-color` | `transparent` |
  * | `--select-trigger-padding-block` | `var(--spacing-2)` |
  * | `--select-trigger-padding-inline-end` | `var(--spacing-4)` |
  * | `--select-trigger-padding-inline-start` | `var(--spacing-6)` |
