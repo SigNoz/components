@@ -123,8 +123,8 @@
   line-height: var(--toast-line-height, var(--paragraph-base-400-line-height));
   letter-spacing: var(--toast-letter-spacing, var(--paragraph-base-400-letter-spacing));
   text-transform: var(--toast-text-transform, var(--paragraph-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--toast-font-variant-numeric, normal);
+  font-feature-settings: var(--toast-font-feature-settings, 'ss01' 1);
   // Base UI numbers the toasts from the newest, 0, and sets `--toast-index` on each.
   z-index: calc(var(--toast-internal-z-index-base) - var(--toast-index, 0));
   transform-origin: var(--toast-transform-origin, top center);
@@ -358,8 +358,8 @@
   line-height: var(--toast-action-line-height, var(--label-small-400-line-height));
   letter-spacing: var(--toast-action-letter-spacing, var(--label-small-400-letter-spacing));
   text-transform: var(--toast-action-text-transform, var(--label-small-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--toast-action-font-variant-numeric, normal);
+  font-feature-settings: var(--toast-action-font-feature-settings, 'ss01' 1);
   cursor: var(--toast-action-cursor, pointer);
   transition-property: var(--toast-action-transition-property, opacity, background-color, color);
   transition-duration: var(--toast-internal-duration);

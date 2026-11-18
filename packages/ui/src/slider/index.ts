@@ -18,6 +18,8 @@
  * | `--slider-display` | `flex` |
  * | `--slider-dragging-cursor` | `grabbing` |
  * | `--slider-flex-direction` | `column` |
+ * | `--slider-font-feature-settings` | `'ss01' 1` |
+ * | `--slider-font-variant-numeric` | `normal` |
  * | `--slider-gap` | `var(--spacing-2)` |
  * | `--slider-highlight-danger-indicator` | `-` |
  * | `--slider-highlight-danger-indicator-color` | `var(--slider-highlight-danger-indicator)` |
@@ -51,6 +53,7 @@
  * | `--slider-mark-grid-area` | `1 / 1` |
  * | `--slider-mark-inset-inline-start` | `var(--slider-internal-mark-anchor)` |
  * | `--slider-mark-justify-self` | `start` |
+ * | `--slider-mark-last-child-room-end` | `calc(100% - var(--slider-internal-mark-anchor))` |
  * | `--slider-mark-letter-spacing` | `var(--paragraph-small-400-letter-spacing)` |
  * | `--slider-mark-line-height` | `var(--paragraph-small-400-line-height)` |
  * | `--slider-mark-max-width` | `var(--slider-internal-mark-max-width)` |
@@ -62,6 +65,7 @@
  * | `--slider-mark-text-overflow` | `ellipsis` |
  * | `--slider-mark-text-transform` | `var(--paragraph-small-400-text-transform)` |
  * | `--slider-mark-translate` | `-50% 0` |
+ * | `--slider-mark-travel` | `calc(100% - var(--slider-internal-thumb-size))` |
  * | `--slider-mark-white-space` | `nowrap` |
  * | `--slider-mark-wrap-overflow-wrap` | `anywhere` |
  * | `--slider-mark-wrap-white-space` | `normal` |

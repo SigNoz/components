@@ -290,7 +290,7 @@
 // line of text it stands for.
 .card__skeleton-line {
 	--skeleton-title-height: var(--card-skeleton-line-height, var(--spacing-6));
-	--skeleton-title-margin-bottom: 0;
+	--skeleton-title-margin-bottom: var(--card-skeleton-line-margin-bottom, 0);
 
 	display: var(--card-skeleton-line-display, flex);
 	align-items: var(--card-skeleton-line-align-items, center);

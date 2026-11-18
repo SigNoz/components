@@ -34,6 +34,7 @@
  * | `--color-picker-box-shadow` | `var(--color-picker-shadow)` |
  * | `--color-picker-box-sizing` | `border-box` |
  * | `--color-picker-channel-label-padding-inline` | `var(--spacing-3) 0` |
+ * | `--color-picker-checkerboard` | `repeating-conic-gradient(var(--color-picker-int...` |
  * | `--color-picker-checkerboard-color` | `color-mix(in srgb, var(--color-picker-foregroun...` |
  * | `--color-picker-checkerboard-size` | `var(--spacing-4)` |
  * | `--color-picker-clear-align-items` | `center` |
@@ -92,7 +93,9 @@
  * | `--color-picker-field-input-color` | `var(--color-picker-field-value)` |
  * | `--color-picker-field-input-flex` | `1` |
  * | `--color-picker-field-input-font-family` | `var(--label-base-400-font-family)` |
+ * | `--color-picker-field-input-font-feature-settings` | `'ss01' 1` |
  * | `--color-picker-field-input-font-size` | `var(--label-base-400-font-size)` |
+ * | `--color-picker-field-input-font-variant-numeric` | `normal` |
  * | `--color-picker-field-input-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--color-picker-field-input-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--color-picker-field-input-line-height` | `var(--label-base-400-line-height)` |
@@ -124,7 +127,9 @@
  * | `--color-picker-flex-direction` | `column` |
  * | `--color-picker-focus-visible-outline` | `none` |
  * | `--color-picker-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--color-picker-font-feature-settings` | `'ss01' 1` |
  * | `--color-picker-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--color-picker-font-variant-numeric` | `normal` |
  * | `--color-picker-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--color-picker-footer-color` | `var(--color-picker-footer-foreground)` |
  * | `--color-picker-footer-font-family` | `var(--paragraph-small-400-font-family)` |
@@ -154,6 +159,7 @@
  * | `--color-picker-positioner-focus-visible-outline` | `none` |
  * | `--color-picker-positioner-inline-size` | `max-content` |
  * | `--color-picker-positioner-pointer-events` | `auto` |
+ * | `--color-picker-preview-background-size` | `100% 100%, var(--color-picker-internal-checker-...` |
  * | `--color-picker-preview-border` | `-` |
  * | `--color-picker-preview-border-color` | `var(--color-picker-preview-border)` |
  * | `--color-picker-preview-border-radius` | `var(--radius-2)` |

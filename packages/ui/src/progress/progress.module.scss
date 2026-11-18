@@ -6,8 +6,8 @@
 	gap: var(--progress-gap, var(--spacing-4));
 	width: var(--progress-width, var(--progress-internal-width, 100%));
 	max-width: var(--progress-max-width, var(--progress-internal-max-width, 100%));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--progress-font-variant-numeric, normal);
+	font-feature-settings: var(--progress-font-feature-settings, 'ss01' 1);
 
 	--progress-internal-border-radius: var(--progress-border-radius, var(--radius-1));
 
@@ -118,10 +118,14 @@
 		--progress-step-border-radius,
 		var(--progress-internal-border-radius)
 	);
-	--progress-internal-step-period: calc(
-		(100% + var(--progress-internal-step-gap)) / var(--progress-internal-steps)
+	--progress-internal-step-period: var(
+		--progress-track-steps-period,
+		calc((100% + var(--progress-internal-step-gap)) / var(--progress-internal-steps))
 	);
-	--progress-internal-step-end: calc(100% - var(--progress-internal-step-gap));
+	--progress-internal-step-end: var(
+		--progress-track-steps-end,
+		calc(100% - var(--progress-internal-step-gap))
+	);
 	--progress-internal-step-corner-end: calc(
 		var(--progress-internal-step-end) - var(--progress-internal-step-radius)
 	);
@@ -199,8 +203,14 @@
 		--progress-indicator-active-transition-timing-function,
 		cubic-bezier(0.4, 0, 0.2, 1)
 	);
-	// Bare: CSS Modules renames the keyframes, and does not rename a name inside a `var()`.
-	animation-name: progress-stripes;
+	// CSS Modules renames the keyframes, and does not rename a name inside a `var()` fallback, so the
+	// name goes through an internal variable first.
+	--progress-internal-animation-name: progress-stripes;
+
+	animation-name: var(
+		--progress-indicator-active-animation-name,
+		var(--progress-internal-animation-name)
+	);
 	animation-duration: var(--progress-indicator-active-animation-duration, 1.5s);
 	animation-timing-function: var(--progress-indicator-active-animation-timing-function, linear);
 	animation-iteration-count: var(--progress-indicator-active-animation-iteration-count, infinite);

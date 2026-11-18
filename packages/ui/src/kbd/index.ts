@@ -10,6 +10,7 @@
  * | `--kbd-block-display` | `flex` |
  * | `--kbd-border-color` | `var(--secondary-border)` |
  * | `--kbd-border-radius` | `var(--radius-1-5)` |
+ * | `--kbd-border-style` | `solid` |
  * | `--kbd-border-width` | `1px` |
  * | `--kbd-cursor` | `default` |
  * | `--kbd-disabled-opacity` | `0.5` |

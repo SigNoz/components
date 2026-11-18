@@ -12,9 +12,9 @@
 		color-mix(in srgb, var(--color-picker-foreground) 24%, transparent)
 	);
 	--color-picker-internal-checker-size: var(--color-picker-checkerboard-size, var(--spacing-4));
-	--color-picker-internal-checkerboard: repeating-conic-gradient(
-		var(--color-picker-internal-checker-color) 0 25%,
-		transparent 0 50%
+	--color-picker-internal-checkerboard: var(
+		--color-picker-checkerboard,
+		repeating-conic-gradient(var(--color-picker-internal-checker-color) 0 25%, transparent 0 50%)
 	);
 
 	display: var(--color-picker-display, flex);
@@ -30,8 +30,8 @@
 	line-height: var(--color-picker-line-height, var(--paragraph-base-400-line-height));
 	letter-spacing: var(--color-picker-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--color-picker-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--color-picker-font-variant-numeric, normal);
+	font-feature-settings: var(--color-picker-font-feature-settings, 'ss01' 1);
 	border-width: var(--color-picker-border-width, 1px);
 	border-style: var(--color-picker-border-style, solid);
 	border-color: var(--color-picker-border-color, var(--color-picker-border));
@@ -229,9 +229,11 @@
 			var(--color-picker-internal-color)
 		),
 		var(--color-picker-internal-checkerboard);
-	background-size:
+	background-size: var(
+		--color-picker-preview-background-size,
 		100% 100%,
-		var(--color-picker-internal-checker-size) var(--color-picker-internal-checker-size);
+		var(--color-picker-internal-checker-size) var(--color-picker-internal-checker-size)
+	);
 
 	&[data-empty] {
 		--color-picker-internal-preview-empty-line: var(
@@ -361,8 +363,8 @@
 		--color-picker-field-input-text-transform,
 		var(--label-base-400-text-transform)
 	);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--color-picker-field-input-font-variant-numeric, normal);
+	font-feature-settings: var(--color-picker-field-input-font-feature-settings, 'ss01' 1);
 }
 
 .color-picker__clear {

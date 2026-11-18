@@ -69,8 +69,8 @@
 	line-height: var(--alert-dialog-line-height, var(--paragraph-base-400-line-height));
 	letter-spacing: var(--alert-dialog-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--alert-dialog-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--alert-dialog-font-variant-numeric, normal);
+	font-feature-settings: var(--alert-dialog-font-feature-settings, 'ss01' 1);
 
 	opacity: var(--alert-dialog-opacity, 1);
 	transform: var(--alert-dialog-transform, none);

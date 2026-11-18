@@ -116,6 +116,7 @@
  * | `--card-skeleton-line-align-items` | `center` |
  * | `--card-skeleton-line-display` | `flex` |
  * | `--card-skeleton-line-height` | `var(--spacing-6)` |
+ * | `--card-skeleton-line-margin-bottom` | `0` |
  * | `--card-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--card-title-color` | `var(--l1-foreground)` |
  * | `--card-title-flex` | `0 1 auto` |

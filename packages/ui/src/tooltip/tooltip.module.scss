@@ -4,15 +4,15 @@
 	// A Radix modal sets `pointer-events: none` on the body. A popup portalled there,
 	// into a `container` outside the panel, would let the pointer fall through and close before
 	// its text can be selected. Base UI still switches it off inline while the popup closes.
-	pointer-events: auto;
+	pointer-events: var(--tooltip-positioner-pointer-events, auto);
 	// Base UI places the positioner with `left`, so its width would otherwise shrink to what is
 	// left of the containing block. Inside a dialog that is a zero-size layer, which wraps the
 	// popup one word per line. The popup still caps itself at `--tooltip-max-width`.
-	width: max-content;
+	width: var(--tooltip-positioner-width, max-content);
 }
 
 .tooltip__content {
-	box-sizing: border-box;
+	box-sizing: var(--tooltip-box-sizing, border-box);
 	background-color: var(--tooltip-background-color, var(--tooltip-background));
 	color: var(--tooltip-foreground, var(--tooltip-label));
 	width: var(--tooltip-width, fit-content);
@@ -29,8 +29,8 @@
 	line-height: var(--tooltip-line-height, var(--paragraph-base-400-line-height));
 	letter-spacing: var(--tooltip-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--tooltip-text-transform, var(--paragraph-base-400-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--tooltip-font-variant-numeric, normal);
+	font-feature-settings: var(--tooltip-font-feature-settings, 'ss01' 1);
 	text-wrap: var(--tooltip-text-wrap, balance);
 	text-align: var(--tooltip-text-align, start);
 	border-width: var(--tooltip-border-width, 1px);
@@ -39,18 +39,18 @@
 	box-shadow: var(--tooltip-box-shadow, var(--tooltip-shadow));
 	backdrop-filter: var(--tooltip-backdrop-filter, blur(30px));
 	// Backstop: past six lines the content belongs in a popover.
-	display: -webkit-box;
-	-webkit-box-orient: vertical;
+	display: var(--tooltip-display, -webkit-box);
+	-webkit-box-orient: var(--tooltip-box-orient, vertical);
 	-webkit-line-clamp: var(--tooltip-max-lines, 6);
 	overflow: var(--tooltip-overflow, hidden);
 }
 
 .tooltip__trigger {
-	font: inherit;
-	letter-spacing: inherit;
-	word-spacing: inherit;
-	text-transform: inherit;
-	color: inherit;
+	font: var(--tooltip-trigger-font, inherit);
+	letter-spacing: var(--tooltip-trigger-letter-spacing, inherit);
+	word-spacing: var(--tooltip-trigger-word-spacing, inherit);
+	text-transform: var(--tooltip-trigger-text-transform, inherit);
+	color: var(--tooltip-trigger-color, inherit);
 }
 
 .tooltip__stack {

@@ -53,6 +53,7 @@
  * | `--button-group-item-flex` | `0 0 auto` |
  * | `--button-group-item-flex-direction` | `row` |
  * | `--button-group-item-focus-z-index` | `2` |
+ * | `--button-group-item-font-feature-settings` | `'ss01' 1` |
  * | `--button-group-item-hover-z-index` | `1` |
  * | `--button-group-item-isolation` | `isolate` |
  * | `--button-group-item-justify-content` | `center` |
@@ -109,6 +110,8 @@
  * | `--button-group-prefix-wrapper-transition` | `grid-template-columns var(--button-group-intern...` |
  * | `--button-group-prefix-wrapper-transition-delay` | `0s` |
  * | `--button-group-radius` | `var(--radius-1)` |
+ * | `--button-group-root-font-feature-settings` | `'ss01' 1` |
+ * | `--button-group-root-font-variant-numeric` | `normal` |
  * | `--button-group-row-align-items` | `stretch` |
  * | `--button-group-row-display` | `flex` |
  * | `--button-group-row-position` | `relative` |

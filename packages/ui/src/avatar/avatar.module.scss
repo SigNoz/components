@@ -26,8 +26,8 @@
 	line-height: var(--avatar-line-height, var(--avatar-internal-line-height));
 	letter-spacing: var(--avatar-letter-spacing, var(--avatar-internal-letter-spacing));
 	text-transform: var(--avatar-text-transform, var(--avatar-internal-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--avatar-font-variant-numeric, normal);
+	font-feature-settings: var(--avatar-font-feature-settings, 'ss01' 1);
 
 	&[data-size='sm'] {
 		--avatar-internal-size: var(--avatar-sm-size, 24px);

@@ -20,6 +20,7 @@
  * | `--button-base-border-color` | `transparent` |
  * | `--button-base-border-width` | `0px` |
  * | `--button-border-radius` | `var(--radius-1)` |
+ * | `--button-box-sizing` | `border-box` |
  * | `--button-cursor` | `pointer` |
  * | `--button-danger-background` | `-` |
  * | `--button-danger-background-color` | `var(--button-danger-background)` |
@@ -31,6 +32,20 @@
  * | `--button-danger-link-hover` | `-` |
  * | `--button-danger-link-hover-color` | `var(--button-danger-link-hover)` |
  * | `--button-danger-solid-foreground` | `var(--button-danger-label)` |
+ * | `--button-dash-border-block-size` | `calc(100% - 2 * var(--button-internal-dash-offs...` |
+ * | `--button-dash-border-inline-size` | `calc(100% - 2 * var(--button-internal-dash-offs...` |
+ * | `--button-dash-border-overflow` | `visible` |
+ * | `--button-dash-border-pointer-events` | `none` |
+ * | `--button-dash-border-position` | `absolute` |
+ * | `--button-dash-border-rect-animation-iteration-count` | `infinite` |
+ * | `--button-dash-border-rect-animation-name` | `var(--button-internal-dash-animation-name)` |
+ * | `--button-dash-border-rect-animation-play-state` | `paused` |
+ * | `--button-dash-border-rect-animation-timing-function` | `linear` |
+ * | `--button-dash-border-rect-fill` | `none` |
+ * | `--button-dash-border-rect-running-animation-play-state` | `running` |
+ * | `--button-dash-border-rect-transition-duration` | `150ms` |
+ * | `--button-dash-border-rect-transition-property` | `stroke` |
+ * | `--button-dash-border-rect-transition-timing-function` | `ease` |
  * | `--button-dash-border-width` | `1px` |
  * | `--button-dash-duration` | `200ms` |
  * | `--button-dash-gap` | `3px` |
@@ -47,19 +62,31 @@
  * | `--button-focus-visible-outline` | `var(--button-focus-ring) solid 1px` |
  * | `--button-focus-visible-outline-offset` | `1px` |
  * | `--button-font-family` | `var(--button-internal-font-family)` |
+ * | `--button-font-feature-settings` | `'ss01' 1` |
  * | `--button-font-size` | `var(--button-internal-font-size)` |
  * | `--button-font-variant-numeric` | `slashed-zero` |
  * | `--button-font-weight` | `var(--button-internal-font-weight)` |
  * | `--button-gap` | `var(--button-internal-gap)` |
+ * | `--button-ghost-content-position` | `relative` |
  * | `--button-ghost-content-z-index` | `1` |
+ * | `--button-ghost-glow-animation-iteration-count` | `infinite` |
+ * | `--button-ghost-glow-animation-name` | `var(--button-internal-ghost-glow-animation-name)` |
+ * | `--button-ghost-glow-animation-play-state` | `paused` |
+ * | `--button-ghost-glow-animation-timing-function` | `linear` |
  * | `--button-ghost-glow-background` | `linear-gradient(90deg, color-mix(in srgb, var(-...` |
  * | `--button-ghost-glow-background-size` | `200% 100%` |
  * | `--button-ghost-glow-blur` | `6px` |
  * | `--button-ghost-glow-duration` | `2.5s` |
- * | `--button-ghost-glow-fade` | `600ms ease` |
+ * | `--button-ghost-glow-idle-opacity` | `0` |
  * | `--button-ghost-glow-inset` | `-4px` |
+ * | `--button-ghost-glow-loading-animation-play-state` | `running` |
  * | `--button-ghost-glow-loading-opacity` | `1` |
  * | `--button-ghost-glow-opacity` | `-` |
+ * | `--button-ghost-glow-pointer-events` | `none` |
+ * | `--button-ghost-glow-position` | `absolute` |
+ * | `--button-ghost-glow-transition-duration` | `600ms` |
+ * | `--button-ghost-glow-transition-property` | `opacity` |
+ * | `--button-ghost-glow-transition-timing-function` | `ease` |
  * | `--button-ghost-glow-z-index` | `0` |
  * | `--button-height` | `24px` |
  * | `--button-highlight-danger-background` | `-` |
@@ -100,6 +127,7 @@
  * | `--button-loader-slot-hidden-opacity` | `0` |
  * | `--button-loader-slot-hidden-transform` | `translateY(var(--button-internal-loading-travel))` |
  * | `--button-loader-slot-idle-animation-play-state` | `paused` |
+ * | `--button-loader-slot-transition-delay` | `0s` |
  * | `--button-loader-slot-visible-opacity` | `1` |
  * | `--button-loader-slot-visible-transform` | `translateY(0)` |
  * | `--button-loading-cursor` | `wait` |
@@ -114,6 +142,7 @@
  * | `--button-padding` | `var(--spacing-2) var(--spacing-4)` |
  * | `--button-prefix-slot-hidden-opacity` | `0` |
  * | `--button-prefix-slot-hidden-transform` | `translateY(calc(-1 * var(--button-internal-load...` |
+ * | `--button-prefix-slot-hidden-transition-delay` | `0s` |
  * | `--button-prefix-slot-visible-opacity` | `1` |
  * | `--button-prefix-slot-visible-transform` | `translateY(0)` |
  * | `--button-prefix-wrapper-align-items` | `center` |
@@ -127,6 +156,7 @@
  * | `--button-prefix-wrapper-justify-items` | `center` |
  * | `--button-prefix-wrapper-overflow` | `visible` |
  * | `--button-prefix-wrapper-transition` | `grid-template-columns var(--button-internal-loa...` |
+ * | `--button-prefix-wrapper-transition-delay` | `0s` |
  * | `--button-primary-background` | `-` |
  * | `--button-primary-background-color` | `var(--button-primary-background)` |
  * | `--button-primary-background-hover` | `-` |
@@ -163,6 +193,7 @@
  * | `--button-size-line-height` | `var(--button-internal-line-height)` |
  * | `--button-slot-align-items` | `center` |
  * | `--button-slot-display` | `flex` |
+ * | `--button-slot-grid-area` | `1 / 1` |
  * | `--button-slot-justify-content` | `center` |
  * | `--button-slot-min-width` | `0` |
  * | `--button-slot-transition` | `opacity var(--button-internal-loading-duration)...` |
@@ -176,6 +207,7 @@
  * | `--button-success-link-hover` | `-` |
  * | `--button-success-link-hover-color` | `var(--button-success-link-hover)` |
  * | `--button-success-solid-foreground` | `var(--button-success-label)` |
+ * | `--button-suffix-slot-display` | `contents` |
  * | `--button-text-spacing` | `var(--button-internal-letter-spacing)` |
  * | `--button-text-transform` | `var(--button-internal-text-transform)` |
  * | `--button-transition` | `background-color 150ms ease, color 150ms ease, ...` |
@@ -197,6 +229,8 @@
  * | `--button-variant-link-font-weight` | `var(--button-font-weight, var(--button-internal...` |
  * | `--button-variant-link-hover-background-color` | `transparent` |
  * | `--button-variant-link-hover-color` | `var(--button-internal-link-hover-foreground)` |
+ * | `--button-variant-link-icon-min-width` | `max-content` |
+ * | `--button-variant-link-padding` | `0` |
  * | `--button-variant-outlined-background-color` | `var(--button-secondary-outlined-background)` |
  * | `--button-variant-outlined-border` | `1px solid var(--button-secondary-outlined-border)` |
  * | `--button-variant-outlined-color` | `var(--button-secondary-outlined-label)` |

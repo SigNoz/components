@@ -20,17 +20,27 @@
  * | `--pill-border-color` | `var(--pill-internal-border-color)` |
  * | `--pill-border-radius` | `var(--radius-round)` |
  * | `--pill-border-width` | `1px` |
+ * | `--pill-close-align-items` | `center` |
+ * | `--pill-close-all` | `unset` |
  * | `--pill-close-color` | `var(--pill-internal-close-color, var(--pill-rec...` |
+ * | `--pill-close-cursor` | `pointer` |
  * | `--pill-close-disabled-cursor` | `not-allowed` |
+ * | `--pill-close-display` | `flex` |
+ * | `--pill-close-flex-shrink` | `0` |
  * | `--pill-close-focus-visible-outline` | `var(--pill-focus-ring) solid 1px` |
  * | `--pill-close-focus-visible-outline-offset` | `-2px` |
  * | `--pill-close-hover-color` | `var(--pill-internal-close-hover-color, var(--pi...` |
+ * | `--pill-close-icon-block-size` | `100%` |
+ * | `--pill-close-icon-inline-size` | `100%` |
  * | `--pill-close-icon-size` | `12px` |
+ * | `--pill-close-justify-content` | `center` |
  * | `--pill-closeable-background-color` | `var(--pill-rect-solid-background)` |
+ * | `--pill-closeable-border-color` | `transparent` |
  * | `--pill-closeable-border-radius` | `var(--radius-1-5)` |
  * | `--pill-closeable-color` | `var(--pill-rect-solid-label)` |
  * | `--pill-closeable-gap` | `var(--spacing-2)` |
  * | `--pill-closeable-hover-background-color` | `var(--pill-rect-solid-background-hover)` |
+ * | `--pill-closeable-hover-border-color` | `transparent` |
  * | `--pill-closeable-hover-color` | `var(--pill-rect-solid-label-hover)` |
  * | `--pill-closeable-padding-inline-end` | `-` |
  * | `--pill-color` | `var(--pill-internal-foreground)` |

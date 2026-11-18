@@ -34,8 +34,14 @@
 				var(--skeleton-internal-fill) 63%
 			)
 		);
-		// Bare: CSS Modules renames the keyframes, and does not rename a name inside a `var()`.
-		animation-name: skeleton-shimmer;
+		// CSS Modules renames the keyframes, and does not rename a name inside a `var()` fallback, so
+		// the name goes through an internal variable first.
+		--skeleton-internal-animation-name: skeleton-shimmer;
+
+		animation-name: var(
+			--skeleton-active-animation-name,
+			var(--skeleton-internal-animation-name)
+		);
 		animation-duration: var(--skeleton-active-animation-duration, 1.4s);
 		animation-timing-function: var(--skeleton-active-animation-timing-function, ease);
 		animation-iteration-count: var(--skeleton-active-animation-iteration-count, infinite);
@@ -97,7 +103,9 @@
 	display: var(--skeleton-input-display, block);
 	// An empty box has no width of its own, so in a parent sized by its content (an `auto` grid
 	// column, an `inline-flex` box, a table cell) `width: 100%` drew nothing. This gives it the
-	// width an empty `Input` takes there, and changes nothing in a parent with a width.
+	// width an empty `Input` takes there, and changes nothing in a parent with a width. The
+	// containment stays bare: it is what lets `--skeleton-input-intrinsic-width` size the box, so an
+	// override of it could only break that variable.
 	contain: inline-size;
 	contain-intrinsic-inline-size: var(--skeleton-input-intrinsic-width, 200px);
 	height: var(--skeleton-internal-height);
