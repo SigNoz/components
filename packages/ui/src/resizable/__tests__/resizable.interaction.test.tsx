@@ -24,6 +24,12 @@ afterEach(() => {
 	vi.restoreAllMocks();
 });
 
+// A drag moves a handle by its distance over the room the panels share. With the 1px line, a root
+// of 400px leaves two panels of 199.5px, and the library measures them as they are, so 40px is
+// 10.025% rather than 10%. One pixel more per line gives whole panels.
+const PANELS_OF_400 = 401;
+const PANELS_OF_200 = 201;
+
 const BOUNDED: ResizableItemType[] = [
 	{ value: 'a', label: 'A', defaultSize: '50%', minSize: '20%', maxSize: '70%', children: 'a' },
 	{ value: 'b', label: 'B', children: 'b' },
@@ -178,7 +184,7 @@ describe('Resizable keyboard', () => {
 
 describe('Resizable pointer', () => {
 	it('grows one panel and shrinks the other by the same amount on a drag', () => {
-		renderResizable({ items: makeItems('a', 'b') });
+		renderResizable({ items: makeItems('a', 'b') }, { width: PANELS_OF_400 });
 		const before = panelWidth('a') + panelWidth('b');
 
 		drag(handle('a'), 40, 0);
@@ -200,7 +206,10 @@ describe('Resizable pointer', () => {
 	});
 
 	it('drags a vertical handle along the vertical axis', () => {
-		renderResizable({ items: makeItems('a', 'b'), orientation: 'vertical' }, { height: 200 });
+		renderResizable(
+			{ items: makeItems('a', 'b'), orientation: 'vertical' },
+			{ height: PANELS_OF_200 },
+		);
 
 		drag(handle('a'), 0, -40);
 
@@ -263,7 +272,7 @@ describe('Resizable double-click', () => {
 	});
 
 	it('does nothing when neither panel has a defaultSize', () => {
-		renderResizable({ items: makeItems('a', 'b') });
+		renderResizable({ items: makeItems('a', 'b') }, { width: PANELS_OF_400 });
 
 		drag(handle('a'), 40, 0);
 		doubleClick(handle('a'));
@@ -303,10 +312,12 @@ describe('Resizable handle colour', () => {
 		expect(colourOf(handle('a'))).toBe('rgb(2, 2, 2)');
 	});
 
-	it('colours the line of a handle a drag left focused, also under the pointer in the band', () => {
+	it('colours the line of a focused handle, also under the pointer in the band', () => {
 		renderColoured();
 
-		drag(handle('a'), 40, 0);
+		act(() => {
+			handle('a').focus();
+		});
 		hover(handle('a'), 3);
 
 		expect(handle('a')).toHaveFocus();

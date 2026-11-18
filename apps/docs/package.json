@@ -31,7 +31,7 @@
 		"@storybook/addon-themes": "^10.6.6",
 		"@storybook/addon-vitest": "^10.6.6",
 		"@storybook/react-vite": "^10.6.6",
-		"@tailwindcss/postcss": "^4.3.3",
+		"@tailwindcss/postcss": "^4.3.5",
 		"@types/react": "^18.3.11",
 		"@types/react-dom": "^18.2.19",
 		"@types/react-syntax-highlighter": "^15.5.13",

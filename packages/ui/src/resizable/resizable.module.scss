@@ -23,7 +23,7 @@
 
 	// The library sets `data-separator` to `hover` over the band around the line, to `active` while
 	// dragging, and to `focus` while the handle has focus, hovered or not. A press on the band
-	// focuses the handle, so after a drag only `focus` is left to colour it under the pointer.
+	// focuses the handle, but the library blurs it when the drag ends, so `focus` is a keyboard one.
 	&[data-separator='hover'],
 	&[data-separator='active'],
 	&[data-separator='focus'] {
