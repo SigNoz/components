@@ -1,12 +1,10 @@
-@use 'sass:list';
-
 .alert-strip {
 	display: var(--alert-strip-display, flex);
 	justify-content: var(--alert-strip-justify-content, center);
 	box-sizing: var(--alert-strip-box-sizing, border-box);
 	width: var(--alert-strip-width, 100%);
 	min-height: var(--alert-strip-min-height, 2rem);
-	margin: 0;
+	margin: var(--alert-strip-margin, 0);
 	color: var(--alert-strip-internal-foreground, inherit);
 	font-family: var(--alert-strip-font-family, var(--paragraph-base-500-font-family));
 	font-size: var(--alert-strip-font-size, var(--paragraph-base-500-font-size));
@@ -16,8 +14,8 @@
 	line-height: var(--alert-strip-line-height, var(--paragraph-base-500-line-height));
 	letter-spacing: var(--alert-strip-letter-spacing, var(--paragraph-base-500-letter-spacing));
 	text-transform: var(--alert-strip-text-transform, var(--paragraph-base-500-text-transform));
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--alert-strip-font-variant-numeric, normal);
+	font-feature-settings: var(--alert-strip-font-feature-settings, 'ss01' 1);
 	--alert-strip-internal-bar-height: var(--alert-strip-bar-height, 8px);
 	--alert-strip-internal-end-inline-size: var(--alert-strip-end-inline-size, 54px);
 	--alert-strip-internal-decoration: var(--alert-strip-decoration-color, var(--alert-strip-decoration));
@@ -34,16 +32,16 @@
 	&::before,
 	&::after {
 		content: '';
-		flex: 1 1 0%;
-		align-self: flex-end;
-		min-width: 0;
+		flex: var(--alert-strip-bar-flex, 1 1 0%);
+		align-self: var(--alert-strip-bar-align-self, flex-end);
+		min-width: var(--alert-strip-bar-min-width, 0);
 		block-size: var(--alert-strip-internal-bar-height);
 		background: var(--alert-strip-internal-background);
 	}
 
 	&[data-side='top']::before,
 	&[data-side='top']::after {
-		align-self: flex-start;
+		align-self: var(--alert-strip-bar-top-align-self, flex-start);
 	}
 
 	&[data-color='primary'] {
@@ -95,95 +93,136 @@
 	}
 }
 
-// The left slant after Figma, in the 54 by 24 units of an end: from its foot on the bar, up the
-// curve and the straight line, round the top corner to the top edge. The curves are sampled into
-// short lines.
-$slant: (
-	11 24,
-	12.34 23.9,
-	13.73 23.59,
-	15.13 23.11,
-	16.55 22.46,
-	17.97 21.67,
-	19.38 20.74,
-	20.76 19.7,
-	22.11 18.55,
-	23.4 17.33,
-	24.64 16.04,
-	36.8 1.44,
-	37.43 0.83,
-	38.18 0.38,
-	39 0.1,
-	39.87 0
-);
-
-// The outline of the region as one polygon: the bar, both slants and the top edge, so the fill is
-// painted once and no seam shows between its parts. A unit is 1/54 of the end across and 1/24 of
-// the height above the bar down, so the slant stretches with the height of the strip and keeps its
-// width. `$side` is the edge the bar runs along. The corners of the bar sit 1px past the box, so
-// the box draws its edges.
-@function region-outline($side) {
-	$end: var(--alert-strip-internal-end-inline-size);
-	$bar: var(--alert-strip-internal-bar-height);
-	$edge: calc(100% + 1px);
-	$bar-edge: calc(100% - #{$bar});
-	@if $side == top {
-		$edge: -1px;
-		$bar-edge: $bar;
-	}
-	$left: (-1px $edge, -1px $bar-edge);
-	$right: (calc(100% + 1px) $bar-edge, calc(100% + 1px) $edge);
-	@each $x, $y in $slant {
-		$from-bar: calc((100% - #{$bar}) * #{$y} / 24);
-		@if $side == top {
-			$from-bar: calc(100% - (100% - #{$bar}) * #{$y} / 24);
-		}
-		$left: list.append($left, calc(#{$end} * #{$x} / 54) $from-bar, comma);
-		$right: list.join((calc(100% - #{$end} * #{$x} / 54) $from-bar,), $right, comma);
-	}
-	@return polygon(list.join($left, $right, comma));
-}
-
 // The content sits between the two tapered ends, centered, and shrinks with a narrower parent.
 .alert-strip__region {
-	position: relative;
-	isolation: isolate;
+	position: var(--alert-strip-region-position, relative);
+	isolation: var(--alert-strip-region-isolation, isolate);
 	display: var(--alert-strip-region-display, flex);
 	flex: var(--alert-strip-region-flex, 0 1 942px);
 	min-width: var(--alert-strip-region-min-width, 0);
 
 	// The fill of the region: the tapered ends, the body between them and the bar under them, cut
 	// out of one box, so a translucent fill is painted once.
+	//
+	// The outline is one polygon, so no seam shows between its parts: the bar, both slants and the
+	// top edge. A unit is 1/54 of the end across and 1/24 of the height above the bar down, so the
+	// slant stretches with the height of the strip and keeps its width. The corners of the bar sit
+	// 1px past the box, so the box draws its edges.
+	//
+	// The left slant is after Figma, in the 54 by 24 units of an end: from its foot on the bar, up the
+	// curve and the straight line, round the top corner to the top edge. The curves are sampled into
+	// short lines. The polygon runs along the left slant, then back down the mirrored one on the
+	// right.
 	&::before {
 		content: '';
-		position: absolute;
-		inset: 0;
-		z-index: -1;
+		position: var(--alert-strip-region-before-position, absolute);
+		inset: var(--alert-strip-region-before-inset, 0);
+		z-index: var(--alert-strip-region-before-z-index, -1);
 		background: var(--alert-strip-internal-background);
-		clip-path: region-outline(bottom);
+		clip-path: var(
+			--alert-strip-region-before-clip-path,
+			polygon(
+				-1px calc(100% + 1px),
+				-1px calc(100% - var(--alert-strip-internal-bar-height)),
+				calc(var(--alert-strip-internal-end-inline-size) * 11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 39 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 39 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 11 / 54) calc((100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
+				calc(100% + 1px) calc(100% - var(--alert-strip-internal-bar-height)),
+				calc(100% + 1px) calc(100% + 1px)
+			)
+		);
 	}
 
 	// At the top of the page the bar runs along the top edge, and the ends hang from it upside down.
 	.alert-strip[data-side='top'] &::before {
-		clip-path: region-outline(top);
+		clip-path: var(
+			--alert-strip-region-before-top-clip-path,
+			polygon(
+				-1px -1px,
+				-1px var(--alert-strip-internal-bar-height),
+				calc(var(--alert-strip-internal-end-inline-size) * 11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 39 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
+				calc(var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 39.87 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 39 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.1 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 38.18 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.38 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 37.43 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 0.83 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 36.8 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 1.44 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 24.64 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 16.04 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 23.4 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 17.33 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 22.11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 18.55 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 20.76 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 19.7 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 19.38 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 20.74 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 17.97 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 21.67 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 16.55 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 22.46 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 15.13 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.11 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 13.73 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.59 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 12.34 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 23.9 / 24),
+				calc(100% - var(--alert-strip-internal-end-inline-size) * 11 / 54) calc(100% - (100% - var(--alert-strip-internal-bar-height)) * 24 / 24),
+				calc(100% + 1px) var(--alert-strip-internal-bar-height),
+				calc(100% + 1px) -1px
+			)
+		);
 	}
 }
 
 // One end of the region holds the dots, over the slant the region paints.
 .alert-strip__end {
-	position: relative;
-	flex-shrink: 0;
+	position: var(--alert-strip-end-position, relative);
+	flex-shrink: var(--alert-strip-end-flex-shrink, 0);
 	inline-size: var(--alert-strip-internal-end-inline-size);
 
 	// The end after the content is the same drawing, mirrored.
 	&:last-child {
-		transform: scaleX(-1);
+		transform: var(--alert-strip-end-last-child-transform, scaleX(-1));
 	}
 
 	// At the top of the page the dots follow the slant upside down. `scale` applies on top of the
 	// mirror of the last end.
 	.alert-strip[data-side='top'] & {
-		scale: 1 -1;
+		scale: var(--alert-strip-end-top-scale, 1 -1);
 	}
 }
 
@@ -191,8 +230,8 @@ $slant: (
 // last row dips 1px into the bar, as Figma draws it. Centered, they would crowd the slant, which
 // does not move sideways at mid height as it stretches.
 .alert-strip__dots {
-	position: absolute;
-	inset-block-end: calc(var(--alert-strip-internal-bar-height) - 1px);
+	position: var(--alert-strip-dots-position, absolute);
+	inset-block-end: var(--alert-strip-dots-inset-block-end, calc(var(--alert-strip-internal-bar-height) - 1px));
 	inset-inline-start: var(--alert-strip-dots-inset-inline-start, 31px);
 	inline-size: var(--alert-strip-dots-size, 18px);
 	block-size: var(--alert-strip-dots-size, 18px);
@@ -220,8 +259,8 @@ $slant: (
 // The prefix and the suffix keep their size, so the content wraps before them.
 .alert-strip__prefix {
 	display: var(--alert-strip-prefix-display, flex);
-	flex-shrink: 0;
-	align-items: center;
+	flex-shrink: var(--alert-strip-prefix-flex-shrink, 0);
+	align-items: var(--alert-strip-prefix-align-items, center);
 	gap: var(--alert-strip-prefix-gap, var(--spacing-2));
 
 	// The size of an icon belongs to the strip, the one passed on the element is ignored. It matches
@@ -250,8 +289,8 @@ $slant: (
 // button after it.
 .alert-strip__suffix {
 	display: var(--alert-strip-suffix-display, flex);
-	flex-shrink: 0;
-	align-items: center;
+	flex-shrink: var(--alert-strip-suffix-flex-shrink, 0);
+	align-items: var(--alert-strip-suffix-align-items, center);
 	gap: var(--alert-strip-suffix-gap, var(--spacing-2));
 	margin-inline-start: var(--alert-strip-suffix-margin-inline-start, var(--spacing-2));
 }
@@ -275,13 +314,13 @@ $slant: (
 
 .alert-strip__close {
 	display: var(--alert-strip-close-display, flex);
-	flex-shrink: 0;
-	align-items: center;
-	justify-content: center;
-	box-sizing: border-box;
+	flex-shrink: var(--alert-strip-close-flex-shrink, 0);
+	align-items: var(--alert-strip-close-align-items, center);
+	justify-content: var(--alert-strip-close-justify-content, center);
+	box-sizing: var(--alert-strip-close-box-sizing, border-box);
 	inline-size: var(--alert-strip-close-size, 24px);
 	block-size: var(--alert-strip-close-size, 24px);
-	padding: 0;
+	padding: var(--alert-strip-close-padding, 0);
 	border: var(--alert-strip-close-border, none);
 	border-radius: var(--alert-strip-close-border-radius, var(--radius-1));
 	background: var(--alert-strip-internal-button-background);
@@ -315,13 +354,13 @@ $slant: (
 	transition-duration: var(--alert-strip-transition-duration, 150ms);
 
 	&:is(button) {
-		display: inline;
-		padding: 0;
-		border: 0;
-		background: none;
-		font: inherit;
-		letter-spacing: inherit;
-		text-transform: inherit;
+		display: var(--alert-strip-link-is-button-display, inline);
+		padding: var(--alert-strip-link-is-button-padding, 0);
+		border: var(--alert-strip-link-is-button-border, 0);
+		background: var(--alert-strip-link-is-button-background, none);
+		font: var(--alert-strip-link-is-button-font, inherit);
+		letter-spacing: var(--alert-strip-link-is-button-letter-spacing, inherit);
+		text-transform: var(--alert-strip-link-is-button-text-transform, inherit);
 	}
 
 	&:hover {
