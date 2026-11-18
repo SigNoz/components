@@ -1,4 +1,8 @@
 .spinner {
+	// CSS Modules renames the keyframes, and does not rename a name inside a `var()` fallback, so the
+	// name goes through an internal variable first.
+	--spinner-internal-animation-name: spinner-rotate;
+
 	inline-size: var(--spinner-size, 12px);
 	block-size: var(--spinner-size, 12px);
 	flex-shrink: var(--spinner-flex-shrink, 0);
@@ -7,7 +11,10 @@
 	border-width: var(--spinner-thickness, 1.5px);
 	border-color: var(--spinner-track-color, color-mix(in srgb, currentColor 22%, transparent));
 	border-block-start-color: var(--spinner-head-color, color-mix(in srgb, currentColor 88%, transparent));
-	animation: spinner-rotate var(--spinner-duration, 0.7s) linear infinite;
+	animation-name: var(--spinner-animation-name, var(--spinner-internal-animation-name));
+	animation-duration: var(--spinner-duration, 0.7s);
+	animation-timing-function: var(--spinner-animation-timing-function, linear);
+	animation-iteration-count: var(--spinner-animation-iteration-count, infinite);
 }
 
 @media (prefers-reduced-motion: reduce) {
