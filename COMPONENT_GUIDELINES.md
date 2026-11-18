@@ -273,26 +273,32 @@ What already counts as wrapped:
   `calc()` over variables. The arithmetic in a `calc()` (`-1 *`, `1 -`, `/ 2`) is not a value.
   A literal inside it is: `calc(var(--gap) + 1px)` goes into a fallback whole.
 - An `-internal-` variable that holds a sign or a rest state the rules swap, such as
-  `--toast-internal-direction: 1` or `--toast-internal-float-x: 0px`. Any other literal in an
-  internal variable reads from a public one first:
+  `--toast-internal-direction: 1` or `--toast-internal-float-x: 0px`, or `initial`, which unsets
+  it so the fallback where it is read applies. Any other literal in an internal variable reads
+  from a public one first:
   `--toast-internal-scale-step: var(--toast-stack-scale-step, 0.05)`.
 
 A shorthand that lists properties, such as `transition: opacity 150ms ease, color 150ms ease`,
 splits into longhands so each part has its variable: `transition-property`,
 `transition-duration` and `transition-timing-function`.
 
-Four declarations stay bare, because an override would break a promise the component makes:
+Five declarations stay bare, because an override would break a promise the component makes:
 
-- Anything inside `@media (prefers-reduced-motion: reduce)`.
+- Anything inside `@media (prefers-reduced-motion: reduce)` or `@media (forced-colors: active)`.
 - `display: none` on `[hidden]`.
 - `content` that only creates a pseudo-element.
-- A declaration that another public variable needs in order to work, where the override can only
-  break it. `contain: inline-size` is what lets `--skeleton-input-intrinsic-width` size the
-  input, so the width is the hook and the containment is not. Give it a comment that names the
-  variable it serves.
+- The frames inside `@keyframes`. A consumer replaces the whole animation through its
+  `animation-name` variable, not frame by frame.
+- A declaration that another public variable or a keyframe animation needs in order to work, where
+  the override can only break it. `contain: inline-size` is what lets
+  `--skeleton-input-intrinsic-width` size the input, so the width is the hook and the containment
+  is not. Give it a comment that names the variable or the keyframes it serves.
 
 `box-sizing`, `position`, `cursor` and the visually-hidden declarations are not in that list.
 They get a variable like any other declaration.
+
+`packages/ui/src/__tests__/css-variables.test.ts` fails on a declaration that breaks this rule. A
+new declaration of the last kind goes into its `SERVES_A_VARIABLE` list too.
 
 #### Colours
 
@@ -475,8 +481,8 @@ shows text (the browser resets their font, so they do not inherit it from the ro
 
 ```scss
 .avatar {
-    font-variant-numeric: normal;
-    font-feature-settings: 'ss01' 1;
+    font-variant-numeric: var(--avatar-font-variant-numeric, normal);
+    font-feature-settings: var(--avatar-font-feature-settings, 'ss01' 1);
 }
 ```
 
