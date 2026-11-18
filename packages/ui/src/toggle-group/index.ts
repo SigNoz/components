@@ -14,12 +14,15 @@
  * | `--toggle-group-border` | `-` |
  * | `--toggle-group-border-color` | `var(--toggle-group-border)` |
  * | `--toggle-group-border-radius` | `var(--radius-1)` |
+ * | `--toggle-group-border-style` | `solid` |
  * | `--toggle-group-border-width` | `1px` |
+ * | `--toggle-group-box-sizing` | `border-box` |
  * | `--toggle-group-button-align-items` | `center` |
  * | `--toggle-group-button-background-color` | `transparent` |
  * | `--toggle-group-button-block-size` | `calc(var(--spacing-16) - 2 * var(--toggle-group...` |
  * | `--toggle-group-button-border` | `none` |
  * | `--toggle-group-button-border-radius` | `0` |
+ * | `--toggle-group-button-box-sizing` | `border-box` |
  * | `--toggle-group-button-color` | `var(--toggle-group-internal-label)` |
  * | `--toggle-group-button-cursor` | `pointer` |
  * | `--toggle-group-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
@@ -27,6 +30,7 @@
  * | `--toggle-group-button-disabled-opacity` | `0.6` |
  * | `--toggle-group-button-display` | `inline-flex` |
  * | `--toggle-group-button-divider-color` | `var(--toggle-group-border)` |
+ * | `--toggle-group-button-divider-style` | `solid` |
  * | `--toggle-group-button-divider-width` | `1px` |
  * | `--toggle-group-button-flex-basis` | `auto` |
  * | `--toggle-group-button-flex-grow` | `1` |
@@ -34,7 +38,9 @@
  * | `--toggle-group-button-focus-visible-outline` | `var(--toggle-group-focus-ring) solid 1px` |
  * | `--toggle-group-button-focus-visible-outline-offset` | `-1px` |
  * | `--toggle-group-button-font-family` | `var(--label-small-400-font-family)` |
+ * | `--toggle-group-button-font-feature-settings` | `'ss01' 1` |
  * | `--toggle-group-button-font-size` | `var(--label-small-400-font-size)` |
+ * | `--toggle-group-button-font-variant-numeric` | `normal` |
  * | `--toggle-group-button-font-weight` | `var(--label-small-400-font-weight)` |
  * | `--toggle-group-button-gap` | `var(--spacing-3)` |
  * | `--toggle-group-button-hover-background-color` | `var(--toggle-group-internal-background-hover)` |
@@ -53,6 +59,8 @@
  * | `--toggle-group-disabled-opacity` | `0.6` |
  * | `--toggle-group-display` | `inline-flex` |
  * | `--toggle-group-focus-ring` | `-` |
+ * | `--toggle-group-font-feature-settings` | `'ss01' 1` |
+ * | `--toggle-group-font-variant-numeric` | `normal` |
  * | `--toggle-group-inline-size` | `var(--toggle-group-internal-inline-size, fit-co...` |
  * | `--toggle-group-label-max-inline-size` | `120px` |
  * | `--toggle-group-label-min-inline-size` | `0` |
@@ -75,6 +83,7 @@
  * | `--toggle-group-scroll-button-background-color` | `var(--toggle-group-scroll-button-background)` |
  * | `--toggle-group-scroll-button-background-hover` | `-` |
  * | `--toggle-group-scroll-button-border` | `none` |
+ * | `--toggle-group-scroll-button-box-sizing` | `border-box` |
  * | `--toggle-group-scroll-button-color` | `var(--toggle-group-scroll-button-label)` |
  * | `--toggle-group-scroll-button-cursor` | `pointer` |
  * | `--toggle-group-scroll-button-disabled-color` | `var(--toggle-group-internal-label-disabled)` |
@@ -82,6 +91,7 @@
  * | `--toggle-group-scroll-button-disabled-shadow` | `none` |
  * | `--toggle-group-scroll-button-display` | `inline-flex` |
  * | `--toggle-group-scroll-button-divider-color` | `var(--toggle-group-border)` |
+ * | `--toggle-group-scroll-button-divider-style` | `solid` |
  * | `--toggle-group-scroll-button-divider-width` | `1px` |
  * | `--toggle-group-scroll-button-flex-basis` | `auto` |
  * | `--toggle-group-scroll-button-flex-grow` | `0` |
@@ -118,6 +128,8 @@
  * | `--toggle-group-secondary-outlined-pressed-color` | `var(--toggle-group-secondary-outlined-label-act...` |
  * | `--toggle-group-sm-button-padding-inline` | `var(--spacing-6)` |
  * | `--toggle-group-transition-duration` | `150ms` |
+ * | `--toggle-group-transition-property` | `background-color, color` |
+ * | `--toggle-group-transition-timing-function` | `ease` |
  * | `--toggle-group-viewport-display` | `flex` |
  * | `--toggle-group-viewport-flex-basis` | `auto` |
  * | `--toggle-group-viewport-flex-grow` | `1` |
