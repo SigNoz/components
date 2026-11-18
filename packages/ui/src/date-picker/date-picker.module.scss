@@ -15,8 +15,8 @@
   inline-size: var(--date-picker-width, var(--date-picker-internal-width, 100%));
   max-inline-size: var(--date-picker-max-width, var(--date-picker-internal-max-width, 100%));
 
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--date-picker-font-variant-numeric, normal);
+  font-feature-settings: var(--date-picker-font-feature-settings, 'ss01' 1);
 }
 
 .date-picker__trigger {
@@ -46,8 +46,8 @@
   line-height: var(--date-picker-trigger-line-height, var(--label-base-400-line-height));
   letter-spacing: var(--date-picker-trigger-letter-spacing, var(--label-base-400-letter-spacing));
   text-transform: var(--date-picker-trigger-text-transform, var(--label-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--date-picker-trigger-font-variant-numeric, normal);
+  font-feature-settings: var(--date-picker-trigger-font-feature-settings, 'ss01' 1);
   text-align: var(--date-picker-trigger-text-align, start);
 
   cursor: var(--date-picker-trigger-cursor, pointer);
@@ -239,8 +239,8 @@
   line-height: var(--date-picker-popup-line-height, var(--paragraph-base-400-line-height));
   letter-spacing: var(--date-picker-popup-letter-spacing, var(--paragraph-base-400-letter-spacing));
   text-transform: var(--date-picker-popup-text-transform, var(--paragraph-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--date-picker-popup-font-variant-numeric, normal);
+  font-feature-settings: var(--date-picker-popup-font-feature-settings, 'ss01' 1);
 
   &:focus-visible {
     outline: var(--date-picker-popup-focus-visible-outline, none);
@@ -302,7 +302,7 @@
   letter-spacing: var(--date-picker-time-field-letter-spacing, var(--label-base-400-letter-spacing));
   text-transform: var(--date-picker-time-field-text-transform, var(--label-base-400-text-transform));
   font-variant-numeric: var(--date-picker-time-field-font-variant-numeric, tabular-nums);
-  font-feature-settings: 'ss01' 1;
+  font-feature-settings: var(--date-picker-time-field-font-feature-settings, 'ss01' 1);
   text-align: var(--date-picker-time-field-text-align, center);
   caret-color: var(--date-picker-time-field-caret-color, transparent);
 

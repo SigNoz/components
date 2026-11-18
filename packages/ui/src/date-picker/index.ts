@@ -23,6 +23,8 @@
  * | `--date-picker-clear-padding` | `0` |
  * | `--date-picker-clear-position` | `absolute` |
  * | `--date-picker-display` | `flex` |
+ * | `--date-picker-font-feature-settings` | `'ss01' 1` |
+ * | `--date-picker-font-variant-numeric` | `normal` |
  * | `--date-picker-footer-border-style` | `solid` |
  * | `--date-picker-footer-border-width` | `1px` |
  * | `--date-picker-footer-display` | `flex` |
@@ -62,7 +64,9 @@
  * | `--date-picker-popup-flex-direction` | `column` |
  * | `--date-picker-popup-focus-visible-outline` | `none` |
  * | `--date-picker-popup-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--date-picker-popup-font-feature-settings` | `'ss01' 1` |
  * | `--date-picker-popup-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--date-picker-popup-font-variant-numeric` | `normal` |
  * | `--date-picker-popup-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--date-picker-popup-inline-size` | `min-content` |
  * | `--date-picker-popup-letter-spacing` | `var(--paragraph-base-400-letter-spacing)` |
@@ -96,6 +100,7 @@
  * | `--date-picker-time-field-focus-ring` | `-` |
  * | `--date-picker-time-field-focus-ring-color` | `var(--date-picker-time-field-focus-ring)` |
  * | `--date-picker-time-field-font-family` | `var(--label-base-400-font-family)` |
+ * | `--date-picker-time-field-font-feature-settings` | `'ss01' 1` |
  * | `--date-picker-time-field-font-size` | `var(--label-base-400-font-size)` |
  * | `--date-picker-time-field-font-variant-numeric` | `tabular-nums` |
  * | `--date-picker-time-field-font-weight` | `var(--label-base-400-font-weight)` |
@@ -144,7 +149,9 @@
  * | `--date-picker-trigger-focus-ring` | `-` |
  * | `--date-picker-trigger-focus-ring-color` | `var(--date-picker-trigger-focus-ring)` |
  * | `--date-picker-trigger-font-family` | `var(--label-base-400-font-family)` |
+ * | `--date-picker-trigger-font-feature-settings` | `'ss01' 1` |
  * | `--date-picker-trigger-font-size` | `var(--label-base-400-font-size)` |
+ * | `--date-picker-trigger-font-variant-numeric` | `normal` |
  * | `--date-picker-trigger-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--date-picker-trigger-forced-colors-outline-style` | `none` |
  * | `--date-picker-trigger-gap` | `var(--spacing-4)` |
