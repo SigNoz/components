@@ -16,8 +16,8 @@ export default {
 			colors: {
 				background: 'var(--background)',
 				foreground: 'var(--foreground)',
-				card: 'var(--card)',
-				'card-foreground': 'var(--card-foreground)',
+				card: 'var(--card-background)',
+				'card-foreground': 'var(--l1-foreground)',
 				popover: 'var(--popover)',
 				'popover-foreground': 'var(--popover-foreground)',
 				primary: 'var(--primary)',

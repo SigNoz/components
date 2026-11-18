@@ -31,8 +31,8 @@ importers:
   .:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: 2.6.0
-        version: 2.6.0
+        specifier: 2.7.0
+        version: 2.7.0
       '@signozhq/icons':
         specifier: 0.4.0
         version: 0.4.0
@@ -119,8 +119,8 @@ importers:
   apps/docs:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: 2.6.0
-        version: 2.6.0
+        specifier: 2.7.0
+        version: 2.7.0
       '@signozhq/icons':
         specifier: ^0.4.0
         version: 0.4.0
@@ -219,8 +219,8 @@ importers:
   packages/tailwind-config:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: '>=2.6.0'
-        version: 2.6.0
+        specifier: '>=2.7.0'
+        version: 2.7.0
       '@tailwindcss/postcss':
         specifier: ^4.3.3
         version: 4.3.3
@@ -256,8 +256,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0(@date-fns/tz@1.4.1)(@types/react@18.3.28)(date-fns@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@signozhq/design-tokens':
-        specifier: '>=2.6.0'
-        version: 2.6.0
+        specifier: '>=2.7.0'
+        version: 2.7.0
       '@signozhq/icons':
         specifier: 0.3.0
         version: 0.3.0
@@ -1925,8 +1925,8 @@ packages:
   '@rushstack/ts-command-line@5.3.9':
     resolution: {integrity: sha512-GIHqU+sRGQ3LGWAZu1O+9Yh++qwtyNIIGuNbcWHJjBTm2qRez0cwINUHZ+pQLR8UuzZDcMajrDaNbUYoaL/XtQ==}
 
-  '@signozhq/design-tokens@2.6.0':
-    resolution: {integrity: sha512-7+lBxC3N4r1A2M8awhop7mtYMMd5yOg4BKfRAN3hnle4lclZHlxm7b3gdplfNN10JA1mcwRSQvWrjQPmA/euqw==}
+  '@signozhq/design-tokens@2.7.0':
+    resolution: {integrity: sha512-Igl6g4GStIo5nDikGaENbXkgve/YoZq7EkWn5rV7xv0RBorejbfr4VY2knEoQKdZsv2jSPXqVCoHbC30ap6KgQ==}
 
   '@signozhq/icons@0.3.0':
     resolution: {integrity: sha512-ZA6kGWf2t7XzQGSaeWtSpkWAiONwKliNKUR01KHl/tuWGZmijJ89pYrEJD9S8wLn8cO2XgIkS2JaEkQfThgIqQ==}
@@ -5693,7 +5693,7 @@ snapshots:
       - '@types/node'
     optional: true
 
-  '@signozhq/design-tokens@2.6.0': {}
+  '@signozhq/design-tokens@2.7.0': {}
 
   '@signozhq/icons@0.3.0': {}
 

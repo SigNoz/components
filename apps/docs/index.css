@@ -1,4 +1,5 @@
 @import '@signozhq/design-tokens/dist/fonts/inter.css';
+@import '@signozhq/design-tokens/dist/fonts/geist-mono.css';
 @import "@signozhq/design-tokens/dist/style.css";
 @import '@signozhq/design-tokens/dist/themes/signoz-tokens.css';
 @import './blue-demo.css';
