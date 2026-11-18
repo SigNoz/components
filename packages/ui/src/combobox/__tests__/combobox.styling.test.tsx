@@ -37,6 +37,7 @@ const ROW_SPACING = `:root {
 	--spacing-6: 12px;
 	--spacing-12: 24px;
 	--spacing-16: 32px;
+	--spacing-20: 40px;
 }`;
 
 afterEach(() => {
@@ -121,7 +122,12 @@ describe('Combobox rows type', () => {
 		expect(row.getBoundingClientRect().height).toBe(34);
 	});
 
-	it('keeps the search row at 41px on the label line', async () => {
+	// As tall as an `lg` Input and the Dropdown search row, its divider included.
+	it.each([
+		['no box-sizing reset', ''],
+		['a box-sizing reset', '*, *::before, *::after { box-sizing: border-box; }'],
+	])('keeps the search row at 40px, with %s on the page', async (_name, css) => {
+		tokens.textContent += css;
 		render(
 			<Combobox
 				placeholder="Select a framework..."
@@ -132,8 +138,10 @@ describe('Combobox rows type', () => {
 		);
 		await openCombobox();
 		const search = required(document.querySelector('[data-slot="combobox-search"]'));
+		const input = required(search.querySelector('input'));
 
-		expect(search.getBoundingClientRect().height).toBe(41);
+		expect(input.getBoundingClientRect().height).toBe(24);
+		expect(search.getBoundingClientRect().height).toBe(40);
 	});
 
 	it('keeps a group label at 30px on the uppercase line', async () => {

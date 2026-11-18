@@ -96,7 +96,12 @@
   gap: var(--command-search-gap, var(--spacing-4));
   flex-shrink: var(--command-search-flex-shrink, 0);
 
-  padding: var(--command-search-padding, var(--spacing-5) var(--spacing-6));
+  // The row reads as the field, as tall as an `lg` Input and the Dropdown search row: 40px with
+  // its divider, whatever the field inside measures. Border-box, so a host page with no box-sizing
+  // reset gets the same 40px.
+  box-sizing: var(--command-search-box-sizing, border-box);
+  block-size: var(--command-search-block-size, var(--spacing-20));
+  padding: var(--command-search-padding, 0 var(--spacing-6));
 
   border-block-end-width: var(--command-search-border-width, 1px);
   border-block-end-style: var(--command-search-border-style, solid);
@@ -120,7 +125,11 @@
 .command__search-input {
   flex-grow: var(--command-search-input-flex-grow, 1);
   min-inline-size: var(--command-search-input-min-inline-size, 0);
-  min-block-size: var(--command-search-input-min-block-size, var(--spacing-10));
+  // The label line height of 1 would shrink the field to its font. The row sets the 40px, so this
+  // only has to keep the text box usable.
+  min-block-size: var(--command-search-input-min-block-size, var(--spacing-12));
+  // A host page may have no box-sizing reset, so it is not left to decide the field's size.
+  box-sizing: var(--command-search-input-box-sizing, border-box);
   margin: var(--command-search-input-margin, 0);
   padding: var(--command-search-input-padding, 0);
 

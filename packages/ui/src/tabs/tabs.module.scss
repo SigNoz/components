@@ -26,6 +26,8 @@
 // block instead without outweighing an alignment rule.
 .tabs__list-wrapper {
   flex-direction: var(--tabs-list-wrapper-flex-direction, row);
+  // The bar is 100% wide plus its inline padding, and a host page may have no box-sizing reset.
+  box-sizing: var(--tabs-list-wrapper-box-sizing, border-box);
 
   &[data-variant="primary"] {
     display: var(--tabs-list-wrapper-primary-display, flex);

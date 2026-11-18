@@ -22,6 +22,7 @@ beforeEach(() => {
 		--spacing-6: 12px;
 		--spacing-10: 20px;
 		--spacing-12: 24px;
+		--spacing-20: 40px;
 		--label-base-400-font-size: 13px;
 		--label-base-400-line-height: 1;
 		--uppercase-small-600-font-size: 11px;
@@ -95,11 +96,18 @@ describe('Command styling', () => {
 		expect(row.getBoundingClientRect().height).toBe(36);
 	});
 
-	it('keeps the search row at 41px on the label line', async () => {
+	// As tall as an `lg` Input and the Dropdown search row, its divider included.
+	it.each([
+		['no box-sizing reset', ''],
+		['a box-sizing reset', '*, *::before, *::after { box-sizing: border-box; }'],
+	])('keeps the search row at 40px, with %s on the page', async (_name, css) => {
+		tokens.textContent += css;
 		await renderOpenCommand({ items: rows(1) });
 		const search = required(document.querySelector('[data-slot="command-search"]'));
+		const input = required(search.querySelector('input'));
 
-		expect(search.getBoundingClientRect().height).toBe(41);
+		expect(input.getBoundingClientRect().height).toBe(24);
+		expect(search.getBoundingClientRect().height).toBe(40);
 	});
 
 	it('keeps a group label at 30px on the uppercase line', async () => {
