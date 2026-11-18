@@ -160,10 +160,12 @@
  * | `--dropdown-search-affix-flex-shrink` | `0` |
  * | `--dropdown-search-affix-justify-content` | `center` |
  * | `--dropdown-search-align-items` | `center` |
+ * | `--dropdown-search-block-size` | `var(--spacing-20)` |
  * | `--dropdown-search-border` | `-` |
  * | `--dropdown-search-border-color` | `var(--dropdown-search-border)` |
  * | `--dropdown-search-border-style` | `solid` |
  * | `--dropdown-search-border-width` | `1px` |
+ * | `--dropdown-search-box-sizing` | `border-box` |
  * | `--dropdown-search-display` | `flex` |
  * | `--dropdown-search-flex-shrink` | `0` |
  * | `--dropdown-search-gap` | `var(--spacing-4)` |
@@ -171,16 +173,18 @@
  * | `--dropdown-search-icon-color` | `var(--dropdown-search-icon)` |
  * | `--dropdown-search-input-background-color` | `transparent` |
  * | `--dropdown-search-input-border` | `none` |
+ * | `--dropdown-search-input-box-sizing` | `border-box` |
  * | `--dropdown-search-input-flex-grow` | `1` |
  * | `--dropdown-search-input-focus-visible-outline` | `none` |
  * | `--dropdown-search-input-font-family` | `var(--label-base-400-font-family)` |
  * | `--dropdown-search-input-font-weight` | `var(--label-base-400-font-weight)` |
  * | `--dropdown-search-input-letter-spacing` | `var(--label-base-400-letter-spacing)` |
  * | `--dropdown-search-input-line-height` | `var(--label-base-400-line-height)` |
- * | `--dropdown-search-input-min-block-size` | `var(--spacing-10)` |
+ * | `--dropdown-search-input-min-block-size` | `var(--spacing-12)` |
  * | `--dropdown-search-input-min-inline-size` | `0` |
+ * | `--dropdown-search-input-padding` | `0` |
  * | `--dropdown-search-input-text-transform` | `var(--label-base-400-text-transform)` |
- * | `--dropdown-search-padding` | `var(--spacing-5) var(--spacing-6)` |
+ * | `--dropdown-search-padding` | `0 var(--spacing-6)` |
  * | `--dropdown-search-placeholder` | `-` |
  * | `--dropdown-search-placeholder-color` | `var(--dropdown-search-placeholder)` |
  * | `--dropdown-separator` | `-` |
