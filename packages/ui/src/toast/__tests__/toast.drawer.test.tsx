@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { page } from 'vitest/browser';
 import { Drawer } from '../../drawer/index.js';
 import { useCoverRightEdge } from '../../lib/right-edge-cover.js';
 import type { ToastPositionType } from '../index.js';
@@ -38,8 +39,11 @@ describe('toast beside an open drawer', () => {
 		document.body.style.setProperty('--drawer-viewport-padding', `${GAP}px`);
 	});
 
-	afterEach(() => {
+	afterEach(async () => {
 		document.body.style.removeProperty('--drawer-viewport-padding');
+		document.body.style.removeProperty('--toast-viewport-transition-duration');
+		// The default viewport of the browser tests.
+		await page.viewport(414, 896);
 	});
 
 	it('moves the right stacks by the width the drawer covers', () => {
@@ -48,6 +52,130 @@ describe('toast beside an open drawer', () => {
 		const cover = `${panelWidth() + GAP}px`;
 		expect(coverOf('top-right')).toBe(cover);
 		expect(coverOf('bottom-right')).toBe(cover);
+	});
+
+	it('counts the distance from a container that holds the drawer to the window edge', () => {
+		// The transform makes the box the containing block of the fixed drawer viewport.
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; right: 20px; width: 50%; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		render(
+			<>
+				<Toaster />
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					title="Span"
+					open
+					onClose={() => {}}
+					container={box}
+				>
+					Details
+				</Drawer>
+			</>,
+		);
+
+		const outside = document.documentElement.clientWidth - box.getBoundingClientRect().right;
+		expect(outside).toBeGreaterThan(0);
+		expect(coverOf('top-right')).toBe(`${panelWidth() + (outside + GAP)}px`);
+		box.remove();
+	});
+
+	it('reads the distance to the window edge again as the window resizes', async () => {
+		await page.viewport(1280, 800);
+		// Fixed to the left of the window, so a resize moves its right edge while the drawer inside
+		// keeps its max width.
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; left: 0; width: 700px; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		render(
+			<>
+				<Toaster />
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					title="Span"
+					open
+					onClose={() => {}}
+					container={box}
+				>
+					Details
+				</Drawer>
+			</>,
+		);
+		const width = panelWidth();
+		const outside = (): number => document.documentElement.clientWidth - 700;
+		expect(coverOf('top-right')).toBe(`${width + (outside() + GAP)}px`);
+
+		await page.viewport(1100, 800);
+
+		expect(outside()).toBeLessThan(1280 - 700);
+		await expect.poll(() => coverOf('top-right')).toBe(`${width + (outside() + GAP)}px`);
+		expect(panelWidth()).toBe(width);
+		box.remove();
+	});
+
+	it('reads the distance to the window edge again as the container resizes', async () => {
+		await page.viewport(1280, 800);
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; left: 0; width: 700px; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		render(
+			<>
+				<Toaster />
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					title="Span"
+					open
+					onClose={() => {}}
+					container={box}
+				>
+					Details
+				</Drawer>
+			</>,
+		);
+		const width = panelWidth();
+
+		box.style.width = '600px';
+
+		const outside = document.documentElement.clientWidth - 600;
+		await expect.poll(() => coverOf('top-right')).toBe(`${width + (outside + GAP)}px`);
+		expect(panelWidth()).toBe(width);
+		box.remove();
+	});
+
+	it('places a stack that shares a container with the drawer beside it', async () => {
+		await page.viewport(1280, 800);
+		document.body.style.setProperty('--toast-viewport-transition-duration', '0s');
+		// 40px from the window edge, which the drawer counts and the stack, placed in the same box,
+		// must not count again.
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; right: 40px; width: 1000px; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		render(
+			<>
+				<Toaster offset={8} container={box} />
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					title="Span"
+					open
+					onClose={() => {}}
+					container={box}
+				>
+					Details
+				</Drawer>
+			</>,
+		);
+
+		const right = Number.parseFloat(getComputedStyle(viewport('top-right')).right);
+		expect(right).toBeCloseTo(8 + panelWidth() + GAP, 1);
+		box.remove();
 	});
 
 	it('moves the right stacks back as soon as the drawer starts closing', () => {
@@ -78,10 +206,11 @@ describe('toast stack beside a covered right edge', () => {
 		document.body.style.setProperty('--toast-viewport-inline-size', '100px');
 	});
 
-	afterEach(() => {
+	afterEach(async () => {
 		document.body.style.removeProperty('--toast-viewport-transition-duration');
 		document.body.style.removeProperty('--toast-viewport-inline-size');
 		document.body.style.removeProperty('--toast-viewport-max-inline-size');
+		await page.viewport(414, 896);
 	});
 
 	it('sits one offset left of the cover', () => {
@@ -142,6 +271,64 @@ describe('toast stack beside a covered right edge', () => {
 		expect(getComputedStyle(viewport('top-right')).right).toBe(
 			`${containingWidth - 60 - 8 - 10}px`,
 		);
+	});
+
+	it('keeps its place with a keyword max size', () => {
+		document.body.style.setProperty('--toast-viewport-max-inline-size', 'none');
+		const { rerender } = render(<Toaster offset={8} />);
+
+		expect(getComputedStyle(viewport('top-right')).right).toBe('8px');
+
+		rerender(
+			<>
+				<Toaster offset={8} />
+				<Cover width={200} />
+			</>,
+		);
+		expect(getComputedStyle(viewport('top-right')).right).toBe('208px');
+	});
+
+	it('counts the cover from the edge of the container the stack is placed in', async () => {
+		await page.viewport(1280, 800);
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; right: 40px; width: 600px; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		const inset = document.documentElement.clientWidth - box.getBoundingClientRect().right;
+		render(
+			<>
+				<Toaster offset={8} container={box} />
+				<Cover width={inset + 200} />
+			</>,
+		);
+
+		expect(getComputedStyle(viewport('top-right')).right).toBe('208px');
+		box.remove();
+	});
+
+	it('reads the distance from its container to the window edge again as the window resizes', async () => {
+		await page.viewport(1280, 800);
+		// Fixed to the left of the window, so a resize moves its right edge.
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; left: 0; width: 600px; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		// Ends 200px inside the box once the window is 1100px wide.
+		const cover = 1100 - 600 + 200;
+		render(
+			<>
+				<Toaster offset={8} container={box} />
+				<Cover width={cover} />
+			</>,
+		);
+
+		await page.viewport(1100, 800);
+
+		const inset = document.documentElement.clientWidth - 600;
+		await expect
+			.poll(() => getComputedStyle(viewport('top-right')).right)
+			.toBe(`${cover - inset + 8}px`);
+		box.remove();
 	});
 
 	it('keeps the offset alone with no cover', () => {

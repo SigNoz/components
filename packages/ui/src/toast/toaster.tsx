@@ -139,6 +139,7 @@ const ToasterRoot = forwardRef<HTMLDivElement, ToasterProps>(function Toaster(
  * | Attribute | on |
  * |---|---|
  * | `data-position` | each viewport |
+ * | `data-beside-drawer` | a right viewport, while it sits beside an open `Drawer` |
  * | `data-type` | the toast and its title, description and action: `success`, `info`, `warning`, `danger` or `loading` |
  * | `data-expanded` | the toast, while the stack is spread |
  * | `data-limited` | a toast past the `limit` the stack shows |
