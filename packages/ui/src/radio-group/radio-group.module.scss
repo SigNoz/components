@@ -4,8 +4,8 @@
 .radio-group {
 	display: var(--radio-group-display, grid);
 	gap: var(--radio-group-internal-gap);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--radio-group-font-variant-numeric, normal);
+	font-feature-settings: var(--radio-group-font-feature-settings, 'ss01' 1);
 
 	--radio-group-internal-border-width: var(--radio-group-border-width, 2px);
 	--radio-group-internal-border-color: var(--radio-group-border-color, var(--radio-group-border));
@@ -126,21 +126,23 @@
 
 .radio-group__item {
 	display: var(--radio-group-item-control-display, flex);
-	box-sizing: border-box;
+	box-sizing: var(--radio-group-item-control-box-sizing, border-box);
 	// Centred on the first line box rather than on the row, which is the same pixel as long as the
 	// label is one line of text and the only pixel that holds still once it is not.
 	margin-block-start: var(--radio-group-item-margin-block-start,
 			calc((var(--radio-group-internal-label-line-height) - var(--radio-group-internal-size)) / 2));
 	block-size: var(--radio-group-internal-size);
 	inline-size: var(--radio-group-internal-size);
-	flex-shrink: 0;
-	align-items: center;
-	justify-content: center;
-	padding: 0;
+	flex-shrink: var(--radio-group-item-control-flex-shrink, 0);
+	align-items: var(--radio-group-item-control-align-items, center);
+	justify-content: var(--radio-group-item-control-justify-content, center);
+	padding: var(--radio-group-item-control-padding, 0);
 	border-radius: var(--radio-group-border-radius, var(--radius-round));
-	border: var(--radio-group-internal-border-width) solid var(--radio-group-internal-border-color);
+	border-width: var(--radio-group-internal-border-width);
+	border-style: var(--radio-group-border-style, solid);
+	border-color: var(--radio-group-internal-border-color);
 	background-color: var(--radio-group-background, transparent);
-	cursor: inherit;
+	cursor: var(--radio-group-item-control-cursor, inherit);
 	transition: var(--radio-group-transition,
 			background-color 150ms ease,
 			border-color 150ms ease,
@@ -181,8 +183,8 @@
 	line-height: var(--radio-group-internal-label-line-height);
 	letter-spacing: var(--radio-group-label-letter-spacing, var(--paragraph-base-400-letter-spacing));
 	text-transform: var(--radio-group-label-text-transform, var(--paragraph-base-400-text-transform));
-	user-select: none;
-	cursor: inherit;
+	user-select: var(--radio-group-label-user-select, none);
+	cursor: var(--radio-group-label-cursor, inherit);
 	transition: var(--radio-group-label-transition, color 150ms ease);
 
 	&-tooltip {
