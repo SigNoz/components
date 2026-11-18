@@ -1,3 +1,4 @@
+import { splitSpacingProps } from '../lib/spacing.js';
 import { forwardRef, useMemo, type ElementType } from 'react';
 import { mergeRefs } from '../lib/merge-refs.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
@@ -11,7 +12,6 @@ import {
 	isFlexDisplay,
 	isTypographyTruncated,
 	resolveTypographyDisplay,
-	splitTypographySpacing,
 	wrapTextRuns,
 } from './utils.js';
 
@@ -186,7 +186,7 @@ const TypographyRoot = forwardRef<HTMLElement, TypographyProps>(function Typogra
 	}: TypographyProps & RejectedProps,
 	ref,
 ) {
-	const [spacing, props] = splitTypographySpacing(rest);
+	const [spacing, props] = splitSpacingProps(rest);
 	const resolvedDisplay = resolveTypographyDisplay(as, display);
 	const hasEllipsis = textOverflow === 'ellipsis';
 	const [isTruncated, measureRef] = useIsLabelTruncated(hasEllipsis, isTypographyTruncated);

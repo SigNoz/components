@@ -8,16 +8,14 @@ import {
 	type ReactNode,
 } from 'react';
 import { toOptionalCssLength } from '../lib/css-length.js';
-import { splitProps, toSpacingShorthand, toSpacingValue } from '../lib/spacing.js';
+import { toSpacingShorthand, toSpacingValue } from '../lib/spacing.js';
 import { isLabelTruncated, isLabelTruncatedInHeight } from '../lib/useIsLabelTruncated.js';
-import { TypographySpacingPropNames, TypographyTextTransform } from './constants.js';
+import { TypographyTextTransform } from './constants.js';
 import type {
 	TypographyDisplayType,
 	TypographyElementType,
 	TypographyLookProps,
-	TypographySpacingProps,
 	TypographyVariantType,
-	WithoutTypographySpacingProps,
 } from './types.js';
 
 const INLINE_ELEMENTS: ReadonlySet<TypographyElementType | 'a'> = new Set([
@@ -26,8 +24,6 @@ const INLINE_ELEMENTS: ReadonlySet<TypographyElementType | 'a'> = new Set([
 	'code',
 	'a',
 ]);
-
-const SPACING_PROP_NAMES: ReadonlySet<string> = new Set(TypographySpacingPropNames);
 
 /**
  * The display a text renders with: `display` when set, otherwise the one of its element.
@@ -50,19 +46,6 @@ export function isFlexDisplay(display: TypographyDisplayType): boolean {
 
 function toLineCount(value: unknown): number {
 	return typeof value === 'number' && Number.isFinite(value) ? Math.max(1, Math.floor(value)) : 1;
-}
-
-/**
- * Splits the margin and padding props from the props the element takes.
- *
- * @access private
- */
-export function splitTypographySpacing<Props extends object>(
-	props: Props,
-): [TypographySpacingProps, WithoutTypographySpacingProps<Props>] {
-	const [spacing, rest] = splitProps(props, SPACING_PROP_NAMES);
-
-	return [spacing, rest as WithoutTypographySpacingProps<Props>];
 }
 
 const TEXT_TRANSFORMS: ReadonlySet<unknown> = new Set(Object.values(TypographyTextTransform));

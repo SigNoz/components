@@ -80,28 +80,6 @@ export const TypographyVerticalAlign = {
 	Baseline: 'baseline',
 } as const;
 
-/**
- * The names of the margin and padding props.
- *
- * @access private
- */
-export const TypographySpacingPropNames = [
-	'margin',
-	'marginX',
-	'marginY',
-	'marginTop',
-	'marginRight',
-	'marginBottom',
-	'marginLeft',
-	'padding',
-	'paddingX',
-	'paddingY',
-	'paddingTop',
-	'paddingRight',
-	'paddingBottom',
-	'paddingLeft',
-] as const;
-
 export const TypographySpacing = [
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 24, 32, 40, 48, 56, 64,
 ] as const;

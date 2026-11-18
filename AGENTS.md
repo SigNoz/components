@@ -55,6 +55,7 @@ On commit, Husky + lint-staged run `pnpm run type-check`, `pnpm oxlint --fix`, `
 - `index.ts` holds only the generated token region plus exports: explicit named exports for values, and a named `export type { ... }` list for types whenever the source file also holds an `@access private` type (`export type *` would publish it). Never a bare `export *`. This is the only re-export surface, do not add other barrel files.
 - Put composed parts in `subcomponents/`, opinionated compositions in `presets/`. One file per component, named kebab-case after it.
 - No helpers in the component file. Shared logic goes in `utils.ts` or `lib/`, cross-component helpers in `src/lib/`. Custom hooks live in their own file next to the component.
+- Split props with a destructure (`const { label, description, ...control } = props`), never with an `Object.entries(props)` loop over an array of key names. A loop is only for keys a destructure cannot name, such as every `data-*` attribute. See `COMPONENT_GUIDELINES.md#required-conventions`.
 - More than 3 public type declarations in a component directory: put them in `types.tsx`. A type private to one file (a hook's state, a subcomponent's props) stays next to its implementation.
 - Relative imports MUST carry the `.js` extension, test files included (`../../__tests__/type-error-messages.js`). Types use `import type` (`typescript/consistent-type-imports` is an error; a value import of a type breaks the CJS build).
 - Icons come from `@signozhq/icons`. Never import `tailwindcss` or `@signozhq/tailwind-config` inside `packages/`.
