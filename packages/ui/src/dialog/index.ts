@@ -55,7 +55,9 @@
  * | `--dialog-flex-direction` | `column` |
  * | `--dialog-focus-visible-outline` | `none` |
  * | `--dialog-font-family` | `var(--paragraph-base-400-font-family)` |
+ * | `--dialog-font-feature-settings` | `'ss01' 1` |
  * | `--dialog-font-size` | `var(--paragraph-base-400-font-size)` |
+ * | `--dialog-font-variant-numeric` | `normal` |
  * | `--dialog-font-weight` | `var(--paragraph-base-400-font-weight)` |
  * | `--dialog-footer-align-items` | `center` |
  * | `--dialog-footer-border-style` | `solid` |
