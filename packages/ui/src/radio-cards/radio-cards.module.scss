@@ -14,8 +14,8 @@
 	grid-template-columns: var(--radio-cards-grid-template-columns,
 			repeat(auto-fill, minmax(min(100%, var(--radio-cards-internal-column-min-size)), 1fr)));
 	gap: var(--radio-cards-internal-gap);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--radio-cards-font-variant-numeric, normal);
+	font-feature-settings: var(--radio-cards-font-feature-settings, 'ss01' 1);
 
 	// A track is the larger of the minimum width and an equal share of the row, so a row never
 	// holds more than `columns` cards, and holds fewer once a share would go under the minimum.
