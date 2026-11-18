@@ -38,28 +38,31 @@
 	color: var(--typography-color, var(--typography-internal-color, inherit));
 
 	&[data-display='inline'] {
-		--typography-internal-display: inline;
+		--typography-internal-display: var(--typography-inline-display, inline);
 	}
 
 	&[data-display='block'] {
-		--typography-internal-display: block;
+		--typography-internal-display: var(--typography-block-display, block);
 	}
 
 	&[data-display='block']:where(li) {
-		--typography-internal-display: list-item;
+		--typography-internal-display: var(--typography-list-item-display, list-item);
 	}
 
 	&[data-display='inline-block'] {
-		--typography-internal-display: inline-block;
-		--typography-internal-clamp-display: -webkit-inline-box;
+		--typography-internal-display: var(--typography-inline-block-display, inline-block);
+		--typography-internal-clamp-display: var(
+			--typography-inline-block-clamp-display,
+			-webkit-inline-box
+		);
 	}
 
 	&[data-display='flex'] {
-		--typography-internal-display: flex;
+		--typography-internal-display: var(--typography-flex-display, flex);
 	}
 
 	&[data-display='inline-flex'] {
-		--typography-internal-display: inline-flex;
+		--typography-internal-display: var(--typography-inline-flex-display, inline-flex);
 	}
 
 	&[data-display$='flex'] {
@@ -72,19 +75,25 @@
 	}
 
 	&[data-vertical-align='start'] {
-		--typography-internal-align-items: flex-start;
+		--typography-internal-align-items: var(
+			--typography-vertical-align-start-align-items,
+			flex-start
+		);
 	}
 
 	&[data-vertical-align='center'] {
-		--typography-internal-align-items: center;
+		--typography-internal-align-items: var(--typography-vertical-align-center-align-items, center);
 	}
 
 	&[data-vertical-align='end'] {
-		--typography-internal-align-items: flex-end;
+		--typography-internal-align-items: var(--typography-vertical-align-end-align-items, flex-end);
 	}
 
 	&[data-vertical-align='baseline'] {
-		--typography-internal-align-items: baseline;
+		--typography-internal-align-items: var(
+			--typography-vertical-align-baseline-align-items,
+			baseline
+		);
 	}
 
 	&[data-align] {
@@ -96,65 +105,77 @@
 	}
 
 	&[data-align='start'] {
-		--typography-internal-text-align: start;
-		--typography-internal-justify-content: flex-start;
+		--typography-internal-text-align: var(--typography-align-start-text-align, start);
+		--typography-internal-justify-content: var(
+			--typography-align-start-justify-content,
+			flex-start
+		);
 	}
 
 	&[data-align='center'] {
-		--typography-internal-text-align: center;
-		--typography-internal-justify-content: center;
+		--typography-internal-text-align: var(--typography-align-center-text-align, center);
+		--typography-internal-justify-content: var(--typography-align-center-justify-content, center);
 	}
 
 	&[data-align='end'] {
-		--typography-internal-text-align: end;
-		--typography-internal-justify-content: flex-end;
+		--typography-internal-text-align: var(--typography-align-end-text-align, end);
+		--typography-internal-justify-content: var(--typography-align-end-justify-content, flex-end);
 	}
 
 	&[data-text-overflow='wrap'] {
-		--typography-internal-white-space: normal;
-		--typography-internal-overflow: visible;
-		--typography-internal-text-overflow: clip;
-		--typography-internal-overflow-wrap: anywhere;
+		--typography-internal-white-space: var(--typography-wrap-white-space, normal);
+		--typography-internal-overflow: var(--typography-wrap-overflow, visible);
+		--typography-internal-text-overflow: var(--typography-wrap-text-overflow, clip);
+		--typography-internal-overflow-wrap: var(--typography-wrap-overflow-wrap, anywhere);
 	}
 
 	&[data-text-overflow='visible'] {
-		--typography-internal-white-space: nowrap;
-		--typography-internal-overflow: visible;
-		--typography-internal-text-overflow: clip;
-		--typography-internal-overflow-wrap: normal;
+		--typography-internal-white-space: var(--typography-visible-white-space, nowrap);
+		--typography-internal-overflow: var(--typography-visible-overflow, visible);
+		--typography-internal-text-overflow: var(--typography-visible-text-overflow, clip);
+		--typography-internal-overflow-wrap: var(--typography-visible-overflow-wrap, normal);
 	}
 
 	&[data-text-overflow='hidden'] {
-		--typography-internal-white-space: nowrap;
-		--typography-internal-overflow: clip visible;
-		--typography-internal-text-overflow: clip;
-		--typography-internal-overflow-wrap: normal;
+		--typography-internal-white-space: var(--typography-hidden-white-space, nowrap);
+		--typography-internal-overflow: var(--typography-hidden-overflow, clip visible);
+		--typography-internal-text-overflow: var(--typography-hidden-text-overflow, clip);
+		--typography-internal-overflow-wrap: var(--typography-hidden-overflow-wrap, normal);
 	}
 
 	&[data-text-overflow='ellipsis'] {
-		--typography-internal-white-space: nowrap;
-		--typography-internal-overflow: clip visible;
-		--typography-internal-text-overflow: ellipsis;
-		--typography-internal-overflow-wrap: normal;
+		--typography-internal-white-space: var(--typography-ellipsis-white-space, nowrap);
+		--typography-internal-overflow: var(--typography-ellipsis-overflow, clip visible);
+		--typography-internal-text-overflow: var(--typography-ellipsis-text-overflow, ellipsis);
+		--typography-internal-overflow-wrap: var(--typography-ellipsis-overflow-wrap, normal);
 		--typography-internal-overflow-min-width: 0;
 	}
 
 	&[data-text-overflow='ellipsis']:not([data-max-lines='1']) {
-		--typography-internal-white-space: normal;
-		--typography-internal-overflow: hidden;
-		--typography-internal-overflow-wrap: anywhere;
+		--typography-internal-white-space: var(--typography-clamp-white-space, normal);
+		--typography-internal-overflow: var(--typography-clamp-overflow, hidden);
+		--typography-internal-overflow-wrap: var(--typography-clamp-overflow-wrap, anywhere);
 	}
 
 	&[data-tabular-numbers] {
-		--typography-internal-font-variant-numeric: tabular-nums;
+		--typography-internal-font-variant-numeric: var(
+			--typography-tabular-numbers-font-variant-numeric,
+			tabular-nums
+		);
 	}
 
 	&[data-slashed-zero] {
-		--typography-internal-font-variant-numeric: slashed-zero;
+		--typography-internal-font-variant-numeric: var(
+			--typography-slashed-zero-font-variant-numeric,
+			slashed-zero
+		);
 	}
 
 	&[data-tabular-numbers][data-slashed-zero] {
-		--typography-internal-font-variant-numeric: tabular-nums slashed-zero;
+		--typography-internal-font-variant-numeric: var(
+			--typography-tabular-numbers-slashed-zero-font-variant-numeric,
+			tabular-nums slashed-zero
+		);
 	}
 
 	&[data-color='main'] {
