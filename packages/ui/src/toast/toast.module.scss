@@ -29,14 +29,11 @@
   margin: var(--toast-viewport-margin, 0);
   padding: var(--toast-viewport-padding, 0);
   // 26.25rem is the 420px of the design.
-  --toast-internal-inline-size: var(--toast-viewport-inline-size, 26.25rem);
-  --toast-internal-max-inline-size: var(
+  inline-size: var(--toast-viewport-inline-size, 26.25rem);
+  max-inline-size: var(
     --toast-viewport-max-inline-size,
     calc(100vw - 2 * max(var(--toast-internal-offset-left), var(--toast-internal-offset-right)))
   );
-
-  inline-size: var(--toast-internal-inline-size);
-  max-inline-size: var(--toast-internal-max-inline-size);
   // The viewport has no surface of its own, so a click beside a toast reaches the page below.
   // Each toast turns it back on, which also keeps it clickable while a modal dialog has turned
   // pointer events off on the body.
@@ -54,24 +51,8 @@
     left: var(--toast-internal-offset-left);
   }
 
-  // While a Drawer is open, `--toast-internal-right-edge-cover` is the width it covers from the
-  // right edge, the gap beside it included, so the stack sits beside it. Where the toast does not
-  // fit there, it stops one offset from the left edge rather than leaving the window. With no
-  // drawer the outer `max` gives the offset alone, as before. The toast width is the rendered one,
-  // the max size included; the fallback keeps `right` valid where an offset does not resolve.
   &[data-position$='right'] {
-    right: max(
-      var(--toast-internal-offset-right),
-      min(
-        var(--toast-internal-offset-right) + var(--toast-internal-right-edge-cover, 0px),
-        100% -
-          min(
-            var(--toast-internal-inline-size),
-            var(--toast-internal-max-inline-size, var(--toast-internal-inline-size))
-          ) -
-          var(--toast-internal-offset-right)
-      )
-    );
+    right: var(--toast-internal-offset-right);
     transition-property: var(--toast-viewport-transition-property, right);
     transition-duration: var(--toast-viewport-transition-duration, 240ms);
     transition-timing-function: var(
@@ -82,6 +63,23 @@
     @media (prefers-reduced-motion: reduce) {
       transition: none;
     }
+  }
+
+  // Beside an open Drawer, `--toast-internal-right-edge-cover` is the width it covers from the
+  // right edge, the gap beside it included, and `--toast-internal-rendered-inline-size` the width
+  // of the stack. Where the stack does not fit beside the drawer, it stops one offset from the left
+  // edge rather than leaving the window.
+  &[data-beside-drawer] {
+    right: var(
+      --toast-viewport-beside-drawer-right,
+      max(
+        var(--toast-internal-offset-right),
+        min(
+          var(--toast-internal-offset-right) + var(--toast-internal-right-edge-cover),
+          100% - var(--toast-internal-rendered-inline-size) - var(--toast-internal-offset-right)
+        )
+      )
+    );
   }
 
   &[data-position$='center'] {

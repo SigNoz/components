@@ -114,6 +114,7 @@
  * | `--toast-transition-property` | `opacity, transform, block-size` |
  * | `--toast-transition-timing-function` | `ease` |
  * | `--toast-transition-travel` | `var(--spacing-4)` |
+ * | `--toast-viewport-beside-drawer-right` | `max( var(--toast-internal-offset-right), min( v...` |
  * | `--toast-viewport-box-sizing` | `border-box` |
  * | `--toast-viewport-center-left` | `50%` |
  * | `--toast-viewport-center-transform` | `translateX(-50%)` |

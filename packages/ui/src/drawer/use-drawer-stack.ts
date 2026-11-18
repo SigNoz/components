@@ -11,7 +11,7 @@ import type {
 	DrawerTypeType,
 } from './types.js';
 import { useCommittedOpen } from './use-committed-open.js';
-import { useElementWidth } from './use-element-width.js';
+import { useElementWidth } from '../lib/use-element-width.js';
 import { useInert } from './use-inert.js';
 import { buildTrail, leaveTrail } from './utils.js';
 

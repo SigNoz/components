@@ -50,6 +50,34 @@ describe('toast beside an open drawer', () => {
 		expect(coverOf('bottom-right')).toBe(cover);
 	});
 
+	it('counts the distance from a container that holds the drawer to the window edge', () => {
+		// The transform makes the box the containing block of the fixed drawer viewport.
+		const box = document.createElement('div');
+		box.style.cssText =
+			'position: fixed; top: 0; right: 20px; width: 50%; height: 300px; transform: translateZ(0)';
+		document.body.append(box);
+		render(
+			<>
+				<Toaster />
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					title="Span"
+					open
+					onClose={() => {}}
+					container={box}
+				>
+					Details
+				</Drawer>
+			</>,
+		);
+
+		const outside = document.documentElement.clientWidth - box.getBoundingClientRect().right;
+		expect(outside).toBeGreaterThan(0);
+		expect(coverOf('top-right')).toBe(`${panelWidth() + (outside + GAP)}px`);
+		box.remove();
+	});
+
 	it('moves the right stacks back as soon as the drawer starts closing', () => {
 		const { rerender } = render(<Page open />);
 		rerender(<Page open={false} />);
@@ -142,6 +170,21 @@ describe('toast stack beside a covered right edge', () => {
 		expect(getComputedStyle(viewport('top-right')).right).toBe(
 			`${containingWidth - 60 - 8 - 10}px`,
 		);
+	});
+
+	it('keeps its place with a keyword max size', () => {
+		document.body.style.setProperty('--toast-viewport-max-inline-size', 'none');
+		const { rerender } = render(<Toaster offset={8} />);
+
+		expect(getComputedStyle(viewport('top-right')).right).toBe('8px');
+
+		rerender(
+			<>
+				<Toaster offset={8} />
+				<Cover width={200} />
+			</>,
+		);
+		expect(getComputedStyle(viewport('top-right')).right).toBe('208px');
 	});
 
 	it('keeps the offset alone with no cover', () => {
