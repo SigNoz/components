@@ -45,6 +45,7 @@ that apply to this PR and delete the rest. A docs-only or CI-only PR needs none 
 - [ ] Subcomponents in `subcomponents/`, opinionated compositions in `presets/`
 - [ ] All four lists updated: `src/index.ts`, `vite.config.ts`, `package.json` exports, `README.md` + `intro.mdx`
 - [ ] New runtime deps added to `externalPatterns`
+- [ ] No `useMemo`, `useCallback` or `memo` for speed; one kept for identity has a comment naming what depends on it
 
 **CSS** ([guidelines](https://github.com/SigNoz/components/blob/main/COMPONENT_GUIDELINES.md#2-css-organization))
 

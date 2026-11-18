@@ -33,7 +33,7 @@ Canonical docs. Read the relevant one before touching that area, they are the so
 | `pnpm -F docs test` | Story render + interaction tests in Chromium (what CI runs) |
 | `pnpm -F @signozhq/ui tokens` | Regenerate CSS token JSDoc tables in `index.ts` after touching any `--{component}-*` var |
 | `pnpm -F @signozhq/ui tokens:check` | Fail if token tables are stale (also runs in lint-staged and CI) |
-| `pnpm -F @signozhq/ui react-compiler:strict-check` | React Compiler strict check for the components on the strict list |
+| `pnpm -F @signozhq/ui react-compiler:strict-check` | React Compiler strict check over every file in `packages/ui/src` |
 | `pnpm dev` | Storybook on :6006 plus `vite build --watch` on `packages/ui` |
 | `pnpm clean` | Remove every `node_modules` and `dist` |
 
@@ -62,6 +62,7 @@ On commit, Husky + lint-staged run `pnpm run type-check`, `pnpm oxlint --fix`, `
 - Adding a runtime dependency means adding it to `externalPatterns` in the same commit, or `packages/ui/src/__tests__/vite-externals.test.ts` fails.
 - Always support `testId` on critical/behavioral elements (inputs, buttons, roots). Tests query by role and accessible name or `testId`, never by hashed CSS Module class names.
 - CSS is always a Sass CSS Module (`.module.scss`). No Tailwind, no CVA, no Sass variables, no plain stylesheets. Every overridable value is `var(--{component}-x, <design token>)`; no literal fallback on a design token; semantic tokens only, never `--bg-*` / `--text-*` primitives. Variants are `data-*` attributes. `data-slot` and `data-testid` on the root. This is a presentational library, there is no data fetching or auth layer to wire up.
+- No `useMemo`, `useCallback` or `memo` for speed: the React Compiler already caches every file in `packages/ui`. Pass a `useState` setter as it is. Keep one only when identity matters to code the compiler does not see, with a comment naming it (`COMPONENT_GUIDELINES.md#memoization`).
 - Comments follow `COMPONENT_GUIDELINES.md#code-comments`: never restate the code; keep a comment that brings outside context, stops a likely bug, or says why the code has a shape it cannot explain itself.
 
 3. FORCED VERIFICATION: Your internal tools mark file writes as successful even if the code does not compile. You are FORBIDDEN from reporting a task as complete until you have run, from the repo root, and fixed ALL resulting errors:

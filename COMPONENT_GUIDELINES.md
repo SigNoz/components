@@ -198,6 +198,32 @@ export type TooltipRootProps = ...;
   (`packages/typescript-config/vite.config.extend.ts`), or
   `packages/ui/src/__tests__/vite-externals.test.ts` fails.
 
+### Memoization
+
+The build runs the React Compiler on every file in `packages/ui`, and the unit tests run the same
+compiled output (`packages/ui/react-compiler.config.ts`). The compiler caches every value, callback
+and element on the inputs it reads, so a `useMemo`, `useCallback` or `memo` written for speed
+compiles to the same code as the plain version and only adds lines.
+
+- Do not write `useMemo`, `useCallback` or `memo` to skip a render or a recomputation. Write the
+  plain value or function.
+- The setter from `useState` and the `dispatch` from `useReducer` never change. Pass them as they
+  are instead of wrapping them in a callback, and an effect that lists them never re-runs because
+  of them.
+- When a value's identity is part of correctness, make it stable by construction first: a state
+  setter, a ref, or a function at module level.
+- Keep a `useMemo` or `useCallback` only when identity matters to code the compiler does not see,
+  such as a callback a third-party primitive reads once. Say who depends on it in a comment.
+  `useFocusTarget` in `packages/ui/src/field/use-focus-target.ts` is the example: Base UI's
+  `RadioGroup` calls its `inputRef` only when a radio registers.
+- A compiler bailout drops every cache in that component or hook, and the build only logs it.
+  `pnpm -F @signozhq/ui react-compiler:strict-check` (part of `pnpm lint`) fails on one in any
+  file under `packages/ui/src`.
+
+To see what the compiler made of a file, run it through `transformSync` from
+`oxc-transform-react` with the options in `packages/ui/scripts/check-react-compiler-strict.mjs`
+and read the output: each cache is an `if ($[n] !== dep)` block.
+
 ## 2. CSS organization
 
 Full rationale in [BUILD.md](./BUILD.md#3-styling). The rules:
