@@ -1,5 +1,5 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
-import { forwardRef, type ReactElement, type RefAttributes } from 'react';
+import { forwardRef, type ReactElement, type RefAttributes, useCallback, useRef } from 'react';
 import { onFocusLeave } from '../lib/focus-leave.js';
 import { useControlledValue } from '../lib/use-controlled-value.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -61,6 +61,18 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 		testId,
 	});
 
+	// Base UI hands the group the hidden input of the checked card, which follows `form`.
+	const inputRef = useRef<HTMLInputElement | null>(null);
+	// Identity: a new ref callback each render would hand the field's focus target `null` and then
+	// the input again on every commit.
+	const groupInputRef = useCallback(
+		(input: HTMLInputElement | null) => {
+			inputRef.current = input;
+			focusTarget?.(input);
+		},
+		[focusTarget],
+	);
+
 	// The group keeps the value itself, even uncontrolled, since Base UI has no way to uncheck a
 	// radio: `allowClear` writes `null` here.
 	const [selectedValue, setSelectedValue] = useControlledValue<string | null>({
@@ -68,6 +80,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 		value,
 		defaultValue,
 		empty: null,
+		formResetRef: inputRef,
 	});
 
 	function onValueChange(next: string | null): void {
@@ -99,7 +112,7 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
 			required={required && isEmpty}
 			name={name}
 			form={form}
-			inputRef={focusTarget}
+			inputRef={groupInputRef}
 			value={selectedValue}
 			onValueChange={onValueChange}
 			onBlur={onFocusLeave(onBlur)}
@@ -187,7 +200,8 @@ const RadioCardsRoot = forwardRef<HTMLDivElement, RadioCardsProps>(function Radi
  * ### In a form
  *
  * Each card renders a hidden radio input with `name` and `form`, so the group submits the checked
- * `value` like a native radio group.
+ * `value` like a native radio group. A form reset brings an uncontrolled group back to
+ * `defaultValue`, without `onChange`.
  *
  * ### Asserting on it
  *

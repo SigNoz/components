@@ -1,8 +1,9 @@
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
-import { forwardRef, type ReactElement, type RefAttributes } from 'react';
+import { forwardRef, type ReactElement, type RefAttributes, useRef } from 'react';
 import { useFieldContext } from '../lib/field-context.js';
 import { onFocusLeave } from '../lib/focus-leave.js';
 import { resolveGroupReason } from '../lib/group-reason.js';
+import { mergeRefs } from '../lib/merge-refs.js';
 import { useControlledValue } from '../lib/use-controlled-value.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipTriggerBoundary } from '../tooltip/tooltip-trigger-context.js';
@@ -42,11 +43,16 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 		field !== null && props['aria-label'] !== undefined && props['aria-labelledby'] === undefined
 			? { 'aria-labelledby': undefined }
 			: undefined;
+	// The root, not Base UI's hidden input: a group that mounts disabled registers no input, so a
+	// reset would never be heard once it is enabled.
+	const rootRef = useRef<HTMLDivElement>(null);
+	const mergedRef = mergeRefs(ref, rootRef);
 	const [checkedValue, setCheckedValue] = useControlledValue<string | null>({
 		component: 'RadioGroup',
 		value,
 		defaultValue,
 		empty: null,
+		formResetRef: rootRef,
 	});
 	// Base UI hands the change two arguments, the value and its event details, and types the value
 	// as `string | null` because the generic also covers the `value` prop. Only a radio reports a
@@ -72,7 +78,7 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
 
 	const groupEl = (
 		<RadioGroupPrimitive<string | null>
-			ref={ref}
+			ref={mergedRef}
 			data-slot="radio-group"
 			data-color={color}
 			data-text-overflow={textOverflow}
@@ -145,6 +151,11 @@ const RadioGroupImpl = forwardRef<HTMLDivElement, RadioGroupProps>(function Radi
  * `nullable` is for a group bound to a nullable schema field (zod `.nullable()`). `onChange` is
  * typed to take `null`, so a `useState<string | null>` setter fits, and the group still never
  * reports it.
+ *
+ * ### In a form
+ *
+ * `name` submits the `value` of the checked item. A form reset brings an uncontrolled group back to
+ * `defaultValue`, or to no item checked without one, without `onChange`.
  *
  * ### Items
  *

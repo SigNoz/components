@@ -1,5 +1,5 @@
 import { Slider as SliderPrimitive } from '@base-ui/react/slider';
-import { type CSSProperties, forwardRef, useEffect, useState } from 'react';
+import { type CSSProperties, forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
 import { useFieldContext } from '../../lib/field-context.js';
 import { onFocusLeave } from '../../lib/focus-leave.js';
@@ -82,12 +82,17 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	}: SliderFrameProps & RejectedProps,
 	ref,
 ) {
+	// Base UI's `Slider.Root` has no `inputRef`, so the form is read from the first thumb input,
+	// which follows `form`.
+	const firstThumbRef = useRef<HTMLElement | null>(null);
+
 	// Base UI is always controlled from `values`, and an uncontrolled slider keeps them itself.
 	const [shownValues, setShownValues] = useControlledValue<readonly number[]>({
 		component: range ? 'Slider.Range' : 'Slider',
 		value,
 		defaultValue,
 		empty: range ? [min, max] : [min],
+		formResetRef: firstThumbRef,
 	});
 	const values = shownValues.map((entry) => toThumbValue(entry, min, max));
 
@@ -148,6 +153,16 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	// In a `Field.Group` the legend also names the range, so a screen reader does not meet two
 	// groups with different names. Inside a `Field`, Base UI wires the root, so nothing is added.
 	const field = useFieldContext();
+	const fieldFocusTarget = field?.focusTarget;
+	// Identity: a new ref callback each render would hand the field's focus target `null` and then
+	// the input again on every commit.
+	const firstThumbTarget = useCallback(
+		(input: HTMLElement | null) => {
+			firstThumbRef.current = input;
+			fieldFocusTarget?.(input);
+		},
+		[fieldFocusTarget],
+	);
 	const groupField = range && field?.kind === 'group' ? field : undefined;
 	const isGroupInvalid = groupField?.status === 'danger' && aria['aria-invalid'] === undefined;
 	const rootAria = range
@@ -252,7 +267,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 							ariaLabelledBy={range ? undefined : ariaLabelledBy}
 							ariaDescribedBy={range ? undefined : ariaDescribedBy}
 							inputAttributes={thumbInputAttributes}
-							focusTarget={index === 0 ? field?.focusTarget : undefined}
+							focusTarget={index === 0 ? firstThumbTarget : undefined}
 							testId={testId}
 						/>
 					))}

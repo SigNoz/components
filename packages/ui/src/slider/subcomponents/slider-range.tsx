@@ -29,7 +29,8 @@ import { SliderFrame } from './slider-frame.js';
  * ### Forms
  *
  * Each thumb input carries `name` and `form`, so the range submits two values under the same
- * `name`, the lower bound first.
+ * `name`, the lower bound first. A form reset brings an uncontrolled range back to `defaultValue`,
+ * without `onChange`.
  *
  * ### Asserting on it
  *

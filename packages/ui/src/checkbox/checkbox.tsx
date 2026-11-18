@@ -7,6 +7,7 @@ import {
 	type RefAttributes,
 	useId,
 	useMemo,
+	useRef,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
@@ -55,6 +56,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 	const field = useFieldContext();
 
 	const isReadOnly = readOnly === true;
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	// `'indeterminate'` is one more value of `value`, while Base UI splits it into a boolean prop
 	// beside `checked`, so Base UI stays controlled from `shown` even when the checkbox is not.
@@ -63,6 +65,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 		value,
 		defaultValue,
 		empty: false,
+		formResetRef: inputRef,
 	});
 	const indeterminate = shown === 'indeterminate';
 
@@ -126,6 +129,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			style={hasContainer ? undefined : sizeStyle}
 			checked={shown === true}
 			onCheckedChange={onCheckedChange}
+			inputRef={inputRef}
 			indeterminate={indeterminate}
 			disabled={isReadOnly ? false : disabled}
 			// Base UI parks a disabled checkbox at `tabindex="-1"`; staying focusable is what keeps
@@ -249,7 +253,8 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * ### In a form
  *
  * `name` makes the hidden input submit `"on"` while checked, like a native checkbox, and
- * `required` blocks submission until it is. `id` lands on that hidden input. Because the label
+ * `required` blocks submission until it is. `id` lands on that hidden input. A form reset brings an
+ * uncontrolled checkbox back to `defaultValue`, without `onChange`. Because the label
  * wraps the control, an antd `Form.Item` with `valuePropName` cannot inject state from outside:
  * pass `value` and `onChange` yourself.
  *

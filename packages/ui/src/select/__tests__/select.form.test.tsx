@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { SelectField } from '../presets/select-field.js';
 import { Select } from '../select.js';
 import { FRAMEWORKS } from './select.test-utils.js';
@@ -228,5 +228,178 @@ describe('SelectField name', () => {
 		await waitFor(() => {
 			expect(submitted().getAll('frameworks')).toEqual(['angular']);
 		});
+	});
+});
+
+describe('Select required while it cannot be filled in', () => {
+	it('blocks the submit while empty and enabled', () => {
+		render(
+			<form data-testid="form">
+				<Select
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick one"
+					items={FRAMEWORKS}
+					required
+				/>
+			</form>,
+		);
+
+		expect((screen.getByTestId('form') as HTMLFormElement).checkValidity()).toBe(false);
+	});
+
+	it('lets the form submit while disabled, and keeps aria-required', () => {
+		render(
+			<form data-testid="form">
+				<Select
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick one"
+					items={FRAMEWORKS}
+					required
+					disabled
+					disabledTooltip="Locked"
+				/>
+			</form>,
+		);
+
+		expect((screen.getByTestId('form') as HTMLFormElement).checkValidity()).toBe(true);
+		expect(screen.getByRole('combobox', { name: 'Framework' })).toHaveAttribute(
+			'aria-required',
+			'true',
+		);
+	});
+
+	it('lets the form submit while read-only, and keeps aria-required', () => {
+		render(
+			<form data-testid="form">
+				<Select
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick one"
+					items={FRAMEWORKS}
+					required
+					readOnly
+					readOnlyTooltip="Fixed"
+				/>
+			</form>,
+		);
+
+		expect((screen.getByTestId('form') as HTMLFormElement).checkValidity()).toBe(true);
+		expect(screen.getByRole('combobox', { name: 'Framework' })).toHaveAttribute(
+			'aria-required',
+			'true',
+		);
+	});
+});
+
+describe('Select form reset', () => {
+	it('brings an uncontrolled value back to defaultValue, without onChange', async () => {
+		const onChange = vi.fn();
+		render(
+			<form data-testid="form">
+				<Select
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick one"
+					items={FRAMEWORKS}
+					defaultValue="vue"
+					onChange={onChange}
+				/>
+				<button type="reset">Reset</button>
+			</form>,
+		);
+
+		await userEvent.click(screen.getByRole('combobox', { name: 'Framework' }));
+		await userEvent.click(await screen.findByRole('option', { name: 'Angular' }));
+
+		await waitFor(() => {
+			expect(submitted().getAll('framework')).toEqual(['angular']);
+		});
+
+		onChange.mockClear();
+		await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+
+		await waitFor(() => {
+			expect(submitted().getAll('framework')).toEqual(['vue']);
+		});
+		expect(screen.getByRole('combobox', { name: 'Framework' })).toHaveTextContent('Vue');
+		expect(onChange).not.toHaveBeenCalled();
+	});
+
+	it('brings several values back to defaultValue', async () => {
+		render(
+			<form data-testid="form">
+				<Select
+					multiple
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick some"
+					items={FRAMEWORKS}
+					defaultValue={['vue']}
+				/>
+				<button type="reset">Reset</button>
+			</form>,
+		);
+
+		await userEvent.click(screen.getByRole('combobox', { name: 'Framework' }));
+		await userEvent.click(await screen.findByRole('option', { name: 'Angular' }));
+
+		await waitFor(() => {
+			expect(submitted().getAll('framework')).toEqual(['vue', 'angular']);
+		});
+
+		await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+
+		await waitFor(() => {
+			expect(submitted().getAll('framework')).toEqual(['vue']);
+		});
+	});
+
+	it('keeps a controlled value, which the form onReset owns', async () => {
+		render(
+			<form data-testid="form">
+				<Select
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick one"
+					items={FRAMEWORKS}
+					value="react"
+				/>
+				<button type="reset">Reset</button>
+			</form>,
+		);
+
+		await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+		await new Promise((resolve) => setTimeout(resolve));
+
+		expect(submitted().getAll('framework')).toEqual(['react']);
+	});
+
+	it('keeps the value when the form cancels the reset', async () => {
+		render(
+			<form data-testid="form" onReset={(event) => event.preventDefault()}>
+				<Select
+					name="framework"
+					aria-label="Framework"
+					placeholder="Pick one"
+					items={FRAMEWORKS}
+					defaultValue="vue"
+				/>
+				<button type="reset">Reset</button>
+			</form>,
+		);
+
+		await userEvent.click(screen.getByRole('combobox', { name: 'Framework' }));
+		await userEvent.click(await screen.findByRole('option', { name: 'Angular' }));
+
+		await waitFor(() => {
+			expect(submitted().getAll('framework')).toEqual(['angular']);
+		});
+
+		await userEvent.click(screen.getByRole('button', { name: 'Reset' }));
+		await new Promise((resolve) => setTimeout(resolve));
+
+		expect(submitted().getAll('framework')).toEqual(['angular']);
 	});
 });

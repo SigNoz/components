@@ -1,6 +1,6 @@
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react/number-field';
 import { ChevronDown, ChevronUp } from '@signozhq/icons';
-import { forwardRef } from 'react';
+import { forwardRef, useRef } from 'react';
 import { useControlledValue } from '../../lib/use-controlled-value.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
@@ -20,6 +20,9 @@ import { getFrameAttributes, InputFrameSlots } from './input-frame.js';
  *
  * Not a target for react-hook-form's `register()` spread, whose `onChange` carries the event, not
  * the value. Use a controlled `Controller` instead.
+ *
+ * A form reset brings an uncontrolled field back to `defaultValue`, empty without one, and calls no
+ * `onChange`.
  *
  * The step buttons are out of the tab order, the way the arrows of a native `type="number"` are:
  * the keyboard already steps with the arrow keys.
@@ -99,6 +102,7 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		readOnlyTooltip,
 	});
 	const { focusVisible, focusProps } = useInputFocusVisible();
+	const hiddenInputRef = useRef<HTMLInputElement>(null);
 
 	// Base UI is always controlled from `shown`, and an uncontrolled field keeps `shown` itself.
 	const [shown, setShown] = useControlledValue<number | null>({
@@ -106,12 +110,14 @@ export const InputNumber = forwardRef<HTMLInputElement, InputNumberProps>(functi
 		value,
 		defaultValue,
 		empty: null,
+		formResetRef: hiddenInputRef,
 	});
 
 	const numberField = (
 		<NumberFieldPrimitive.Root
 			className={styles['input__number-root']}
 			id={field.id}
+			inputRef={hiddenInputRef}
 			value={shown}
 			onValueChange={(next) => {
 				setShown(next);

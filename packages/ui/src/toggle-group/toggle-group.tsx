@@ -5,10 +5,12 @@ import {
 	type ReactElement,
 	type RefAttributes,
 	useMemo,
+	useRef,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
 import { onFocusLeave } from '../lib/focus-leave.js';
+import { mergeRefs } from '../lib/merge-refs.js';
 import { useControlledValue } from '../lib/use-controlled-value.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -83,6 +85,10 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 	const isReadOnly = readOnly === true;
 	const isDisabled = isReadOnly ? false : disabled;
 
+	// The hidden inputs only render while a button is pressed, so the root stands for the bar.
+	const rootRef = useRef<HTMLDivElement>(null);
+	const mergedRef = useMemo(() => mergeRefs(ref, rootRef), [ref]);
+
 	// The bar keeps the pressed list itself, even uncontrolled, so it knows which button a form
 	// library's `focus()` has to land on. Base UI always gets the list as a controlled one.
 	const controlledValue = useMemo(() => toGroupValue(value), [value]);
@@ -91,6 +97,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		value: controlledValue,
 		defaultValue: toGroupValue(defaultValue) ?? undefined,
 		empty: NO_VALUES,
+		formResetRef: rootRef,
 	});
 
 	function onValueChange(
@@ -145,7 +152,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 
 	return (
 		<div
-			ref={ref}
+			ref={mergedRef}
 			data-slot="toggle-group"
 			data-variant={variant}
 			data-color={color}
@@ -284,7 +291,8 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * ### In a form
  *
  * With `name`, each pressed button submits its `value` under it, so a `multiple` bar submits one
- * entry per pressed button. A disabled bar submits nothing, and a read-only one still does.
+ * entry per pressed button. A disabled bar submits nothing, and a read-only one still does. A form
+ * reset brings an uncontrolled bar back to `defaultValue`, without `onChange`.
  *
  * ### Disabled and read-only
  *

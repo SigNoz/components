@@ -1,5 +1,5 @@
 import { CheckboxGroup } from '@base-ui/react/checkbox-group';
-import { forwardRef } from 'react';
+import { forwardRef, type Ref, useCallback, useRef } from 'react';
 import { onFocusLeave } from '../../lib/focus-leave.js';
 import { useControlledValue } from '../../lib/use-controlled-value.js';
 import type { RejectedProps } from '../../lib/utils.js';
@@ -48,7 +48,8 @@ function orderByItems(items: readonly RadioCardsItemType[], values: readonly str
  * ### In a form
  *
  * Each card renders a hidden checkbox input with `name` and `form`, so the group submits one `name`
- * entry per checked card, like a native checkbox list.
+ * entry per checked card, like a native checkbox list. A form reset brings an uncontrolled group
+ * back to `defaultValue`, without `onChange`.
  *
  * ### Asserting on it
  *
@@ -116,6 +117,10 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 			testId,
 		});
 
+		// The hidden input of the first card, which every group has and which follows `form`, even
+		// while the card is disabled.
+		const firstInputRef = useRef<HTMLInputElement | null>(null);
+
 		// Not `useSelectionValue`: it reads `''` as no value, the rule of a select. A card's value is
 		// any string, `''` included, as on `RadioCards`.
 		const [selectedValues, setSelectedValues] = useControlledValue<readonly string[]>({
@@ -123,6 +128,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 			value,
 			defaultValue,
 			empty: NO_VALUES,
+			formResetRef: firstInputRef,
 		});
 
 		function onValueChange(
@@ -148,6 +154,31 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 		const focusTargetCard =
 			cards.find((item) => item.disabled !== true && selectedValues.includes(item.value)) ??
 			cards.find((item) => item.disabled !== true);
+
+		const firstCardFocuses = focusTargetCard === cards[0];
+		// Identity: a new ref callback each render would hand the field's focus target `null` and then
+		// the input again on every commit.
+		const firstCardInputRef = useCallback(
+			(input: HTMLInputElement | null) => {
+				firstInputRef.current = input;
+
+				if (firstCardFocuses) {
+					focusTarget?.(input);
+				}
+			},
+			[firstCardFocuses, focusTarget],
+		);
+
+		function cardInputRef(
+			item: RadioCardsItemType,
+			index: number,
+		): Ref<HTMLInputElement> | undefined {
+			if (index === 0) {
+				return firstCardInputRef;
+			}
+
+			return item === focusTargetCard ? focusTarget : undefined;
+		}
 
 		const groupEl = (
 			<CheckboxGroup
@@ -184,7 +215,7 @@ export const RadioCardsMultiple = forwardRef<HTMLDivElement, RadioCardsMultipleP
 								required={required && isEmpty}
 								ariaRequired={isFieldRequired && isEmpty}
 								focusableWhenDisabled={isDisabled && index === 0}
-								inputRef={item === focusTargetCard ? focusTarget : undefined}
+								inputRef={cardInputRef(item, index)}
 							/>
 						))}
 					</TooltipTriggerBoundary>

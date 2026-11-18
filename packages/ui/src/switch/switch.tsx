@@ -6,6 +6,7 @@ import {
 	type RefAttributes,
 	useId,
 	useMemo,
+	useRef,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
 import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
@@ -60,6 +61,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 	const isFieldRequired = required === undefined && field?.kind === 'field' && field.required;
 
 	const isReadOnly = readOnly === true;
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	// Base UI is always controlled from `shown`, and an uncontrolled switch keeps `shown` itself.
 	const [shown, setShown] = useControlledValue<boolean>({
@@ -67,6 +69,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 		value,
 		defaultValue,
 		empty: false,
+		formResetRef: inputRef,
 	});
 
 	// Base UI hands the change two arguments, the value and its event details. The extra argument
@@ -131,6 +134,7 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
 			style={hasContainer ? undefined : sizeStyle}
 			checked={shown}
 			onCheckedChange={onCheckedChange}
+			inputRef={inputRef}
 			disabled={isReadOnly ? false : disabled}
 			// Base UI parks a disabled switch at `tabindex="-1"`; staying focusable is what keeps
 			// `disabledTooltip` reachable without a pointer. Spread rather than written plainly,
@@ -275,6 +279,11 @@ const SwitchImpl = forwardRef<HTMLSpanElement, SwitchProps>(function Switch(
  * not, since the track has no border of its own. `data-invalid` is on the switch for it. Base UI
  * sets it inside a `Field`, and the switches of a `Field.Group` read the status themselves and set
  * no `aria-invalid`. An `aria-invalid` written on the switch draws the ring the same way.
+ *
+ * ### In a form
+ *
+ * `name` makes the hidden input submit `"on"` while the switch is on, like a native checkbox. A
+ * form reset brings an uncontrolled switch back to `defaultValue`, without `onChange`.
  *
  * ### Disabled and read-only
  *

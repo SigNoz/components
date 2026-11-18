@@ -77,12 +77,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		} = props;
 
 		const field = useFieldContext();
-		// Base UI puts a native `required` on its hidden input, which would block the submit before
-		// the form's own validation runs.
-		const isFieldRequired = required === undefined && field?.required === true;
-		const fieldRequiredProps: AriaAttributes | undefined = isFieldRequired
-			? { 'aria-required': true }
-			: undefined;
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
 
 		const { selectedValues, commit } = useSelectionValue({
 			component: 'Combobox',
@@ -91,11 +87,18 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			value,
 			defaultValue,
 			onChange,
+			formResetRef: rootRef,
 		});
 
-		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
-
 		const isInert = disabled || readOnly;
+
+		// Base UI puts a native `required` on its hidden input, which would block the submit before
+		// the form's own validation runs. A disabled or read-only field cannot be filled in, so it
+		// drops the native one too, like a native input, and keeps only `aria-required`.
+		const isFieldRequired = required === undefined && field?.required === true;
+		const isNativeRequired = required === true && !isInert;
+		const ariaRequiredProps: AriaAttributes | undefined =
+			isFieldRequired || (required === true && isInert) ? { 'aria-required': true } : undefined;
 
 		const forcedOpen = useForceOpen();
 		const [openState, setOpenState] = useState(false);
@@ -260,7 +263,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			<TooltipProviderIfMissing>
 				<BaseCombobox.Root<ComboboxBaseValue, boolean>
 					multiple={multiple}
-					required={required}
+					required={isNativeRequired}
 					name={disabled ? undefined : name}
 					value={(multiple ? selectedValues : (selectedValues[0] ?? null)) as never}
 					onValueChange={handleValueChange}
@@ -295,7 +298,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 						<ComboboxTrigger
 							ref={triggerRef}
 							forwardedProps={{
-								...fieldRequiredProps,
+								...ariaRequiredProps,
 								...triggerProps,
 								...fieldGroupTriggerAria(field, triggerProps),
 							}}
@@ -384,7 +387,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
  * that is `undefined` on the first render leaves the combobox uncontrolled, starting at
  * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
  * `undefined` shows nothing selected. `onChange` reports `undefined` for a cleared single value and
- * `[]` for a multiple one.
+ * `[]` for a multiple one. A form reset brings an uncontrolled combobox back to `defaultValue`,
+ * without `onChange`.
  *
  * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
  * react-hook-form `Controller`: `value` then takes `null` too, a controlled combobox with nothing
@@ -439,8 +443,10 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
  * and a click on it focuses the trigger. The field's description and message are in the trigger's
  * `aria-describedby`, and `danger` sets `aria-invalid`, which paints the border. The field's
  * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
- * runs before the browser's. The combobox's own `required` wins, and keeps the native one. The
- * search row keeps its own name. `ComboboxField` renders the pair from one object.
+ * runs before the browser's. The combobox's own `required` wins, and keeps the native one, except
+ * while `disabled` or `readOnly`: nobody can fill the combobox in then, so, like a native input, it
+ * never blocks the submit and keeps only `aria-required`. The search row keeps its own name.
+ * `ComboboxField` renders the pair from one object.
  *
  * In a `Field.Group` the legend names the group, not the combobox, so the combobox needs its own
  * `aria-label`. The group's description and message still reach `aria-describedby`, and a

@@ -64,6 +64,11 @@ import type { SliderProps, SliderRangeProps, ValidateSliderProps } from './types
  * `disabledTooltip`, `readOnly` with `readOnlyTooltip`. Pass the reason as `undefined` when there
  * is none to give.
  *
+ * ### In a form
+ *
+ * Each thumb input carries `name` and `form`, so the slider submits its value like a native range
+ * input. A form reset brings an uncontrolled slider back to `defaultValue`, without `onChange`.
+ *
  * ### Tooltips
  *
  * `tooltip` shows the value of each thumb above it. It opens on hover, on press and on keyboard

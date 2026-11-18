@@ -61,12 +61,8 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 		} = props;
 
 		const field = useFieldContext();
-		// Base UI puts a native `required` on its hidden input, which would block the submit before
-		// the form's own validation runs.
-		const isFieldRequired = required === undefined && field?.required === true;
-		const fieldRequiredProps: AriaAttributes | undefined = isFieldRequired
-			? { 'aria-required': true }
-			: undefined;
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
 
 		const { selectedValues, commit } = useSelectionValue({
 			component: 'Select',
@@ -75,11 +71,18 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			value,
 			defaultValue,
 			onChange,
+			formResetRef: rootRef,
 		});
 
-		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
-
 		const isInert = disabled || readOnly;
+
+		// Base UI puts a native `required` on its hidden input, which would block the submit before
+		// the form's own validation runs. A disabled or read-only field cannot be filled in, so it
+		// drops the native one too, like a native input, and keeps only `aria-required`.
+		const isFieldRequired = required === undefined && field?.required === true;
+		const isNativeRequired = required === true && !isInert;
+		const ariaRequiredProps: AriaAttributes | undefined =
+			isFieldRequired || (required === true && isInert) ? { 'aria-required': true } : undefined;
 
 		const forcedOpen = useForceOpen();
 		const [openState, setOpenState] = useState(false);
@@ -166,7 +169,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					onValueChange={handleValueChange as never}
 					open={open}
 					onOpenChange={handleOpenChange}
-					required={required}
+					required={isNativeRequired}
 					name={disabled ? undefined : name}
 					modal={false}
 				>
@@ -185,7 +188,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 						<SelectTrigger
 							ref={triggerRef}
 							forwardedProps={{
-								...fieldRequiredProps,
+								...ariaRequiredProps,
 								...triggerProps,
 								...fieldGroupTriggerAria(field, triggerProps),
 							}}
@@ -253,7 +256,8 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  * that is `undefined` on the first render leaves the select uncontrolled, starting at
  * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
  * `undefined` shows nothing selected. `onChange` reports a `string`, or a `string[]` with
- * `multiple`, `[]` once every chip is removed. A single select has no way to clear its value.
+ * `multiple`, `[]` once every chip is removed. A single select has no way to clear its value. A
+ * form reset brings an uncontrolled select back to `defaultValue`, without `onChange`.
  *
  * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
  * react-hook-form `Controller`: `value` then takes `null` too, a controlled select with nothing
@@ -293,8 +297,9 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  * message. A multiple trigger is a `<div>`, so the browser does not link the label to it: the
  * select adds `aria-labelledby` and focuses the trigger when the label is clicked. The field's
  * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
- * runs before the browser's. The select's own `required` wins, and keeps the native one.
- * `SelectField` writes the two together.
+ * runs before the browser's. The select's own `required` wins, and keeps the native one, except
+ * while `disabled` or `readOnly`: nobody can fill the select in then, so, like a native input, it
+ * never blocks the submit and keeps only `aria-required`. `SelectField` writes the two together.
  *
  * In a `Field.Group` the legend names the group, not the select, so the select needs its own
  * `aria-label`. The group's description and message still reach `aria-describedby`, and a

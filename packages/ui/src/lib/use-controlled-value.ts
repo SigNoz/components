@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { type RefObject, useEffect, useState } from 'react';
+import { useFormReset } from './use-form-reset.js';
 
 /**
  * The value a control shows, and the setter its own input calls, under the one rule every value
@@ -13,6 +14,10 @@ import { useEffect, useState } from 'react';
  *
  * `null` counts as a written value: a control that accepts it treats it as controlled and empty.
  *
+ * With `formResetRef`, a reset of the form around that element brings an uncontrolled control back
+ * to the first `defaultValue`, the way a form reset restores a native input, and calls no
+ * `onChange`. A controlled control keeps `value`: the form's `onReset` owns it.
+ *
  * @access private
  */
 export function useControlledValue<T>({
@@ -21,6 +26,7 @@ export function useControlledValue<T>({
 	value,
 	defaultValue,
 	empty,
+	formResetRef,
 }: {
 	/**
 	 * The component name the warning starts with.
@@ -38,10 +44,15 @@ export function useControlledValue<T>({
 	 * What the control shows with nothing selected.
 	 */
 	empty: T;
+	/**
+	 * An element inside the control's form, whose reset restores the starting value.
+	 */
+	formResetRef?: RefObject<Element | null>;
 }): [value: T, setValue: (next: T) => void, isControlled: boolean] {
 	const [startedUncontrolled] = useState(value === undefined);
 	const [wasControlled, setWasControlled] = useState(!startedUncontrolled);
-	const [ownValue, setOwnValue] = useState<T>(defaultValue ?? empty);
+	const [startValue] = useState<T>(defaultValue ?? empty);
+	const [ownValue, setOwnValue] = useState<T>(startValue);
 	const isControlled = wasControlled || value !== undefined;
 
 	// Stored during render, as React's "previous render" pattern, so the switch never shows a frame
@@ -57,6 +68,12 @@ export function useControlledValue<T>({
 			);
 		}
 	}, [component, prop, startedUncontrolled, isControlled]);
+
+	useFormReset(formResetRef, () => {
+		if (!isControlled) {
+			setOwnValue(startValue);
+		}
+	});
 
 	function setValue(next: T): void {
 		if (!isControlled) {

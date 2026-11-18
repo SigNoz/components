@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type RefObject, useMemo } from 'react';
 import { useControlledValue } from './use-controlled-value.js';
 
 function toValues(value: string | readonly string[]): string[] {
@@ -28,6 +28,10 @@ export type UseSelectionValueOptions = {
 		| ((value: string | null) => void)
 		| ((value: string | undefined) => void)
 		| undefined;
+	/**
+	 * An element inside the field's form, whose reset restores an uncontrolled selection.
+	 */
+	formResetRef?: RefObject<Element | null>;
 };
 
 /**
@@ -44,6 +48,7 @@ export function useSelectionValue({
 	value,
 	defaultValue,
 	onChange,
+	formResetRef,
 }: UseSelectionValueOptions): {
 	selectedValues: string[];
 	commit: (next: string[]) => void;
@@ -57,6 +62,7 @@ export function useSelectionValue({
 		value: written,
 		defaultValue: defaultValue === undefined ? undefined : toValues(defaultValue),
 		empty: NO_VALUES,
+		formResetRef,
 	});
 
 	function commit(next: string[]): void {
