@@ -13,8 +13,8 @@
 	min-width: var(--slider-min-width, calc(var(--slider-internal-thumb-size) * 2));
 	touch-action: var(--slider-touch-action, none);
 	user-select: var(--slider-user-select, none);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--slider-font-variant-numeric, normal);
+	font-feature-settings: var(--slider-font-feature-settings, 'ss01' 1);
 
 	&[data-color='primary'] {
 		--slider-internal-indicator: var(
@@ -181,7 +181,10 @@
 .slider__mark {
 	// Where the label points, from the start of the slider. A thumb centre runs from half a thumb
 	// in at `min` to half a thumb in at `max`, and so does this.
-	--slider-internal-mark-travel: calc(100% - var(--slider-internal-thumb-size));
+	--slider-internal-mark-travel: var(
+		--slider-mark-travel,
+		calc(100% - var(--slider-internal-thumb-size))
+	);
 	--slider-internal-mark-anchor: calc(
 		var(--slider-internal-thumb-size) / 2 + var(--slider-internal-mark-travel) *
 			var(--slider-internal-mark-position)
@@ -224,7 +227,10 @@
 	}
 
 	&:last-child {
-		--slider-internal-mark-room-end: calc(100% - var(--slider-internal-mark-anchor));
+		--slider-internal-mark-room-end: var(
+			--slider-mark-last-child-room-end,
+			calc(100% - var(--slider-internal-mark-anchor))
+		);
 	}
 
 	// A label at an end of the slider grows away from it, so it takes the room of both sides.
