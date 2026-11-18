@@ -6,7 +6,9 @@ import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.j
 /**
  * How far the right edge of the box `element` is placed in, its containing block, sits from the
  * right edge of the window. `0` for a fixed element, unless an ancestor with a transform holds it,
- * such as a `container`. Read again as the window resizes, which resizes the root element.
+ * such as a `container`. Read again as the window resizes, which resizes the root element, and as
+ * the parent resizes: the portal `element` renders in fills the `container`, so it follows a
+ * container that resizes on its own, such as one a drawer shares.
  *
  * The edge is the element's own right edge plus its `right` and its right margin, so it holds
  * whatever `right` the element has, even while `right` animates.
@@ -31,7 +33,14 @@ export function useContainingBlockRightInset(element: HTMLElement | null): numbe
 		};
 		measure();
 
-		return observeResize(root, measure);
+		const stopRoot = observeResize(root, measure);
+		const parent = element.parentElement;
+		const stopParent = parent ? observeResize(parent, measure) : undefined;
+
+		return () => {
+			stopRoot();
+			stopParent?.();
+		};
 	}, [element]);
 
 	return inset;

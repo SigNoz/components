@@ -795,10 +795,13 @@ export const BesideADrawer: Story = {
 		await userEvent.click(canvas.getByRole('button', { name: 'Open drawer' }));
 		await waitFor(() => expect(Math.round(panel().right)).toBe(windowRight - EDGE_GAP));
 
-		// Beside the panel, one gap away from it, not over its header or its footer.
+		// Beside the panel, one gap away from it, not over its header or its footer. On a page too
+		// narrow for both, the stack stops one gap from the left edge instead.
 		for (const position of ['top-right', 'bottom-right'] as const) {
 			await waitFor(() =>
-				expect(Math.round(stack(position).right)).toBe(Math.round(panel().left) - EDGE_GAP),
+				expect(Math.round(stack(position).right)).toBe(
+					Math.round(Math.max(panel().left - EDGE_GAP, EDGE_GAP + stack(position).width)),
+				),
 			);
 		}
 		await expect(stack('top-left').left).toBe(topLeft);
