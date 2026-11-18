@@ -3,6 +3,7 @@ import {
 	ButtonColor,
 	ButtonSize,
 	ButtonVariant,
+	Drawer,
 	Toaster,
 	type ToasterProps,
 	ToastPosition,
@@ -699,5 +700,117 @@ export const ToastShowcase: Story = {
 		);
 		await expect(edges.bottom).toBe('48px');
 		await expect(edges.right).toBe('8px');
+	},
+};
+
+// The gap the Toaster keeps from the window edges, and the one the drawer keeps from the right.
+const EDGE_GAP = 16;
+
+function BesideADrawerDemo(): ReactElement {
+	const [isOpen, setIsOpen] = useState(false);
+
+	return (
+		<PersistToastsProvider>
+			<Toaster position="top-right" offset={EDGE_GAP} />
+			<div className={`story-center ${styles.playground}`}>
+				<div className={styles.timed}>
+					<Button
+						variant={ButtonVariant.Solid}
+						color={ButtonColor.Primary}
+						size={ButtonSize.MD}
+						onClick={() => {
+							toast.info('Top right', { id: 'beside-top-right' });
+							toast.success('Bottom right', {
+								id: 'beside-bottom-right',
+								position: 'bottom-right',
+							});
+						}}
+					>
+						Raise toasts
+					</Button>
+					<Button
+						variant={ButtonVariant.Outlined}
+						color={ButtonColor.Secondary}
+						size={ButtonSize.MD}
+						onClick={() => setIsOpen(true)}
+					>
+						Open drawer
+					</Button>
+				</div>
+			</div>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				title="Span details"
+				open={isOpen}
+				onClose={() => setIsOpen(false)}
+				testId="beside-drawer"
+			>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="base"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
+					The right stacks sit beside this panel while it is open.
+				</Typography>
+			</Drawer>
+		</PersistToastsProvider>
+	);
+}
+
+/**
+ * While a `Drawer` is open, the right stacks move left of it, so a toast does not cover its header
+ * or its footer, and they move back as it closes. The left and center stacks stay where they are,
+ * so on a narrow page a moved stack can meet one of them.
+ */
+export const BesideADrawer: Story = {
+	argTypes: {
+		variant: { table: { disable: true } },
+		title: { table: { disable: true } },
+		description: { table: { disable: true } },
+		actionLabel: { table: { disable: true } },
+		count: { table: { disable: true } },
+		callTimeout: { table: { disable: true } },
+	},
+	render: () => <BesideADrawerDemo />,
+	play: async ({ canvasElement }) => {
+		const page = canvasElement.ownerDocument;
+		const canvas = within(page.body);
+		const stack = (position: ToastPositionType) =>
+			(
+				page.querySelector(`[data-slot="toaster"][data-position="${position}"]`) as HTMLElement
+			).getBoundingClientRect();
+		const panel = () =>
+			(page.querySelector('[data-testid="beside-drawer"]') as HTMLElement).getBoundingClientRect();
+		const windowRight = page.documentElement.clientWidth;
+
+		toast.dismiss();
+		await userEvent.click(canvas.getByRole('button', { name: 'Raise toasts' }));
+		await canvas.findByText('Top right');
+		const topLeft = stack('top-left').left;
+
+		await userEvent.click(canvas.getByRole('button', { name: 'Open drawer' }));
+		await waitFor(() => expect(Math.round(panel().right)).toBe(windowRight - EDGE_GAP));
+
+		// Beside the panel, one gap away from it, not over its header or its footer. On a page too
+		// narrow for both, the stack stops one gap from the left edge instead.
+		for (const position of ['top-right', 'bottom-right'] as const) {
+			await waitFor(() =>
+				expect(Math.round(stack(position).right)).toBe(
+					Math.round(Math.max(panel().left - EDGE_GAP, EDGE_GAP + stack(position).width)),
+				),
+			);
+		}
+		await expect(stack('top-left').left).toBe(topLeft);
+
+		await userEvent.click(canvas.getByRole('button', { name: 'Close' }));
+		await waitFor(() => expect(page.querySelector('[data-testid="beside-drawer"]')).toBeNull());
+		for (const position of ['top-right', 'bottom-right'] as const) {
+			await waitFor(() => expect(Math.round(stack(position).right)).toBe(windowRight - EDGE_GAP));
+		}
+		await expect(stack('top-left').left).toBe(topLeft);
 	},
 };

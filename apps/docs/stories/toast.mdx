@@ -234,9 +234,14 @@ The toasts portal into `document.body`, or into the panel of the `Dialog` or `Dr
 
 They stack above dialogs, popovers and tooltips, because a toast often reports what a click inside
 one of them just did. Over a modal dialog the button stays clickable, and clicking it does not
-close the dialog. A toast does not move for a dialog or a drawer. To keep one clear of a header or
-footer, set `offset` or `--toast-viewport-offset-top` and `--toast-viewport-offset-bottom` from the
-app.
+close the dialog. A toast does not move for a dialog.
+
+While a `Drawer` is open, the right stacks move left of its panel, so a toast does not cover its
+header or its footer, and they move back as it closes. The left and center stacks stay where they
+are, so on a narrow page a moved stack can meet one of them. The Beside A Drawer story shows it.
+
+To keep a toast clear of a header or footer of the app, set `offset` or
+`--toast-viewport-offset-top` and `--toast-viewport-offset-bottom` from the app.
 
 ## Empty text
 

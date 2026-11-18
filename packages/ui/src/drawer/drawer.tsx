@@ -32,6 +32,7 @@ import type {
 } from './types.js';
 import { useDrawerStack } from './use-drawer-stack.js';
 import { useFocusFallback } from './use-focus-fallback.js';
+import { useReportRightEdgeCover } from './use-report-right-edge-cover.js';
 import { letPageKeysThrough, toDrawerCloseReason } from './utils.js';
 
 const NO_STEPS: readonly DrawerTrailStepType[] = [];
@@ -78,6 +79,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 	const handleState = useDialogHandleState(handle);
 	useCloseHandleOnUnmount(handle);
 	const isOpen = handle ? handleState.open : (open ?? false);
+	useReportRightEdgeCover(panel, isOpen);
 	// A type the types reject, such as `undefined` from a wrapper, renders an inspector, the drawer
 	// that leaves the page usable, rather than a viewport that takes the pointer with no backdrop.
 	const resolvedType = type === 'task' ? 'task' : 'inspector';

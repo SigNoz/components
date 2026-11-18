@@ -53,6 +53,33 @@
 
   &[data-position$='right'] {
     right: var(--toast-internal-offset-right);
+    transition-property: var(--toast-viewport-transition-property, right);
+    transition-duration: var(--toast-viewport-transition-duration, 240ms);
+    transition-timing-function: var(
+      --toast-viewport-transition-timing-function,
+      cubic-bezier(0.2, 0, 0, 1)
+    );
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  // Beside an open Drawer, `--toast-internal-right-edge-cover` is the width it covers from the
+  // right edge, the gap beside it included, and `--toast-internal-rendered-inline-size` the width
+  // of the stack. Where the stack does not fit beside the drawer, it stops one offset from the left
+  // edge rather than leaving the window.
+  &[data-beside-drawer] {
+    right: var(
+      --toast-viewport-beside-drawer-right,
+      max(
+        var(--toast-internal-offset-right),
+        min(
+          var(--toast-internal-offset-right) + var(--toast-internal-right-edge-cover),
+          100% - var(--toast-internal-rendered-inline-size) - var(--toast-internal-offset-right)
+        )
+      )
+    );
   }
 
   &[data-position$='center'] {
