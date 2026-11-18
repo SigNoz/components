@@ -4,7 +4,9 @@
 // The three `--tabs-internal-order-*` values are shared by the list, the arrows and the spacers.
 .tabs {
   --tabs-internal-spacer-min-inline: 0;
-  --tabs-internal-bar-rule-block-end: 0 solid transparent;
+  --tabs-internal-bar-rule-width: 0;
+  --tabs-internal-bar-rule-style: var(--tabs-border-style, solid);
+  --tabs-internal-bar-rule-color: var(--tabs-bar-rule-color, transparent);
   --tabs-internal-order-spacer-start: 1;
   --tabs-internal-order-list: 2;
   --tabs-internal-order-spacer-end: 3;
@@ -16,8 +18,8 @@
   // The `width`/`maxWidth` props arrive as the internal pair, so a token still outranks a call site.
   inline-size: var(--tabs-inline-size, var(--tabs-internal-inline-size, 100%));
   max-inline-size: var(--tabs-max-inline-size, var(--tabs-internal-max-inline-size, 100%));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--tabs-font-variant-numeric, normal);
+  font-feature-settings: var(--tabs-font-feature-settings, 'ss01' 1);
 }
 
 // Bar content sits at the outer edges, and the spacers between it and the list
@@ -50,8 +52,8 @@
     // The rule needs a run before the first trigger and after the last. `primary`
     // paints no rule, so its spacers start at zero.
     --tabs-internal-spacer-min-inline: var(--tabs-secondary-border-spacer-min-inline-size, var(--spacing-8));
-    --tabs-internal-bar-rule-block-end: var(--tabs-border-width, 1px) solid
-      var(--tabs-border-color, var(--tabs-border));
+    --tabs-internal-bar-rule-width: var(--tabs-border-width, 1px);
+    --tabs-internal-bar-rule-color: var(--tabs-border-color, var(--tabs-border));
   }
 
   &[data-alignment="start"] {
@@ -169,7 +171,9 @@
   }
 
   [data-variant="secondary"] & {
-    border-block-end: var(--tabs-internal-bar-rule-block-end);
+    border-block-end-width: var(--tabs-internal-bar-rule-width);
+    border-block-end-style: var(--tabs-internal-bar-rule-style);
+    border-block-end-color: var(--tabs-internal-bar-rule-color);
   }
 }
 
@@ -239,7 +243,9 @@
   }
 
   [data-variant="secondary"] & {
-    border-block-end: var(--tabs-internal-bar-rule-block-end);
+    border-block-end-width: var(--tabs-internal-bar-rule-width);
+    border-block-end-style: var(--tabs-internal-bar-rule-style);
+    border-block-end-color: var(--tabs-internal-bar-rule-color);
   }
 
   // The start arrow is the right-hand one under RTL.
@@ -264,7 +270,9 @@
   order: var(--tabs-internal-order-spacer-start);
 
   [data-variant="secondary"] & {
-    border-block-end: var(--tabs-internal-bar-rule-block-end);
+    border-block-end-width: var(--tabs-internal-bar-rule-width);
+    border-block-end-style: var(--tabs-internal-bar-rule-style);
+    border-block-end-color: var(--tabs-internal-bar-rule-color);
   }
 
   &--grow {
@@ -286,8 +294,8 @@
 
   // A navigating tab renders as an anchor, which the user agent underlines.
   text-decoration: var(--tabs-trigger-text-decoration, none);
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--tabs-trigger-font-variant-numeric, normal);
+  font-feature-settings: var(--tabs-trigger-font-feature-settings, 'ss01' 1);
 
   &:hover {
     color: var(--tabs-hover-text-color, var(--tabs-label-hover));
@@ -407,7 +415,7 @@
       color: var(--tabs-trigger-secondary-active-color, var(--tabs-secondary-label-active));
 
       .tabs__dot {
-        display: block;
+        display: var(--tabs-trigger-secondary-dot-active-display, block);
       }
     }
 
@@ -464,11 +472,17 @@
       // minimum size to 0 and collapses it. Each band rounds its own outer corner instead, and only
       // where the trigger rounds too.
       &:first-child::before {
-        border-start-start-radius: inherit;
+        border-start-start-radius: var(
+          --tabs-trigger-secondary-disabled-stripe-first-child-border-start-start-radius,
+          inherit
+        );
       }
 
       &:last-child::after {
-        border-start-end-radius: inherit;
+        border-start-end-radius: var(
+          --tabs-trigger-secondary-disabled-stripe-last-child-border-start-end-radius,
+          inherit
+        );
       }
 
       & > * {
@@ -538,8 +552,8 @@
   line-height: var(--tabs-content-line-height, var(--paragraph-base-400-line-height));
   letter-spacing: var(--tabs-content-letter-spacing, var(--paragraph-base-400-letter-spacing));
   text-transform: var(--tabs-content-text-transform, var(--paragraph-base-400-text-transform));
-  font-variant-numeric: normal;
-  font-feature-settings: 'ss01' 1;
+  font-variant-numeric: var(--tabs-content-font-variant-numeric, normal);
+  font-feature-settings: var(--tabs-content-font-feature-settings, 'ss01' 1);
 
   &[data-no-content-padding] {
     padding: var(--tabs-content-no-padding-padding, 0);
@@ -577,15 +591,26 @@
 // It is positioned rather than laid out, and sits in the trigger's trailing padding. As a flex item
 // it widened the selected tab by the dot plus a gap and left an empty slot on every tab without one.
 .tabs__dot {
-  display: none;
+  // CSS Modules renames the keyframes, and does not rename a name inside a `var()` fallback, so the
+  // name goes through an internal variable first.
+  --tabs-internal-dot-animation-name: tabs-dot-in;
+
+  display: var(--tabs-trigger-secondary-dot-display, none);
   position: var(--tabs-trigger-secondary-dot-position, absolute);
   inset-inline-end: var(--tabs-trigger-secondary-dot-inset-inline-end, var(--spacing-6));
   // Centred on the cross axis by an auto margin against both insets, which leaves `transform` free
   // for the entry animation.
   inset-block: var(--tabs-trigger-secondary-dot-inset-block, 0);
   margin-block: var(--tabs-trigger-secondary-dot-margin-block, auto);
-  animation: tabs-dot-in var(--tabs-trigger-secondary-dot-duration, 180ms)
-    var(--tabs-trigger-secondary-dot-easing, cubic-bezier(0.34, 1.2, 0.64, 1));
+  animation-name: var(
+    --tabs-trigger-secondary-dot-animation-name,
+    var(--tabs-internal-dot-animation-name)
+  );
+  animation-duration: var(--tabs-trigger-secondary-dot-duration, 180ms);
+  animation-timing-function: var(
+    --tabs-trigger-secondary-dot-easing,
+    cubic-bezier(0.34, 1.2, 0.64, 1)
+  );
   inline-size: var(--tabs-trigger-secondary-dot-size, var(--spacing-2));
   block-size: var(--tabs-trigger-secondary-dot-size, var(--spacing-2));
   border-radius: var(--tabs-trigger-secondary-dot-border-radius, var(--radius-round));
