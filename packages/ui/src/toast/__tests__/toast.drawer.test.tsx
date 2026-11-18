@@ -81,6 +81,7 @@ describe('toast stack beside a covered right edge', () => {
 	afterEach(() => {
 		document.body.style.removeProperty('--toast-viewport-transition-duration');
 		document.body.style.removeProperty('--toast-viewport-inline-size');
+		document.body.style.removeProperty('--toast-viewport-max-inline-size');
 	});
 
 	it('sits one offset left of the cover', () => {
@@ -124,6 +125,23 @@ describe('toast stack beside a covered right edge', () => {
 
 		const containingWidth = document.documentElement.clientWidth;
 		expect(getComputedStyle(viewport('top-right')).right).toBe(`${containingWidth - 100 - 8}px`);
+	});
+
+	it('fits beside the cover by the width a max size caps the toast at', () => {
+		document.body.style.setProperty('--toast-viewport-max-inline-size', '60px');
+		const containingWidth = document.documentElement.clientWidth;
+		// Room for the 60px the toast renders at, with 10px to spare, but not for its 100px.
+		render(
+			<>
+				<Toaster offset={8} />
+				<Cover width={containingWidth - 8 - 60 - 8 - 10} />
+			</>,
+		);
+
+		expect(viewport('top-right').getBoundingClientRect().width).toBe(60);
+		expect(getComputedStyle(viewport('top-right')).right).toBe(
+			`${containingWidth - 60 - 8 - 10}px`,
+		);
 	});
 
 	it('keeps the offset alone with no cover', () => {
