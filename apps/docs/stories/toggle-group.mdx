@@ -94,7 +94,9 @@ preview of what pressing it will look like.
 ## Controlled and uncontrolled
 
 `defaultValue` presses one option on the first render and then leaves the bar to keep its own state.
-`value` and `onChange` hand that state to you.
+`value` and `onChange` hand that state to you. A `value` that is `undefined` on the first render
+leaves the bar uncontrolled, and one that arrives later is followed, with a warning. Once
+controlled, `undefined` shows nothing pressed.
 
 ```tsx
 const [layout, setLayout] = useState('list');
@@ -111,7 +113,9 @@ const [layout, setLayout] = useState('list');
 ```
 
 A `single` bar reads and writes a string, and the empty string is how it says nothing is pressed. A
-`multiple` bar reads and writes `string[]`, and the empty array says the same.
+`multiple` bar reads and writes `string[]`, and the empty array says the same. `nullable` adds
+`null` as an empty value, for a field whose schema allows it. A `single` bar with `allowClear`
+reports `null` in place of the empty string, and a `multiple` bar still reports the empty array.
 
 ## Sizes
 
@@ -256,6 +260,47 @@ The trigger is mounted from the props rather than from whether there is somethin
 so a button never remounts when a tooltip appears and never loses its focus. The tooltip itself
 mounts only while there is content for it.
 
+## In a field
+
+`ToggleGroupField` renders the bar inside a `Field.Group` from one object holding the props of both.
+The label is the legend of the fieldset, and the `role="group"` list of the bar takes it as its
+name, so a screen reader reads the same name for both. A bar with an `aria-label` or an
+`aria-labelledby` of its own keeps it and does not take the legend.
+
+```tsx
+import { ToggleGroupField } from '@signozhq/ui';
+
+<Controller
+	control={control}
+	name="layout"
+	render={({ field }) => (
+		<ToggleGroupField
+			label="Layout"
+			type="single"
+			variant="outlined"
+			color="secondary"
+			size="md"
+			items={layouts}
+			description="How the rows are drawn."
+			value={field.value}
+			onChange={field.onChange}
+			onBlur={field.onBlur}
+			ref={field.ref}
+		/>
+	)}
+/>;
+```
+
+- `description` and the validation message are listed in the `aria-describedby` of the fieldset.
+- `required` adds an asterisk to the legend. A `role="group"` takes neither `aria-required` nor
+  `aria-invalid`, so the legend and the message carry the status and the bar sets neither. With a
+  `danger` status the outline of the bar turns red.
+- `ref` goes to the pressed button, or to the first one that is not disabled while nothing is
+  pressed, and not to the root of the bar, so react-hook-form can focus it after a failed submit.
+  Every other prop that is not a field prop goes to the bar.
+- With a `testId`, the bar gets it, and the parts of the field take it as their prefix:
+  `<testId>-label`, `<testId>-description` and `<testId>-message`. The fieldset gets none.
+
 ## Asserting on it
 
 `testId` becomes `data-testid` on the root, and it names every button: with `testId="layout"`, the
@@ -278,7 +323,7 @@ Otherwise reach for the roles and the data attributes, never the hashed class na
 
 | `data-slot`                                  | rendered                                                                                                                                                                       |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `toggle-group`                               | the root, `data-disabled` while the bar is off, `data-readonly` while its value is locked                                                                                      |
+| `toggle-group`                               | the root, `data-disabled` while the bar is off, `data-readonly` while its value is locked, `data-invalid` while a `Field` or a `Field.Group` around it is in `danger`          |
 | `toggle-group-viewport`                      | the box the strip scrolls inside                                                                                                                                               |
 | `toggle-group-list`                          | the group itself, `data-multiple` while `type="multiple"`                                                                                                                      |
 | `toggle-group-button`                        | one per item, `data-pressed` while pressed, `data-disabled` while that option alone is blocked, `data-readonly` while the bar is locked, `aria-disabled` on any of those paths |

@@ -1,6 +1,9 @@
 import { Slider as SliderPrimitive } from '@base-ui/react/slider';
 import { type CSSProperties, forwardRef, useEffect, useState } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
+import { useFieldContext } from '../../lib/field-context.js';
+import { onFocusLeave } from '../../lib/focus-leave.js';
+import { useControlledValue } from '../../lib/use-controlled-value.js';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { hasTooltipContent } from '../../tooltip/tooltip-content-stack-context.js';
@@ -50,6 +53,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 		defaultValue,
 		onChange,
 		onAfterChange,
+		onBlur,
 		min = 0,
 		max = 100,
 		step = 1,
@@ -78,13 +82,14 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	}: SliderFrameProps & RejectedProps,
 	ref,
 ) {
-	const isControlled = value !== undefined;
-	const [uncontrolledValue, setUncontrolledValue] = useState<readonly number[]>(
-		() => defaultValue ?? (range ? [min, max] : [min]),
-	);
-	const values = (isControlled ? value : uncontrolledValue).map((entry) =>
-		toThumbValue(entry, min, max),
-	);
+	// Base UI is always controlled from `values`, and an uncontrolled slider keeps them itself.
+	const [shownValues, setShownValues] = useControlledValue<readonly number[]>({
+		component: range ? 'Slider.Range' : 'Slider',
+		value,
+		defaultValue,
+		empty: range ? [min, max] : [min],
+	});
+	const values = shownValues.map((entry) => toThumbValue(entry, min, max));
 
 	const isDisabled = disabled && !readOnly;
 	const isInteractive = !disabled && !readOnly;
@@ -117,10 +122,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	}, [isPressing]);
 
 	function setValues(next: number[]): void {
-		if (!isControlled) {
-			setUncontrolledValue(next);
-		}
-
+		setShownValues(next);
 		onChange?.(next);
 	}
 
@@ -143,17 +145,26 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 	// A single slider names and describes its thumb input. A range is a group, so every aria
 	// attribute goes to the root and the thumbs get names of their own.
 	const { aria, data } = splitAttributes(props);
+	// Inside a `Field.Group` the legend names the range too, so a screen reader does not meet two
+	// groups with different names. The fieldset already carries the description, which stays
+	// there. A `danger` status marks both thumbs, since `role="group"` takes no `aria-invalid`.
+	// Inside a `Field` Base UI wires the root, so nothing is added.
+	const field = useFieldContext();
+	const groupField = range && field?.kind === 'group' ? field : undefined;
+	const isGroupInvalid = groupField?.status === 'danger' && aria['aria-invalid'] === undefined;
 	const rootAria = range
 		? {
 				...aria,
 				'aria-label': ariaLabel,
-				'aria-labelledby': ariaLabelledBy,
+				'aria-labelledby':
+					ariaLabelledBy ?? (ariaLabel === undefined ? groupField?.labelId : undefined),
 				'aria-describedby': ariaDescribedBy,
 			}
 		: {};
 	const thumbInputAttributes = {
 		...(range ? {} : aria),
 		...(readOnly ? { 'aria-readonly': 'true' } : {}),
+		...(isGroupInvalid ? { 'aria-invalid': 'true' } : {}),
 	};
 
 	const rootStyle = {
@@ -167,6 +178,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 			{...rootAria}
 			ref={ref}
 			id={id}
+			onBlur={onFocusLeave(onBlur)}
 			value={range ? values : values[0]}
 			min={min}
 			max={max}
@@ -241,6 +253,7 @@ export const SliderFrame = forwardRef<HTMLDivElement, SliderFrameProps>(function
 							ariaLabelledBy={range ? undefined : ariaLabelledBy}
 							ariaDescribedBy={range ? undefined : ariaDescribedBy}
 							inputAttributes={thumbInputAttributes}
+							focusTarget={index === 0 ? field?.focusTarget : undefined}
 							testId={testId}
 						/>
 					))}

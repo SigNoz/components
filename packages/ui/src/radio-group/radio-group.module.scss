@@ -63,6 +63,13 @@
 		--radio-group-internal-dot-color: var(--radio-group-highlight-danger-dot-color, var(--radio-group-highlight-danger-dot));
 	}
 
+	// The group carries `aria-invalid` for a `Field` or a `Field.Group` in danger, and for one written
+	// on it. Only an unchecked dial reacts to hover, and it does it through this property, so the
+	// colour holds there.
+	&[aria-invalid='true'] {
+		--radio-group-internal-hover-border-color: var(--radio-group-invalid-border-color, var(--destructive));
+	}
+
 	&[data-text-overflow='wrap'] .radio-group__label {
 		white-space: var(--radio-group-wrap-white-space, normal);
 		overflow-wrap: var(--radio-group-wrap-overflow-wrap, anywhere);
@@ -158,6 +165,12 @@
 		outline: var(--radio-group-focus-visible-outline, 1px solid var(--radio-group-focus-ring));
 		outline-offset: var(--radio-group-focus-visible-outline-offset, 1px);
 	}
+}
+
+// A checked dial keeps its fill and its dot, so the border alone says what is wrong. It weighs more
+// than the checked rule above, so the order does not matter.
+.radio-group[aria-invalid='true'] .radio-group__item {
+	border-color: var(--radio-group-invalid-border-color, var(--destructive));
 }
 
 .radio-group__indicator {

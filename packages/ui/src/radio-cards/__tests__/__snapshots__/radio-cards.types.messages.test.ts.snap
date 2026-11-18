@@ -5,12 +5,13 @@ exports[`RadioCards type error messages > prints a message that names the constr
   "allowClear > hands null to an inline onChange of a group that can be emptied > \`v\` is \`string | null\`, so it has no \`length\` until the call site checks": "TS18047: 'v' is possibly 'null'.",
   "allowClear > rejects an onChange that cannot take null > a group that can be emptied reports \`null\`": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: true; onChange: (value: string) => void; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
     Types of property 'onChange' are incompatible.
-      Type '(value: string) => void' is not assignable to type '(value: string | null) => void'.
-        Types of parameters 'value' and 'value' are incompatible.
-          Type 'string | null' is not assignable to type 'string'.
-            Type 'null' is not assignable to type 'string'.",
+      Type '(value: string) => void' is not assignable to type '((value: string | null) => void) | ((value: string | null) => void) | undefined'.
+        Type '(value: string) => void' is not assignable to type '(value: string | null) => void'.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'string | null' is not assignable to type 'string'.
+              Type 'null' is not assignable to type 'string'.",
   "allowClear > rejects an onChange that cannot take null when allowClear is decided at run time > \`allowClear\` typed \`boolean\` may empty the group": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: boolean; onChange: (value: string) => void; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
-    Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: boolean; onChange: (value: string) => void; }' is not assignable to type '{ allowClear?: false | undefined; onChange?: ((value: string) => void) | undefined; }'.
+    Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: boolean; onChange: (value: string) => void; }' is not assignable to type '{ nullable?: undefined; allowClear?: false | undefined; onChange?: ((value: string) => void) | undefined; }'.
       Types of property 'allowClear' are incompatible.
         Type 'boolean' is not assignable to type 'false'.",
   "disabled and disabledTooltip > a possibly undefined disabled still needs a reason > \`disabled\` typed \`boolean | undefined\` is still \`disabled\`": "TS2741: Property ''\`disabled\` needs \`disabledTooltip\`, a disabled control has to tell the user why it cannot be used'' is missing in type '{ "aria-label": string; items: RadioCardsItemType[]; disabled: boolean | undefined; }' but required in type 'ADisabledRadioCardsGroupMustSayWhy'.",

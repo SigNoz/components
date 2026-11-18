@@ -45,6 +45,7 @@
  * | `--input-icon` | `-` |
  * | `--input-icon-color` | `var(--input-icon)` |
  * | `--input-icon-disc-color` | `currentcolor` |
+ * | `--input-icon-disc-stroke` | `none` |
  * | `--input-icon-glyph-color` | `var(--l1-background)` |
  * | `--input-icon-size` | `14px` |
  * | `--input-letter-spacing` | `var(--input-internal-letter-spacing)` |
@@ -114,4 +115,5 @@
 
 export type * from './types.js';
 export { Input } from './input.js';
+export { InputField } from './presets/input-field.js';
 export { InputSize, InputStatus, InputVariant } from './constants.js';

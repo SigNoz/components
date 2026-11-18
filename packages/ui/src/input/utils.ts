@@ -3,7 +3,8 @@ import { hasTooltipContent } from '../tooltip/tooltip-content-stack-context.js';
 
 /**
  * A props rest split between the two elements: `data-*` for the frame, everything else (the native
- * attributes and the remaining `aria-*`) for the control.
+ * attributes and the remaining `aria-*`) for the control. The aria attributes the input resolves
+ * against the surrounding `Field` are destructured away before the rest reaches this.
  *
  * @access private
  */

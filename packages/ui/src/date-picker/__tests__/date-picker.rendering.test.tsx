@@ -505,12 +505,14 @@ describe('DatePicker rendering', () => {
 
 		it('marks data-empty only while there is no value', () => {
 			const { rerender } = render(
-				<DatePicker placeholder="Select date" aria-label="Expiry" value={undefined} />,
+				<DatePicker placeholder="Select date" aria-label="Expiry" nullable value={null} />,
 			);
 
 			expect(getTrigger()).toHaveAttribute('data-empty');
 
-			rerender(<DatePicker placeholder="Select date" aria-label="Expiry" value={NOV_6_2026} />);
+			rerender(
+				<DatePicker placeholder="Select date" aria-label="Expiry" nullable value={NOV_6_2026} />,
+			);
 
 			expect(getTrigger()).not.toHaveAttribute('data-empty');
 		});
@@ -595,15 +597,14 @@ describe('DatePicker rendering', () => {
 		});
 
 		it('leaves the clear button out without allowClear or without a value', () => {
-			const { rerender } = render(
+			const { unmount } = render(
 				<DatePicker placeholder="Select date" aria-label="Expiry" defaultValue={NOV_6_2026} />,
 			);
 
 			expect(document.querySelector('[data-slot="date-picker-clear"]')).toBeNull();
 
-			rerender(
-				<DatePicker placeholder="Select date" aria-label="Expiry" allowClear value={undefined} />,
-			);
+			unmount();
+			render(<DatePicker placeholder="Select date" aria-label="Expiry" allowClear />);
 
 			expect(document.querySelector('[data-slot="date-picker-clear"]')).toBeNull();
 		});

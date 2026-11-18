@@ -7,9 +7,10 @@ import {
 	type RefAttributes,
 	useId,
 	useMemo,
-	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
@@ -20,7 +21,7 @@ import {
 } from '../tooltip/tooltip-content-stack-context.js';
 import { CheckboxTextOverflow } from './constants.js';
 import styles from './checkbox.module.scss';
-import type { CheckboxProps, ValidateCheckboxProps } from './types.js';
+import type { CheckboxProps, CheckboxValueType, ValidateCheckboxProps } from './types.js';
 
 const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbox(
 	{
@@ -51,28 +52,32 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 	ref,
 ) {
 	const labelId = useId();
+	// Inside a `Field` Base UI marks the checkbox invalid. A `Field.Group` has no Base UI field, so
+	// the status it hands down is read here, as `data-invalid` only: each checkbox of a list is not
+	// announced as invalid on its own, the group's message already says so.
+	const field = useFieldContext();
 
 	const isReadOnly = readOnly === true;
 
 	// `'indeterminate'` is one more value of `value`, while Base UI splits it into a boolean prop
-	// beside `checked`; the union is unpacked here. An uncontrolled checkbox needs one piece of
-	// state for it: the dash shows until the first toggle, then the internal boolean takes over.
-	const [uncontrolledIndeterminate, setUncontrolledIndeterminate] = useState(
-		defaultValue === 'indeterminate',
-	);
-	const indeterminate = value === undefined ? uncontrolledIndeterminate : value === 'indeterminate';
+	// beside `checked`; the union is unpacked here. Base UI is always controlled from `shown`, and
+	// an uncontrolled checkbox keeps `shown` itself: the dash shows until the first toggle, then the
+	// boolean it reports takes its place.
+	const [shown, setShown] = useControlledValue<CheckboxValueType>({
+		component: 'Checkbox',
+		value,
+		defaultValue,
+		empty: false,
+	});
+	const indeterminate = shown === 'indeterminate';
 
 	// Base UI hands the change two arguments, the value and its event details. The extra argument
 	// stops at this boundary so `onChange` keeps the one-argument shape every input in this
 	// library shares.
-	const onCheckedChange = useMemo(
-		() =>
-			(checked: boolean): void => {
-				setUncontrolledIndeterminate(false);
-				onChange?.(checked);
-			},
-		[onChange],
-	);
+	const onCheckedChange = (checked: boolean): void => {
+		setShown(checked);
+		onChange?.(checked);
+	};
 
 	const hasLabel = hasRenderableContent(children);
 	const hasContainer =
@@ -124,8 +129,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			data-color={color}
 			className={styles['checkbox']}
 			style={hasContainer ? undefined : sizeStyle}
-			checked={value === undefined ? undefined : value === true}
-			defaultChecked={defaultValue === undefined ? undefined : defaultValue === true}
+			checked={shown === true}
 			onCheckedChange={onCheckedChange}
 			indeterminate={indeterminate}
 			disabled={isReadOnly ? false : disabled}
@@ -141,6 +145,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
 			required={required}
 			name={name}
 			aria-labelledby={hasLabel ? labelId : undefined}
+			{...fieldInvalidDataProps(field)}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
@@ -251,6 +256,18 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * wraps the control, an antd `Form.Item` with `valuePropName` cannot inject state from outside:
  * pass `value` and `onChange` yourself.
  *
+ * ### Inside a field
+ *
+ * A single checkbox that needs a required marker, a description or a validation message is a
+ * `CheckboxField`, which uses its `label` as the text of the checkbox and keeps the rest of a
+ * field around it. A list of checkboxes, each with its own text, goes in a `Field.Group`.
+ *
+ * While the field is in `danger`, the border of the box takes `--destructive`, on a checked box too:
+ * the fill and the glyph still say it is checked. `data-invalid` is on the checkbox for it. Base UI
+ * sets it inside a `Field`, and a `Field.Group` has no Base UI field, so the checkbox reads the
+ * status itself and sets no `aria-invalid`. An `aria-invalid` written on the checkbox paints it the
+ * same way.
+ *
  * ### Asserting on it
  *
  * `testId` is `data-testid` on the checkbox itself and survives the tooltip trigger cloning the
@@ -264,6 +281,7 @@ const CheckboxImpl = forwardRef<HTMLSpanElement, CheckboxProps>(function Checkbo
  * | `data-checked` / `data-unchecked` | the current state, neither while `indeterminate` |
  * | `data-indeterminate` | present while `indeterminate` |
  * | `data-disabled`, `data-readonly`, `data-required` | present while set |
+ * | `data-invalid` | present while a `Field` or a `Field.Group` around it is in `danger` |
  *
  * | wrapper attribute | value |
  * |---|---|

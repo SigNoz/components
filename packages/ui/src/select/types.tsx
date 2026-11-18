@@ -1,5 +1,13 @@
 import type { Select as BaseSelect } from '@base-ui/react/select';
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactElement, ReactNode } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactElement,
+	ReactNode,
+} from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { SelectItemKind } from './constants.js';
 
 type OriginalPortalProps = BaseSelect.Portal.Props;
@@ -132,7 +140,39 @@ export type SelectGroupItemType = {
  */
 export type SelectItemType = SelectGroupChildType | SelectGroupItemType;
 
-type SelectSingleProps = {
+/**
+ * `nullable` decides the types of `value` and `onChange`, so the two travel as a union: a select
+ * that is not nullable keeps the props it always had, and a nullable one takes `null` in and a
+ * callback that handles it. `nullable` only takes `true`, so a select is nullable by being written
+ * that way, never by a flag decided at run time.
+ *
+ * The plain single member comes last in `SelectProps` on purpose. TypeScript reports a props
+ * object that matches no member against the last one, so a `value={null}` written without
+ * `nullable` is told that `null` is not a `string | undefined`, not that `multiple` is missing.
+ */
+type SelectNullableOn = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the select is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable: true;
+};
+
+type SelectNullableOff = {
+	/**
+	 * Makes `value` also take `null`: nothing selected, and the select is controlled. For a field
+	 * whose schema is nullable, such as a zod `.nullable()` one behind a react-hook-form
+	 * `Controller`.
+	 *
+	 * @note Only `true` is accepted. Without it `null` is a type error.
+	 */
+	nullable?: never;
+};
+
+type SelectSingleShared = {
 	/**
 	 * When true, the select picks several values and shows them as chips in the trigger.
 	 *
@@ -140,20 +180,9 @@ type SelectSingleProps = {
 	 */
 	multiple?: false;
 	/**
-	 * The selected `value` of an `item` row.
-	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`. Leave it out
-	 * entirely for an uncontrolled select.
-	 */
-	value?: string;
-	/**
 	 * The value selected on the first render, for a select that keeps its own state.
 	 */
 	defaultValue?: string;
-	/**
-	 * Called with the value of the row the user picked.
-	 */
-	onChange?: (value: string) => void;
 	/**
 	 * Decides what the trigger shows for the selected row, in place of the row's `prefix`,
 	 * `displayValue` and label.
@@ -165,22 +194,47 @@ type SelectSingleProps = {
 	maxDisplayedPills?: never;
 };
 
-type SelectMultipleProps = {
-	multiple: true;
+interface SelectSingleNullableProps extends SelectSingleShared, SelectNullableOn {
 	/**
-	 * The selected values, in the order they were picked.
+	 * The selected `value` of an `item` row, or `null` for none.
 	 *
-	 * @note Writing the prop makes the component controlled, even with `undefined`.
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
 	 */
-	value?: string[];
+	value?: string | null;
+	/**
+	 * Called with the value of the row the user picked.
+	 *
+	 * @note Takes `null` so a `useState<string | null>` setter fits. A single select never
+	 * reports it: nothing in it clears the value.
+	 */
+	onChange?: (value: string | null) => void;
+}
+
+interface SelectSingleProps extends SelectSingleShared, SelectNullableOff {
+	/**
+	 * The selected `value` of an `item` row.
+	 *
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
+	 *
+	 * @note A controlled select that starts with nothing selected passes `''`.
+	 */
+	value?: string;
+	/**
+	 * Called with the value of the row the user picked.
+	 */
+	onChange?: (value: string) => void;
+}
+
+type SelectMultipleShared = {
+	multiple: true;
 	/**
 	 * The values selected on the first render, for a select that keeps its own state.
 	 */
 	defaultValue?: string[];
-	/**
-	 * Called with the new values. `[]` when every value is removed.
-	 */
-	onChange?: (value: string[]) => void;
 	/**
 	 * Decides what the trigger shows in place of the chips, such as `3 services`.
 	 *
@@ -194,6 +248,36 @@ type SelectMultipleProps = {
 	 */
 	maxDisplayedPills?: number;
 };
+
+interface SelectMultipleNullableProps extends SelectMultipleShared, SelectNullableOn {
+	/**
+	 * The selected values, in the order they were picked. `null` is `[]`.
+	 *
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`, and `null` makes it controlled with nothing selected. A value that arrives
+	 * later is followed, with one warning, and once controlled `undefined` shows nothing selected.
+	 */
+	value?: string[] | null;
+	/**
+	 * Called with the new values. `[]` when every value is removed, never `null`.
+	 */
+	onChange?: (value: string[]) => void;
+}
+
+interface SelectMultipleProps extends SelectMultipleShared, SelectNullableOff {
+	/**
+	 * The selected values, in the order they were picked.
+	 *
+	 * @note `undefined` on the first render leaves the select uncontrolled, starting at
+	 * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+	 * `undefined` shows nothing selected.
+	 */
+	value?: string[];
+	/**
+	 * Called with the new values. `[]` when every value is removed.
+	 */
+	onChange?: (value: string[]) => void;
+}
 
 interface ADisabledSelectMustSayWhy {
 	'`disabled` needs `disabledTooltip`, a disabled control has to tell the user why it cannot be used': never;
@@ -281,6 +365,19 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		noContent?: ReactNode;
 		/**
+		 * When true, marks the select as required: the trigger carries `aria-required`.
+		 *
+		 * @note It blocks nothing inside a `Form`, which is `noValidate`. The consumer's validation
+		 * catches an empty value, the same as for every other rule.
+		 *
+		 * @note Inside a `Field` or a `Field.Group` the field's `required` only sets `aria-required`
+		 * on the trigger, with no native `required`, so the form's own validation runs before the
+		 * browser's. This prop wins over the field, and keeps the native `required`.
+		 *
+		 * @default false
+		 */
+		required?: boolean;
+		/**
 		 * When true, the popup does not open, and the trigger carries `aria-disabled` and
 		 * `data-disabled`.
 		 *
@@ -364,9 +461,47 @@ type SelectBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		testId?: string;
 		/**
+		 * The name the selected value is submitted under. Base UI's hidden input carries it, so the
+		 * `FormData` of the surrounding `<form>` holds the value: one entry for a single select, an
+		 * empty string while nothing is selected, and one entry per value with `multiple`, in the order
+		 * they were picked, none while nothing is selected.
+		 *
+		 * @note A `disabled` select submits nothing, as a native control does. The trigger carries no
+		 * native `disabled`, so the name is what is withheld.
+		 */
+		name?: string;
+		/**
+		 * Called when the focus leaves the select, the trigger and its popup counting as one. Opening
+		 * the popup, which takes the focus, and closing it, which gives it back, do not call it.
+		 * Tabbing away, or pressing outside while the popup is open, does.
+		 *
+		 * @note Called one task after the focus moved, so a `Tab` through the popup has handed it on by
+		 * then, and `event.currentTarget` is the root of the select. A handler that takes no argument,
+		 * such as the `onBlur` a react-hook-form `field` holds, is accepted.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
+		/**
 		 * Any `data-*` prop is accepted and forwarded to the trigger, alongside `aria-*`.
 		 */
 		[key: `data-${string}`]: unknown;
 	};
 
-export type SelectProps = SelectBaseProps & (SelectSingleProps | SelectMultipleProps);
+export type SelectProps = SelectBaseProps &
+	(
+		| SelectMultipleNullableProps
+		| SelectMultipleProps
+		| SelectSingleNullableProps
+		| SelectSingleProps
+	);
+
+/**
+ * Distributes over every shape of `SelectProps`, so `multiple` and `nullable` still decide the type
+ * of `value`, `defaultValue` and `onChange`.
+ */
+type WithField<P> = P extends unknown ? Omit<P, 'required'> & FieldLabelAndMessageProps : never;
+
+/**
+ * The props of `SelectField`: the field's label, description and status, and every prop of
+ * `Select`.
+ */
+export type SelectFieldProps = WithField<SelectProps>;

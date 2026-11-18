@@ -57,6 +57,12 @@
     --toggle-group-internal-button-padding-inline: var(--toggle-group-md-button-padding-inline, var(--spacing-12));
   }
 
+  // A `Field` or a `Field.Group` in danger. Only the outline of the bar changes, so the seams between
+  // the options stay as they are and a pressed option keeps its fill.
+  &[data-invalid] {
+    border-color: var(--toggle-group-invalid-border-color, var(--destructive));
+  }
+
   &[data-disabled] {
     opacity: var(--toggle-group-disabled-opacity, 0.6);
     cursor: var(--toggle-group-disabled-cursor, not-allowed);
