@@ -2,8 +2,9 @@
 // name, never a semantic token directly, so a re-theme moves one component and nothing else. The
 // semantic tokens themselves live in `@signozhq/design-tokens`.
 .button-group {
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	// `--button-group-font-variant-numeric` is the item's, whose default is `slashed-zero`.
+	font-variant-numeric: var(--button-group-root-font-variant-numeric, normal);
+	font-feature-settings: var(--button-group-root-font-feature-settings, 'ss01' 1);
 
 	&[data-variant='outlined'][data-color='secondary'] {
 		--button-group-internal-background: var(--button-group-secondary-outlined-background);
@@ -113,7 +114,7 @@
 		font-weight: var(--button-group-internal-font-weight);
 		letter-spacing: var(--button-group-internal-letter-spacing);
 		text-transform: var(--button-group-internal-text-transform);
-		font-feature-settings: 'ss01' 1;
+		font-feature-settings: var(--button-group-item-font-feature-settings, 'ss01' 1);
 		text-decoration: var(--button-group-text-decoration, none);
 		border: var(--button-group-border-width, 1px) var(--button-group-border-style, solid) var(--button-group-internal-border);
 		border-radius: var(--button-group-item-border-radius, 0);
