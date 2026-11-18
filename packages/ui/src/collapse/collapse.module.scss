@@ -14,8 +14,8 @@
 	line-height: var(--collapse-internal-line-height);
 	letter-spacing: var(--collapse-internal-letter-spacing);
 	text-transform: var(--collapse-internal-text-transform);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--collapse-font-variant-numeric, normal);
+	font-feature-settings: var(--collapse-font-feature-settings, 'ss01' 1);
 
 	// The type scale of `Callout`: Label/500 for the title and Paragraph/400 for the description and
 	// the panel, at Base. A wrapped title takes Paragraph/500, the same face with a line height that
@@ -58,8 +58,8 @@
 	// Clipped on the inline axis only: the 1em line box of the title is shorter than Inter's accents
 	// and descenders, which stay visible above and below it.
 	&[data-text-overflow='ellipsis'] {
-		--collapse-internal-toggle-align-items: center;
-		--collapse-internal-header-suffix-align-self: stretch;
+		--collapse-internal-toggle-align-items: var(--collapse-toggle-ellipsis-align-items, center);
+		--collapse-internal-header-suffix-align-self: var(--collapse-header-suffix-ellipsis-align-self, stretch);
 		--collapse-internal-title-overflow: var(--collapse-title-overflow, clip visible);
 		--collapse-internal-title-text-overflow: var(--collapse-title-text-overflow, ellipsis);
 		--collapse-internal-title-white-space: var(--collapse-title-white-space, nowrap);
@@ -68,8 +68,8 @@
 	// A wrapped title takes the paragraph style of its size and weight, so its lines do not touch.
 	// The chevron and the prefix stay centred on its first line.
 	&[data-text-overflow='wrap'] {
-		--collapse-internal-toggle-align-items: flex-start;
-		--collapse-internal-header-suffix-align-self: flex-start;
+		--collapse-internal-toggle-align-items: var(--collapse-toggle-wrap-align-items, flex-start);
+		--collapse-internal-header-suffix-align-self: var(--collapse-header-suffix-wrap-align-self, flex-start);
 		--collapse-internal-title-font-family: var(--collapse-internal-title-wrap-font-family);
 		--collapse-internal-title-font-size: var(--collapse-internal-title-wrap-font-size);
 		--collapse-internal-title-font-weight: var(--collapse-internal-title-wrap-font-weight);
@@ -77,9 +77,9 @@
 		--collapse-internal-title-letter-spacing: var(--collapse-internal-title-wrap-letter-spacing);
 		--collapse-internal-title-text-transform: var(--collapse-internal-title-wrap-text-transform);
 		--collapse-internal-title-line-box: var(--collapse-internal-title-wrap-line-height);
-		--collapse-internal-title-overflow: visible;
-		--collapse-internal-title-text-overflow: clip;
-		--collapse-internal-title-white-space: normal;
+		--collapse-internal-title-overflow: var(--collapse-title-wrap-overflow, visible);
+		--collapse-internal-title-text-overflow: var(--collapse-title-wrap-text-overflow, clip);
+		--collapse-internal-title-white-space: var(--collapse-title-wrap-white-space, normal);
 	}
 
 	// The box clips the edges of a panel with no padding to its radius, so the focus ring of the
@@ -101,7 +101,7 @@
 		background: var(--collapse-ghost-background, transparent);
 		--collapse-internal-toggle-border-radius: var(--collapse-ghost-toggle-border-radius, var(--radius-2));
 		--collapse-internal-focus-visible-outline-offset: var(--collapse-ghost-focus-visible-outline-offset, 0);
-		--collapse-internal-panel-divider: none;
+		--collapse-internal-panel-divider: var(--collapse-ghost-divider, none);
 	}
 }
 
@@ -155,8 +155,8 @@
 	background: var(--collapse-toggle-background, transparent);
 	color: var(--collapse-toggle-color, var(--collapse-title));
 	font: var(--collapse-toggle-font, inherit);
-	font-variant-numeric: normal;
-	font-feature-settings: 'ss01' 1;
+	font-variant-numeric: var(--collapse-toggle-font-variant-numeric, normal);
+	font-feature-settings: var(--collapse-toggle-font-feature-settings, 'ss01' 1);
 	text-align: var(--collapse-toggle-text-align, start);
 	cursor: var(--collapse-toggle-cursor, pointer);
 
