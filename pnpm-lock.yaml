@@ -31,8 +31,8 @@ importers:
   .:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: 2.7.0
-        version: 2.7.0
+        specifier: 2.8.0
+        version: 2.8.0
       '@signozhq/icons':
         specifier: 0.4.0
         version: 0.4.0
@@ -119,8 +119,8 @@ importers:
   apps/docs:
     dependencies:
       '@signozhq/design-tokens':
-        specifier: 2.7.0
-        version: 2.7.0
+        specifier: 2.8.0
+        version: 2.8.0
       '@signozhq/icons':
         specifier: ^0.4.0
         version: 0.4.0
@@ -1927,6 +1927,9 @@ packages:
 
   '@signozhq/design-tokens@2.7.0':
     resolution: {integrity: sha512-Igl6g4GStIo5nDikGaENbXkgve/YoZq7EkWn5rV7xv0RBorejbfr4VY2knEoQKdZsv2jSPXqVCoHbC30ap6KgQ==}
+
+  '@signozhq/design-tokens@2.8.0':
+    resolution: {integrity: sha512-nX+UbFjjnsu5vVTBkSKOn+6AxsUX2umXzuU8Be3AcUKsJ3z0Hz1122Nj5BlULYeFyrsO+4FSAGm80SG5MHneng==}
 
   '@signozhq/icons@0.3.0':
     resolution: {integrity: sha512-ZA6kGWf2t7XzQGSaeWtSpkWAiONwKliNKUR01KHl/tuWGZmijJ89pYrEJD9S8wLn8cO2XgIkS2JaEkQfThgIqQ==}
@@ -5592,6 +5595,8 @@ snapshots:
     optional: true
 
   '@signozhq/design-tokens@2.7.0': {}
+
+  '@signozhq/design-tokens@2.8.0': {}
 
   '@signozhq/icons@0.3.0': {}
 

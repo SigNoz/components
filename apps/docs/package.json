@@ -14,7 +14,7 @@
 		"type-check": "tsgo --noEmit"
 	},
 	"dependencies": {
-		"@signozhq/design-tokens": "2.7.0",
+		"@signozhq/design-tokens": "2.8.0",
 		"@signozhq/icons": "^0.4.0",
 		"@signozhq/ui": "workspace:*",
 		"react": "^18.2.0",
