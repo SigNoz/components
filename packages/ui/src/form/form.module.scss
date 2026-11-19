@@ -10,5 +10,33 @@
 		flex-direction: var(--form-inline-flex-direction, row);
 		flex-wrap: var(--form-inline-flex-wrap, wrap);
 		align-items: var(--form-inline-align-items, flex-end);
+
+		// The row lines up the bottom edge of each field, and a message or a description is the
+		// bottom of its field, so one under a single field would push every other field and the
+		// buttons down. It hangs under its field instead, and the row keeps one line of room for it.
+		> :is([data-slot='field'], [data-slot='field-group'])
+			> :is([data-slot='field-message'], [data-slot='field-description']) {
+			position: var(--form-inline-message-position, absolute);
+			inset-block-start: var(--form-inline-message-inset-block-start, 100%);
+			inset-inline: var(--form-inline-message-inset-inline, 0);
+			margin-block-start: var(--form-inline-message-margin-block-start, var(--spacing-4));
+		}
+
+		&:has(
+				> :is([data-slot='field'], [data-slot='field-group'])
+					> :is([data-slot='field-message'], [data-slot='field-description'])
+			) {
+			row-gap: var(
+				--form-inline-message-row-gap,
+				calc(
+					var(--form-gap, var(--spacing-8)) + var(--spacing-4) +
+						var(--paragraph-small-400-line-height)
+				)
+			);
+			padding-block-end: var(
+				--form-inline-message-padding-block-end,
+				calc(var(--spacing-4) + var(--paragraph-small-400-line-height))
+			);
+		}
 	}
 }

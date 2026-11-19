@@ -233,6 +233,65 @@ export const Inline: Story = {
 	},
 };
 
+/**
+ * The same row with a description on one field and an error on another: each hangs under its
+ * field, and the controls and the button stay in one line.
+ */
+export const InlineWithMessages: Story = {
+	decorators: [
+		(Story) => (
+			<div className="story-container-full">
+				<Story />
+			</div>
+		),
+	],
+	args: {
+		layout: 'inline',
+		testId: 'filters',
+	},
+	render: ({ children: _children, ...args }) => (
+		<Form {...args}>
+			<InputField
+				label="Service"
+				name="service"
+				placeholder="checkout-service"
+				description="Supports * wildcards."
+				width={220}
+				testId="service"
+			/>
+			<Field label="Environment">
+				<Select
+					items={ENVIRONMENTS}
+					placeholder="Environment"
+					defaultValue="production"
+					width={180}
+					testId="environment"
+				/>
+			</Field>
+			<InputField.Number
+				label="Min duration (ms)"
+				name="duration"
+				defaultValue={90000}
+				min={0}
+				width={160}
+				error="Use 60000 ms or less."
+				testId="duration"
+			/>
+			<Button type="submit" variant="solid" color="primary" size="md" testId="apply">
+				Apply filters
+			</Button>
+		</Form>
+	),
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+		const bottom = (testId: string) => canvas.getByTestId(testId).getBoundingClientRect().bottom;
+
+		await expect(bottom('environment')).toBe(bottom('service'));
+		await expect(bottom('duration')).toBe(bottom('service'));
+		await expect(bottom('apply')).toBe(bottom('service'));
+	},
+};
+
 type RenameValues = { name: string };
 
 const RENAME_INITIAL: RenameValues = { name: 'Checkout latency' };

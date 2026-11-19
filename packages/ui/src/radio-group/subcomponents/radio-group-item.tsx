@@ -5,6 +5,7 @@ import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { RADIO_GROUP_EMPTY_LABEL, RadioGroupTextOverflow } from '../constants.js';
 import styles from '../radio-group.module.scss';
 import type { RadioGroupItemType, RadioGroupTextOverflowType } from '../types.js';
+import { keepFocusOnTextPress } from '../utils.js';
 
 /**
  * @access private
@@ -62,10 +63,12 @@ export function RadioGroupItem({
 	});
 
 	const itemEl = (
+		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- only a pointer presses the text, the arrows already move the focus between the radios
 		<label
 			data-slot="radio-group-item"
 			data-disabled={disabled === true || undefined}
 			className={styles['radio-group__item-wrapper']}
+			onMouseDown={keepFocusOnTextPress}
 		>
 			<Radio.Root
 				value={value}

@@ -313,8 +313,8 @@ export type RadioGroupProps = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * Called once when the focus leaves the group, for a form that validates on blur.
 		 *
-		 * @note Moving the focus from one radio to another does not call it, the focus is still
-		 * inside the group.
+		 * @note Moving the focus from one radio to another does not call it, with the arrow keys or
+		 * with a click on another radio or its text: the focus is still inside the group.
 		 *
 		 * @note A function that takes no argument, such as react-hook-form's `field.onBlur`, is
 		 * accepted.

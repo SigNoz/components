@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
+import type { CSSProperties } from 'react';
 import { describe, expect, it } from 'vitest';
+import { Button } from '../../button/index.js';
 import { InputField } from '../../input/presets/input-field.js';
 import { Form } from '../form.js';
 
@@ -88,6 +90,62 @@ describe('Form layout', () => {
 			shortLabel.getBoundingClientRect().height,
 		);
 		expect(long.getBoundingClientRect().bottom).toBe(short.getBoundingClientRect().bottom);
+	});
+
+	it('keeps the inline controls and buttons in line while one field shows a message', () => {
+		render(
+			<div style={{ inlineSize: 960 }}>
+				<Form onSubmit={noop} layout="inline" testId="form">
+					<InputField label="Service" testId="service" width={160} />
+					<InputField label="Min duration" testId="duration" width={160} error="Too long." />
+					<Button type="submit" testId="apply">
+						Apply
+					</Button>
+				</Form>
+			</div>,
+		);
+
+		const bottom = screen.getByTestId('service').getBoundingClientRect().bottom;
+
+		expect(screen.getByTestId('duration').getBoundingClientRect().bottom).toBe(bottom);
+		expect(screen.getByTestId('apply').getBoundingClientRect().bottom).toBe(bottom);
+	});
+
+	it('keeps the inline controls in line while one field shows a description', () => {
+		render(
+			<div style={{ inlineSize: 960 }}>
+				<Form onSubmit={noop} layout="inline" testId="form">
+					<InputField label="Service" testId="service" width={160} description="Supports *." />
+					<InputField label="Environment" testId="environment" width={160} />
+				</Form>
+			</div>,
+		);
+
+		expect(screen.getByTestId('environment').getBoundingClientRect().bottom).toBe(
+			screen.getByTestId('service').getBoundingClientRect().bottom,
+		);
+	});
+
+	it('makes room under the inline row for one line of message', () => {
+		// The room is built from these two tokens, which the unit tests do not load.
+		const tokens = {
+			inlineSize: 960,
+			'--spacing-4': '8px',
+			'--paragraph-small-400-line-height': '18px',
+		} as CSSProperties;
+		render(
+			<div style={tokens}>
+				<Form onSubmit={noop} layout="inline" testId="form">
+					<InputField label="Min duration" testId="duration" width={160} error="Too long." />
+				</Form>
+			</div>,
+		);
+
+		const message = screen.getByTestId('duration-message');
+
+		expect(Math.round(message.getBoundingClientRect().bottom)).toBeLessThanOrEqual(
+			Math.round(screen.getByTestId('form').getBoundingClientRect().bottom),
+		);
 	});
 
 	it('adds no padding of its own', () => {
