@@ -106,13 +106,16 @@ const ToasterRoot = forwardRef<HTMLDivElement, ToasterProps>(function Toaster(
  * as a strip along the bottom. A stack sits `offset` beyond it, so a toast never covers that
  * chrome.
  *
- * While a `Dialog`, an `AlertDialog` or a `task` `Drawer` is open, its backdrop covers the chrome,
- * and the stack sits `offset` from the edge of the window instead. It goes back as the layer
- * starts to close. An `inspector` `Drawer` leaves the page usable, so the inset stays. Any layer
- * that is open counts, even one in a `container` that covers only part of the window.
+ * While a `Dialog`, an `AlertDialog`, a `task` `Drawer` or a `Command` palette is open, its
+ * backdrop covers the chrome, and the stack sits `offset` from the edge of the window instead. It
+ * goes back as the layer starts to close. An `inspector` `Drawer` leaves the page usable, so the
+ * inset stays. Any layer that is open counts, even one in a `container` that covers only part of
+ * the window.
  *
  * `--toast-viewport-page-inset-top` and `--toast-viewport-page-inset-bottom` set the same spaces
- * from the CSS of the app. Each one beats the prop for its edge, and a modal layer drops it too.
+ * from the CSS of the app. Each one beats the prop for its edge, and a modal layer drops it too. A
+ * modal from another library does not report itself: set the property to `0px` from the app while
+ * one is open, with a selector that matches only then.
  *
  * ### Timeout
  *
@@ -154,7 +157,7 @@ const ToasterRoot = forwardRef<HTMLDivElement, ToasterProps>(function Toaster(
  * |---|---|
  * | `data-position` | each viewport |
  * | `data-beside-drawer` | a right viewport, while it sits beside an open `Drawer` |
- * | `data-under-modal` | each viewport, while a `Dialog`, an `AlertDialog` or a `task` `Drawer` is open |
+ * | `data-under-modal` | each viewport, while a `Dialog`, an `AlertDialog`, a `task` `Drawer` or a `Command` palette is open |
  * | `data-type` | the toast and its title, description and action: `success`, `info`, `warning`, `danger` or `loading` |
  * | `data-expanded` | the toast, while the stack is spread |
  * | `data-limited` | a toast past the `limit` the stack shows |

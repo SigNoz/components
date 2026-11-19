@@ -238,10 +238,11 @@ nothing is measured in JS.
 <Toaster position="bottom-right" pageInset={{ bottom: 'var(--bottom-strip-height, 0px)' }} />
 ```
 
-While a `Dialog`, an `AlertDialog` or a `task` `Drawer` is open, its backdrop covers the chrome, and
-the stacks slide to `offset` from the edge of the window instead. They slide back as the layer
-starts to close. An `inspector` `Drawer` leaves the page usable, so the inset stays. The Page Inset story
-shows it. Any open layer counts, even one in a `container` that covers only part of the window.
+While a `Dialog`, an `AlertDialog`, a `task` `Drawer` or a `Command` palette is open, its backdrop
+covers the chrome, and the stacks slide to `offset` from the edge of the window instead. They slide
+back as the layer starts to close. An `inspector` `Drawer` leaves the page usable, so the inset
+stays. The Page Inset story shows it. Any open layer counts, even one in a `container` that covers
+only part of the window.
 
 The same spaces are custom properties, set from the CSS of the app: `--toast-viewport-page-inset-top`
 and `--toast-viewport-page-inset-bottom`. Each one beats the prop for its edge, and a modal layer

@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { AlertDialog } from '../../alert-dialog/index.js';
+import { Command } from '../../command/index.js';
 import { Dialog } from '../../dialog/index.js';
 import { useDialogHandle } from '../../dialog/use-dialog-handle.js';
 import { Drawer } from '../../drawer/index.js';
@@ -33,7 +34,9 @@ function underModal(): number {
 	return document.querySelectorAll('[data-slot="toaster"][data-under-modal]').length;
 }
 
-type Layer = 'none' | 'inspector' | 'task' | 'dialog' | 'alert-dialog';
+type Layer = 'none' | 'inspector' | 'task' | 'dialog' | 'alert-dialog' | 'command';
+
+const COMMANDS = [{ type: 'item' as const, label: 'Copy link', value: 'copy', onClick: () => {} }];
 
 function Page({ layer, open = true }: { layer: Layer; open?: boolean }) {
 	return (
@@ -60,6 +63,15 @@ function Page({ layer, open = true }: { layer: Layer; open?: boolean }) {
 				>
 					It goes away.
 				</AlertDialog>
+			) : null}
+			{layer === 'command' ? (
+				<Command
+					open={open}
+					onOpenChange={() => {}}
+					label="Commands"
+					items={COMMANDS}
+					searchInputProps={{ placeholder: 'Search' }}
+				/>
 			) : null}
 		</>
 	);
@@ -201,7 +213,7 @@ describe('toast page inset beside layers', () => {
 		expect(underModal()).toBe(0);
 	});
 
-	it.each(['task', 'dialog', 'alert-dialog'] as const)(
+	it.each(['task', 'dialog', 'alert-dialog', 'command'] as const)(
 		'drops the inset on every stack while a %s is open',
 		(layer) => {
 			render(<Page layer={layer} />);
@@ -236,7 +248,7 @@ describe('toast page inset beside layers', () => {
 		expect(distance('bottom-right', 'bottom')).toBe(WITHOUT_INSET);
 	});
 
-	it.each(['task', 'dialog', 'alert-dialog'] as const)(
+	it.each(['task', 'dialog', 'alert-dialog', 'command'] as const)(
 		'restores the inset as soon as a %s starts closing',
 		(layer) => {
 			const { rerender } = render(<Page layer={layer} />);

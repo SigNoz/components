@@ -915,9 +915,9 @@ function PageInsetDemo(): ReactElement {
 
 /**
  * `pageInset` keeps the stacks above the fixed chrome of the page, a strip along the bottom here.
- * The stack drops to the edge of the window while a `Dialog`, an `AlertDialog` or a `task` `Drawer`
- * covers the strip with its backdrop, and stays above it beside an `inspector` `Drawer`, which
- * leaves the page usable.
+ * The stack drops to the edge of the window while a `Dialog`, an `AlertDialog`, a `task` `Drawer`
+ * or a `Command` palette covers the strip with its backdrop, and stays above it beside an
+ * `inspector` `Drawer`, which leaves the page usable.
  */
 export const PageInset: Story = {
 	argTypes: {

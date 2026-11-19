@@ -7,6 +7,7 @@ import {
 	useRef,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { useReportModalLayer } from '../lib/modal-layer.js';
 import type { RejectedProps } from '../lib/utils.js';
 import styles from './command.module.scss';
 import { CommandLayer } from './subcomponents/command-layer.js';
@@ -32,6 +33,7 @@ const CommandImpl = forwardRef<HTMLDivElement, CommandProps & RejectedProps>(
 		} = props;
 
 		const inputRef = useRef<HTMLInputElement>(null);
+		useReportModalLayer(open);
 
 		const panelStyle = {
 			...(contentMaxWidth != null && {
