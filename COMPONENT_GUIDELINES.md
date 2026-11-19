@@ -198,6 +198,32 @@ export type TooltipRootProps = ...;
   (`packages/typescript-config/vite.config.extend.ts`), or
   `packages/ui/src/__tests__/vite-externals.test.ts` fails.
 
+### Memoization
+
+The build runs the React Compiler on every file in `packages/ui`, and the unit tests run the same
+compiled output (`packages/ui/react-compiler.config.ts`). The compiler caches every value, callback
+and element on the inputs it reads, so a `useMemo`, `useCallback` or `memo` written for speed
+compiles to the same code as the plain version and only adds lines.
+
+- Do not write `useMemo`, `useCallback` or `memo` to skip a render or a recomputation. Write the
+  plain value or function.
+- The setter from `useState` and the `dispatch` from `useReducer` never change. Pass them as they
+  are instead of wrapping them in a callback, and an effect that lists them never re-runs because
+  of them.
+- When a value's identity is part of correctness, make it stable by construction first: a state
+  setter, a ref, or a function at module level.
+- Keep a `useMemo` or `useCallback` only when identity matters to code the compiler does not see,
+  such as a callback a third-party primitive reads once. Say who depends on it in a comment.
+  `useFocusTarget` in `packages/ui/src/field/use-focus-target.ts` is the example: Base UI's
+  `RadioGroup` calls its `inputRef` only when a radio registers.
+- A compiler bailout drops every cache in that component or hook, and the build only logs it.
+  `pnpm -F @signozhq/ui react-compiler:strict-check` (part of `pnpm lint`) fails on one in any
+  file under `packages/ui/src`.
+
+To see what the compiler made of a file, run it through `transformSync` from
+`oxc-transform-react` with the options in `packages/ui/scripts/check-react-compiler-strict.mjs`
+and read the output: each cache is an `if ($[n] !== dep)` block.
+
 ## 2. CSS organization
 
 Full rationale in [BUILD.md](./BUILD.md#3-styling). The rules:
@@ -704,6 +730,7 @@ the lowercase string that lands in `data-*`, and never a TS `enum`.
 | Providers | A component that needs a provider wraps itself in `XProviderIfMissing` (see `TooltipProviderIfMissing`), never in `XProvider`. It adds the provider when none is above and reuses the existing one otherwise, so the component never fails for want of a provider and never shadows what the app configured. Apps place `XProvider` once near the root |
 | `testId` | Always present; forwarded as `data-testid`. Consumers have no `className` to hang a test hook on |
 | Defaults | Set in the destructuring (`variant = 'default'`), and mirrored in an `@default` JSDoc tag |
+| Splitting props | Destructure the props one part takes by name and pass the rest to the other: `const { label, description, ...control } = props`. Never split a known set of names with a loop over `Object.entries(props)` checked against an array of keys. The loop runs on every render, needs casts to get the types back, and keeps a second list of the prop names that drifts from the type. A split several components share destructures in the helper's parameters, as `splitSpacingProps` in `packages/ui/src/lib/spacing.ts` does. A loop is only for keys no destructure can name, such as every `data-*` or `aria-*` attribute |
 | Controlled/uncontrolled | Follow Radix naming: `value`/`defaultValue`/`onChange`, `open`/`defaultOpen`/`onOpenChange` |
 | Escape hatches | No `className`, no `style`, no `classNames` or `styles` maps. See [No `className` or `style`](#no-classname-or-style) |
 | Accessibility | Interactive elements get a real role and a labellable prop (`closeAriaLabel`, `aria-label`). `jsx-a11y` rules are on |

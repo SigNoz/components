@@ -532,7 +532,7 @@ describe('Collapse controlled', () => {
 		expect(onExpandedChange).not.toHaveBeenCalled();
 	});
 
-	it('stays controlled when expanded turns undefined, shows it closed, and warns', () => {
+	it('stays controlled when expanded turns undefined, and shows it closed', () => {
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { rerender } = render(
 			<Collapse
@@ -563,12 +563,10 @@ describe('Collapse controlled', () => {
 		);
 
 		expect(screen.getByTestId('c-toggle')).toHaveAttribute('aria-expanded', 'false');
-		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('Collapse: `expanded` turned `undefined`'),
-		);
+		expect(warn).not.toHaveBeenCalled();
 	});
 
-	it('stays closed and warns after expanded turns undefined, whatever a press reports', async () => {
+	it('stays closed after expanded turns undefined, whatever a press reports', async () => {
 		const user = userEvent.setup();
 		vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const onExpandedChange = vi.fn();
@@ -605,7 +603,7 @@ describe('Collapse controlled', () => {
 });
 
 describe('Collapse controlled and uncontrolled switch', () => {
-	it('ignores an expanded that appears on a section that started uncontrolled, and warns', async () => {
+	it('follows an expanded that appears on a section that started uncontrolled, and warns', async () => {
 		const user = userEvent.setup();
 		const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 		const { rerender } = render(
@@ -631,15 +629,18 @@ describe('Collapse controlled and uncontrolled switch', () => {
 			</Collapse>,
 		);
 
-		expect(screen.getByTestId('c-toggle')).toHaveAttribute('aria-expanded', 'true');
+		expect(screen.getByTestId('c-toggle')).toHaveAttribute('aria-expanded', 'false');
 		expect(warn).toHaveBeenCalledWith(
-			expect.stringContaining('Collapse: `expanded` was `undefined` on the first render'),
+			expect.stringContaining(
+				'Collapse: `expanded` was `undefined` on the first render and is set now',
+			),
 		);
 	});
 
-	it('keeps its own state after the ignored expanded, and still toggles', async () => {
+	it('stays controlled after the late expanded, and a press only reports', async () => {
 		const user = userEvent.setup();
 		vi.spyOn(console, 'warn').mockImplementation(() => {});
+		const onExpandedChange = vi.fn();
 		const { rerender } = render(
 			<Collapse variant="outlined" size="sm" testId="c" title="Advanced" defaultExpanded={false}>
 				Body
@@ -653,16 +654,17 @@ describe('Collapse controlled and uncontrolled switch', () => {
 				testId="c"
 				title="Advanced"
 				expanded
-				onExpandedChange={vi.fn()}
+				onExpandedChange={onExpandedChange}
 			>
 				Body
 			</Collapse>,
 		);
 
-		expect(screen.getByTestId('c-toggle')).toHaveAttribute('aria-expanded', 'false');
+		expect(screen.getByTestId('c-toggle')).toHaveAttribute('aria-expanded', 'true');
 
 		await user.click(screen.getByTestId('c-toggle'));
 
+		expect(onExpandedChange).toHaveBeenCalledWith(false);
 		expect(screen.getByTestId('c-toggle')).toHaveAttribute('aria-expanded', 'true');
 	});
 

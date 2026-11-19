@@ -57,6 +57,10 @@
     --toggle-group-internal-button-padding-inline: var(--toggle-group-md-button-padding-inline, var(--spacing-12));
   }
 
+  &[data-invalid] {
+    border-color: var(--toggle-group-invalid-border-color, var(--destructive));
+  }
+
   &[data-disabled] {
     opacity: var(--toggle-group-disabled-opacity, 0.6);
     cursor: var(--toggle-group-disabled-cursor, not-allowed);

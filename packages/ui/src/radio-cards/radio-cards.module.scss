@@ -105,6 +105,13 @@
 	}
 }
 
+// `RadioCards.Multiple` is a `role="group"`, which takes no `aria-invalid`, so it carries
+// `data-invalid`. Hover never sets the border, and this weighs more than the checked rule, so
+// nothing else needs overriding.
+.radio-cards:is([aria-invalid='true'], [data-multiple][data-invalid]) .radio-cards__item {
+	--radio-cards-internal-border-color: var(--radio-cards-invalid-border-color, var(--destructive));
+}
+
 .radio-cards__prefix,
 .radio-cards__indicator {
 	display: var(--radio-cards-icon-display, inline-flex);

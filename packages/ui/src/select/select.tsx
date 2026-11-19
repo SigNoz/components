@@ -1,5 +1,6 @@
 import { Select as BaseSelect } from '@base-ui/react/select';
 import {
+	type AriaAttributes,
 	type CSSProperties,
 	forwardRef,
 	type ReactElement,
@@ -9,8 +10,10 @@ import {
 	useState,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { fieldGroupTriggerAria, useFieldContext } from '../lib/field-context.js';
 import { useForceOpen } from '../lib/force-open.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useControlBlur } from '../lib/use-control-blur.js';
 import { useLabelFor } from '../lib/use-label-for.js';
 import { useSelectionValue } from '../lib/use-selection-value.js';
 import type { RejectedProps } from '../lib/utils.js';
@@ -28,6 +31,7 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 		const {
 			items,
 			multiple = false,
+			nullable = false,
 			value,
 			defaultValue,
 			onChange,
@@ -48,20 +52,37 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 			maxWidth,
 			testId,
 			id,
+			required,
+			name,
+			onBlur,
 			className: _className,
 			style: _style,
 			...triggerProps
 		} = props;
 
+		const field = useFieldContext();
+
+		const { rootRef, popupRef, handleBlur, trackOpenChange } = useControlBlur(onBlur);
+
 		const { selectedValues, commit } = useSelectionValue({
-			isControlled: 'value' in props,
+			component: 'Select',
 			multiple,
+			nullable,
 			value,
 			defaultValue,
 			onChange,
+			formResetRef: rootRef,
 		});
 
 		const isInert = disabled || readOnly;
+
+		// Base UI puts a native `required` on its hidden input, which would block the submit before
+		// the form's own validation runs. A disabled or read-only field cannot be filled in, so it
+		// drops the native one too, like a native input, and keeps only `aria-required`.
+		const isFieldRequired = required === undefined && field?.required === true;
+		const isNativeRequired = required === true && !isInert;
+		const ariaRequiredProps: AriaAttributes | undefined =
+			isFieldRequired || (required === true && isInert) ? { 'aria-required': true } : undefined;
 
 		const forcedOpen = useForceOpen();
 		const [openState, setOpenState] = useState(false);
@@ -114,15 +135,21 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 				return;
 			}
 
+			trackOpenChange(nextOpen, eventDetails.reason);
 			setOpenState(nextOpen);
 		}
 
-		// The name, in the order the accessible name takes it: `aria-labelledby`, `aria-label`, a
-		// `<label for>`, then the placeholder. The popup list takes the same one.
-		const [labelId, labelRef] = useLabelFor(id);
 		// State, not a ref: the popup reads the layer the trigger sits in when it mounts.
 		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
+		// A `Field` points its `<label for>` at the trigger one commit after the trigger mounts, and at
+		// the id Base UI gives it when there is no `id`. The label is looked up again once the trigger
+		// is mounted, by the id the element ended up with.
+		const [labelId, labelRef] = useLabelFor(
+			triggerElement === null ? undefined : (id ?? triggerElement.id),
+		);
 		const triggerRef = useMemo(() => mergeRefs(ref, labelRef, setTriggerElement), [ref, labelRef]);
+		// The name, in the order the accessible name takes it: `aria-labelledby`, `aria-label`, a
+		// `<label for>`, then the placeholder. The popup list takes the same one.
 		const labelledBy =
 			triggerProps['aria-labelledby'] ??
 			(triggerProps['aria-label'] === undefined ? labelId : undefined);
@@ -142,9 +169,12 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 					onValueChange={handleValueChange as never}
 					open={open}
 					onOpenChange={handleOpenChange}
+					required={isNativeRequired}
+					name={disabled ? undefined : name}
 					modal={false}
 				>
 					<div
+						ref={rootRef}
 						data-slot="select"
 						data-multiple={multiple || undefined}
 						data-disabled={disabled || undefined}
@@ -153,10 +183,15 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 						data-popup-open={open || undefined}
 						className={styles['select']}
 						style={rootStyle}
+						onBlur={handleBlur}
 					>
 						<SelectTrigger
 							ref={triggerRef}
-							forwardedProps={triggerProps}
+							forwardedProps={{
+								...ariaRequiredProps,
+								...triggerProps,
+								...fieldGroupTriggerAria(field, triggerProps),
+							}}
 							id={id}
 							accessibleName={accessibleName}
 							labelledBy={labelledBy}
@@ -176,6 +211,8 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
 						/>
 					</div>
 					<SelectPopup
+						popupRef={popupRef}
+						onBlur={handleBlur}
 						trigger={triggerElement}
 						accessibleName={accessibleName}
 						labelledBy={labelledBy}
@@ -215,10 +252,16 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  *
  * ### Values
  *
- * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. Writing
- * `value` makes the select controlled, even with `undefined`. `onChange` reports a `string`, or a
- * `string[]` with `multiple`, `[]` once every chip is removed. A single select has no way to clear
- * its value.
+ * `value` is the `value` of an `item` row, a `string`, or a `string[]` with `multiple`. A `value`
+ * that is `undefined` on the first render leaves the select uncontrolled, starting at
+ * `defaultValue`. A value that arrives later is followed, with one warning, and once controlled
+ * `undefined` shows nothing selected. `onChange` reports a `string`, or a `string[]` with
+ * `multiple`, `[]` once every chip is removed. A single select has no way to clear its value. A
+ * form reset brings an uncontrolled select back to `defaultValue`, without `onChange`.
+ *
+ * `nullable` is for a field whose schema is nullable, such as a zod `.nullable()` one behind a
+ * react-hook-form `Controller`: `value` then takes `null` too, a controlled select with nothing
+ * selected, and `onChange` is typed to take `null` so a `useState<string | null>` setter fits.
  *
  * A single trigger shows the selected row's `prefix`, then its `displayValue` when it has one, its
  * label otherwise. A multiple select shows chips, and `maxDisplayedPills` collapses the rest into a
@@ -246,6 +289,24 @@ const SelectImpl = forwardRef<HTMLElement, SelectProps & RejectedProps>(
  *
  * `aria-invalid` reaches the trigger like any other `aria-*` prop and paints its border in the
  * destructive colour, hovered or not. It changes nothing else.
+ *
+ * ### Inside a Field
+ *
+ * In a `Field` the trigger takes its name from the field's label, its description from the field's
+ * row, and `aria-invalid` from a `danger` status, so the border turns destructive with the
+ * message. A multiple trigger is a `<div>`, so the browser does not link the label to it: the
+ * select adds `aria-labelledby` and focuses the trigger when the label is clicked. The field's
+ * `required` sets `aria-required` on the trigger and nothing native, so the form's own validation
+ * runs before the browser's. The select's own `required` wins, and keeps the native one, except
+ * while `disabled` or `readOnly`: nobody can fill the select in then, so, like a native input, it
+ * never blocks the submit and keeps only `aria-required`. `SelectField` writes the two together.
+ *
+ * In a `Field.Group` the legend names the group, not the select, so the select needs its own
+ * `aria-label`. The group's description and message still reach `aria-describedby`, and a
+ * `danger` group sets `aria-invalid`, so a select beside an input in an amount-and-unit group
+ * turns red with it.
+ *
+ * Only `danger` tints the border. `warning` and `success` reach the label and the message alone.
  *
  * `loading` swaps the trigger's chevron for a spinner and the rows for `loadingContent`. It blocks
  * nothing: the popup still opens.

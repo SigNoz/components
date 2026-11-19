@@ -12,6 +12,11 @@ import { SliderFrame } from './slider-frame.js';
  * Every `aria-*` goes to the root, which is a `role="group"`, and any `data-*` too. Name the group
  * with `aria-label` or `aria-labelledby`. The thumbs are named `Minimum` and `Maximum`.
  *
+ * Inside a `Field.Group`, or through `SliderField.Range`, the legend names the group and `danger`
+ * sets `aria-invalid` on both thumbs, since a `role="group"` takes none. An `aria-label` or an
+ * `aria-labelledby` written on the range wins, and an `aria-invalid` written on it keeps the thumbs
+ * unmarked.
+ *
  * ### Two thumbs
  *
  * The fill runs between the two thumbs. A click on the track or on a mark moves the closest
@@ -24,7 +29,8 @@ import { SliderFrame } from './slider-frame.js';
  * ### Forms
  *
  * Each thumb input carries `name` and `form`, so the range submits two values under the same
- * `name`, the lower bound first.
+ * `name`, the lower bound first. A form reset brings an uncontrolled range back to `defaultValue`,
+ * without `onChange`.
  *
  * ### Asserting on it
  *

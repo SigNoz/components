@@ -63,6 +63,12 @@
 		--radio-group-internal-dot-color: var(--radio-group-highlight-danger-dot-color, var(--radio-group-highlight-danger-dot));
 	}
 
+	// Only an unchecked dial reacts to hover, through this property, so setting it here keeps the
+	// invalid border on hover.
+	&[aria-invalid='true'] {
+		--radio-group-internal-hover-border-color: var(--radio-group-invalid-border-color, var(--destructive));
+	}
+
 	&[data-text-overflow='wrap'] .radio-group__label {
 		white-space: var(--radio-group-wrap-white-space, normal);
 		overflow-wrap: var(--radio-group-wrap-overflow-wrap, anywhere);
@@ -158,6 +164,11 @@
 		outline: var(--radio-group-focus-visible-outline, 1px solid var(--radio-group-focus-ring));
 		outline-offset: var(--radio-group-focus-visible-outline-offset, 1px);
 	}
+}
+
+// It weighs more than the `[data-checked]` rule, so it wins on a checked dial whatever the order.
+.radio-group[aria-invalid='true'] .radio-group__item {
+	border-color: var(--radio-group-invalid-border-color, var(--destructive));
 }
 
 .radio-group__indicator {

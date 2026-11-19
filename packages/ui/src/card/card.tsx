@@ -1,5 +1,6 @@
 import { forwardRef, useId, type ReactElement, type RefAttributes } from 'react';
 import { isBlankText } from '../lib/blank-text.js';
+import { splitSpacingProps } from '../lib/spacing.js';
 import { hasRenderableContent, type RejectedProps } from '../lib/utils.js';
 import { Skeleton } from '../skeleton/skeleton.js';
 import styles from './card.module.scss';
@@ -15,7 +16,6 @@ import {
 	isFlushBody,
 	isPendingPart,
 	resolveCardLoading,
-	splitCardSpacing,
 } from './utils.js';
 
 const DEFAULT_LOADING_CONTENT = (
@@ -48,7 +48,7 @@ const CardRoot = forwardRef<HTMLDivElement, CardProps>(function Card(
 		style: _style,
 		...props
 	} = cardProps;
-	const [spacing, rest] = splitCardSpacing(props);
+	const [spacing, rest] = splitSpacingProps(props);
 	const baseId = useId();
 	const controlId = `${baseId}-control`;
 	const titleId = `${baseId}-title`;

@@ -1,5 +1,5 @@
 import { Select as BaseSelect } from '@base-ui/react/select';
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, FocusEvent, ReactNode, RefObject } from 'react';
 import { toCssLength } from '../../lib/css-length.js';
 import { useLayerZIndex } from '../../lib/layer-z-index.js';
 import { usePopupContainer } from '../../lib/popup-container.js';
@@ -15,6 +15,8 @@ import { SelectRows } from './select-rows.js';
  * @access private
  */
 export type SelectPopupProps = {
+	popupRef: RefObject<HTMLDivElement>;
+	onBlur: (event: FocusEvent<HTMLElement>) => void;
 	trigger: Element | null;
 	accessibleName: string | undefined;
 	labelledBy: string | undefined;
@@ -35,6 +37,8 @@ export type SelectPopupProps = {
  * @access private
  */
 export function SelectPopup({
+	popupRef,
+	onBlur,
 	trigger,
 	accessibleName,
 	labelledBy,
@@ -64,9 +68,11 @@ export function SelectPopup({
 		<BaseSelect.Portal container={container === undefined ? popupContainer : container}>
 			<SelectPositioner trigger={trigger}>
 				<BaseSelect.Popup
+					ref={popupRef}
 					data-slot="select-popup"
 					className={styles['select__popup']}
 					style={popupStyle}
+					onBlur={onBlur}
 				>
 					{loading && (
 						<div

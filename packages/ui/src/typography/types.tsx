@@ -1,5 +1,6 @@
 import type { AriaAttributes, CSSProperties, MouseEventHandler, ReactNode } from 'react';
 import type { RenderLinkProps } from '../lib/use-render-link.js';
+import type { SpacingPropName } from '../lib/spacing.js';
 import type {
 	TypographyAlign,
 	TypographyColor,
@@ -7,7 +8,6 @@ import type {
 	TypographyElement,
 	TypographySize,
 	TypographySpacing,
-	TypographySpacingPropNames,
 	TypographyTextOverflow,
 	TypographyTextTransform,
 	TypographyVariant,
@@ -30,7 +30,7 @@ export type TypographyVerticalAlignType =
 	(typeof TypographyVerticalAlign)[keyof typeof TypographyVerticalAlign];
 export type TypographySpacingType = (typeof TypographySpacing)[number];
 export type TypographyMarginType = TypographySpacingType | 'auto';
-type TypographySpacingPropName = (typeof TypographySpacingPropNames)[number];
+type TypographySpacingPropName = SpacingPropName;
 
 type TypographyInlineElement = 'span' | 'label' | 'code';
 type TypographyBlockElement = Exclude<TypographyElementType, TypographyInlineElement>;
@@ -445,15 +445,6 @@ export type TypographyLinkProps = RenderLinkProps &
  * @access private
  */
 export type TypographySpacingProps = Partial<Record<TypographySpacingPropName, unknown>>;
-
-/**
- * `Props` without the margin and padding props, member by member of a union.
- *
- * @access private
- */
-export type WithoutTypographySpacingProps<Props> = Props extends unknown
-	? Omit<Props, TypographySpacingPropName>
-	: never;
 
 /**
  * The props of a text that set its look, for `Typography` and `Typography.Link`.

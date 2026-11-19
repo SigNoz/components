@@ -7,6 +7,7 @@ import styles from '../input.module.scss';
 import type { InputProps, InputSizeType, InputStatusType, InputVariantType } from '../types.js';
 import { useInputFocusVisible } from '../use-input-focus-visible.js';
 
+// The same icons as the message row of a `Field` (field-row.tsx), so the two agree for one status.
 const STATUS_ICONS = {
 	success: SolidCheckCircle2,
 	warning: SolidAlertCircle,

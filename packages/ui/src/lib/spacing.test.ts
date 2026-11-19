@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
 	splitMarginProps,
-	splitProps,
+	splitSpacingProps,
 	toMarginShorthand,
 	toSpacingShorthand,
 	toSpacingValue,
@@ -77,15 +77,16 @@ describe('toSpacingValue', () => {
 	});
 });
 
-describe('splitProps', () => {
-	it('splits the named props from the rest, keeping undefined values on their side', () => {
-		const [picked, rest] = splitProps(
-			{ padding: 4, marginTop: undefined, id: 'card', 'aria-label': 'Card' },
-			new Set(['padding', 'marginTop']),
-		);
+describe('splitSpacingProps', () => {
+	it('moves the margin and padding props out and leaves the rest', () => {
+		const [spacing, rest] = splitSpacingProps({
+			padding: 4,
+			marginTop: 2,
+			id: 'card',
+			'aria-label': 'Card',
+		});
 
-		expect(picked).toEqual({ padding: 4, marginTop: undefined });
-		expect(Object.keys(picked)).toEqual(['padding', 'marginTop']);
+		expect(spacing).toEqual({ padding: 4, marginTop: 2 });
 		expect(rest).toEqual({ id: 'card', 'aria-label': 'Card' });
 	});
 });

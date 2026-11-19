@@ -2,6 +2,8 @@ import { forwardRef } from 'react';
 import { partTestId, type RejectedProps } from '../../lib/utils.js';
 import styles from '../input.module.scss';
 import type { InputTextAreaProps } from '../types.js';
+import { useFieldControl } from '../use-field-control.js';
+import { useNativeValue } from '../use-native-value.js';
 import { getReasonTooltip, splitAttributes } from '../utils.js';
 import { InputFrame } from './input-frame.js';
 
@@ -23,7 +25,7 @@ import { InputFrame } from './input-frame.js';
 export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>(
 	function InputTextArea(
 		{
-			size,
+			size = 'md',
 			variant = 'default',
 			status,
 			noFocusRing = false,
@@ -36,17 +38,28 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			testId,
 			id,
 			required,
+			'aria-required': ariaRequired,
 			'aria-describedby': ariaDescribedBy,
 			'aria-invalid': ariaInvalid,
+			value,
+			defaultValue,
+			nullable: _nullable,
 			className: _className,
 			style: _style,
 			...props
 		}: InputTextAreaProps & RejectedProps,
 		ref,
 	) {
-		const resolvedSize = size ?? 'md';
-		const resolvedInvalid = ariaInvalid ?? (status === 'danger' ? true : undefined);
+		const field = useFieldControl({
+			id,
+			status,
+			required,
+			ariaRequired,
+			ariaDescribedBy,
+			ariaInvalid,
+		});
 		const { control, data } = splitAttributes(props);
+		const nativeValue = useNativeValue({ component: 'Input.TextArea', value, defaultValue });
 		const isDisabled = disabled && !readOnly;
 		const { reason, hasReasonAnchor } = getReasonTooltip({
 			disabled,
@@ -57,9 +70,9 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 
 		return (
 			<InputFrame
-				size={resolvedSize}
+				size={size}
 				variant={variant}
-				status={status}
+				status={field.status}
 				noFocusRing={noFocusRing}
 				disabled={isDisabled}
 				readOnly={readOnly}
@@ -75,13 +88,15 @@ export const InputTextArea = forwardRef<HTMLTextAreaElement, InputTextAreaProps>
 			>
 				<textarea
 					{...control}
+					{...nativeValue}
 					ref={ref}
-					id={id}
-					required={required}
+					id={field.id}
+					required={field.required}
+					aria-required={field.ariaRequired}
 					disabled={isDisabled}
 					readOnly={readOnly}
-					aria-describedby={ariaDescribedBy}
-					aria-invalid={resolvedInvalid}
+					aria-describedby={field.ariaDescribedBy}
+					aria-invalid={field.ariaInvalid}
 					className={styles['input__field']}
 					data-slot="input-field"
 					data-testid={partTestId(testId, 'field')}

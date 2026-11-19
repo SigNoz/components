@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`RadioCards nullable type error messages > prints a message that names the constraint that failed 1`] = `
+{
+  "nullable and onChange on the single group > keeps the allowClear rule without nullable > \`allowClear\` typed \`boolean\` may empty the group": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: boolean; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
+    Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: boolean; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type '{ nullable?: undefined; allowClear?: false | undefined; onChange?: ((value: string) => void) | undefined; }'.
+      Types of property 'allowClear' are incompatible.
+        Type 'boolean' is not assignable to type 'false'.",
+  "nullable and onChange on the single group > keeps the allowClear rule without nullable > a group that can be emptied reports \`null\`": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; allowClear: true; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
+    Types of property 'onChange' are incompatible.
+      Type 'Dispatch<SetStateAction<string>>' is not assignable to type '((value: string | null) => void) | ((value: string | null) => void) | undefined'.
+        Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null) => void'.
+          Types of parameters 'value' and 'value' are incompatible.
+            Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+              Type 'null' is not assignable to type 'SetStateAction<string>'.",
+  "nullable and onChange on the single group > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable and onChange on the single group > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on the field shorthand too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable and onChange on the single group > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, with a plain callback too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable and onChange on the single group > rejects an onChange that cannot take null > a nullable group's \`onChange\` takes \`string | null\`": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; nullable: true; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
+    Types of property 'onChange' are incompatible.
+      Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null) => void'.
+        Types of parameters 'value' and 'value' are incompatible.
+          Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+            Type 'null' is not assignable to type 'SetStateAction<string>'.",
+  "nullable and onChange on the single group > rejects an onChange that cannot take null > a nullable group's \`onChange\` takes \`string | null\`, \`allowClear\` or not": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; nullable: true; allowClear: true; onChange: Dispatch<SetStateAction<string>>; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
+    Types of property 'onChange' are incompatible.
+      Type 'Dispatch<SetStateAction<string>>' is not assignable to type '(value: string | null) => void'.
+        Types of parameters 'value' and 'value' are incompatible.
+          Type 'string | null' is not assignable to type 'SetStateAction<string>'.
+            Type 'null' is not assignable to type 'SetStateAction<string>'.",
+  "nullable and onChange on the single group > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable and onChange on the single group > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on the field shorthand too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable and onChange on the single group > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, with \`allowClear\` too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable and the other props > rejects a prop the shorthand does not have > \`signals\` is not a prop": "TS2322: Type 'number' is not assignable to type 'never'.",
+  "nullable and the other props > still asks for the items > a group with nothing to pick from is not allowed": "TS2322: Type '{ label: string; nullable: true; }' is not assignable to type 'IntrinsicAttributes & Checked<RadioCardsFieldProps, RadioCardsFieldProps>'.
+    Property 'items' is missing in type '{ label: string; nullable: true; }' but required in type '{ items: readonly RadioCardsItemType[]; value?: string | null | undefined; defaultValue?: string | undefined; }'.",
+  "nullable on the multiple group > does not turn the list into a single value > \`RadioCards.Multiple\` holds the list of checked values": "TS2322: Type 'string' is not assignable to type 'readonly string[]'.",
+  "nullable on the multiple group > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, a \`boolean\` is not accepted": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable on the multiple group > rejects a nullable decided at run time > \`nullable\` only takes \`true\`, on the field shorthand too": "TS2322: Type 'boolean' is not assignable to type 'true'.",
+  "nullable on the multiple group > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable on the multiple group > rejects nullable={false}, which is the same as leaving it out > \`nullable\` only takes \`true\`, on the field shorthand too": "TS2322: Type 'false' is not assignable to type 'true'.",
+  "nullable on the multiple group > takes null as a value only while nullable > \`null\` is not a value of the multiple group until it is \`nullable\`": "TS2322: Type '{ "aria-label": string; items: RadioCardsItemType[]; value: null; }' is not assignable to type 'IntrinsicAttributes & (RadioCardsMultipleProps & Record<never, never> & RefAttributes<HTMLDivElement>)'.
+    Type '{ "aria-label": string; items: RadioCardsItemType[]; value: null; }' is not assignable to type '{ nullable?: undefined; value?: readonly string[] | undefined; }'.
+      Types of property 'value' are incompatible.
+        Type 'null' is not assignable to type 'readonly string[] | undefined'.",
+  "nullable takes the field a Controller spreads > on the multiple group without nullable, a null list is refused > \`null\` is not a value of the multiple group until it is \`nullable\`": "TS2322: Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string[] | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; items: RadioCardsItemType[]; }' is not assignable to type 'IntrinsicAttributes & Checked<RadioCardsFieldMultipleProps, RadioCardsFieldMultipleProps>'.
+    Type '{ onChange: (...event: any[]) => void; onBlur: () => void; value: string[] | null; name: string; ref: (instance: any) => void; disabled?: boolean | undefined; label: string; items: RadioCardsItemType[]; }' is not assignable to type '{ nullable?: undefined; value?: readonly string[] | undefined; }'.
+      Types of property 'value' are incompatible.
+        Type 'string[] | null' is not assignable to type 'readonly string[] | undefined'.
+          Type 'null' is not assignable to type 'readonly string[] | undefined'.",
+}
+`;
