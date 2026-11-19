@@ -67,3 +67,19 @@
 	grid-template-columns: repeat(3, auto);
 	gap: 0.5rem;
 }
+
+/* A fixed strip along the bottom of the page, under the layer of a dialog, like the one an app keeps. */
+.strip {
+	position: fixed;
+	inset-inline: 0;
+	inset-block-end: 0;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	block-size: var(--story-strip-height, 0px);
+	border-block-start: 1px solid var(--l2-border);
+	background-color: var(--l2-background);
+	color: var(--l2-foreground);
+	font-size: 0.75rem;
+}

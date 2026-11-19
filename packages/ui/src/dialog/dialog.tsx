@@ -4,6 +4,7 @@ import { forwardRef, type ReactElement, type RefAttributes, useMemo, useRef } fr
 import { Button } from '../button/index.js';
 import { DrawerStackReset } from '../drawer/drawer-stack-context.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useReportModalLayer } from '../lib/modal-layer.js';
 import { PopupContainer } from '../lib/popup-container.js';
 import { Skeleton } from '../skeleton/index.js';
 import { hasRenderableContent, partTestId, type RejectedProps } from '../lib/utils.js';
@@ -54,6 +55,7 @@ const DialogImpl = forwardRef<HTMLDivElement, DialogProps & RejectedProps>(funct
 	const handleState = useDialogHandleState(handle);
 	useCloseHandleOnUnmount(handle);
 	const isOpen = handle ? handleState.open : (open ?? false);
+	useReportModalLayer(isOpen);
 
 	const requestClose = (reason: DialogCloseReasonType): void => {
 		if (handle) {

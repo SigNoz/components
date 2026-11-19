@@ -3,6 +3,7 @@ import {
 	ButtonColor,
 	ButtonSize,
 	ButtonVariant,
+	Dialog,
 	Drawer,
 	Toaster,
 	type ToasterProps,
@@ -60,6 +61,15 @@ const meta: Meta<ToastStoryArgs> = {
 				category: 'Appearance',
 				type: { summary: 'number | string | ToastOffset' },
 				defaultValue: { summary: '16' },
+			},
+		},
+		pageInset: {
+			control: false,
+			description:
+				'The space the fixed chrome of the page, such as a header or a bottom strip, takes at the top and the bottom edge of the window, so a stack sits `offset` beyond it. A number is written as `px` and a string is a CSS length, so a height the page publishes needs no measuring: `var(--bottom-strip-height, 0px)`. A stack reads only the edge its position sits against, and drops the inset while a modal layer covers the page.',
+			table: {
+				category: 'Appearance',
+				type: { summary: 'ToastPageInset' },
 			},
 		},
 		limit: {
@@ -812,5 +822,141 @@ export const BesideADrawer: Story = {
 			await waitFor(() => expect(Math.round(stack(position).right)).toBe(windowRight - EDGE_GAP));
 		}
 		await expect(stack('top-left').left).toBe(topLeft);
+	},
+};
+
+// The height of the bottom strip of the story page, published on `body` like an app does.
+const STRIP_HEIGHT = 24;
+
+function PageInsetDemo(): ReactElement {
+	const [layer, setLayer] = useState<'dialog' | 'inspector' | null>(null);
+
+	useEffect(() => {
+		document.body.style.setProperty('--story-strip-height', `${STRIP_HEIGHT}px`);
+
+		return () => {
+			document.body.style.removeProperty('--story-strip-height');
+		};
+	}, []);
+
+	return (
+		<PersistToastsProvider>
+			<Toaster
+				position="bottom-right"
+				offset={EDGE_GAP}
+				pageInset={{ bottom: 'var(--story-strip-height, 0px)' }}
+			/>
+			<div className={`story-center ${styles.playground}`}>
+				<div className={styles.timed}>
+					<Button
+						variant={ButtonVariant.Solid}
+						color={ButtonColor.Primary}
+						size={ButtonSize.MD}
+						onClick={() => {
+							toast.info('Bottom right', { id: 'page-inset-bottom-right' });
+						}}
+					>
+						Raise a toast
+					</Button>
+					<Button
+						variant={ButtonVariant.Outlined}
+						color={ButtonColor.Secondary}
+						size={ButtonSize.MD}
+						onClick={() => setLayer('inspector')}
+					>
+						Open drawer
+					</Button>
+					<Button
+						variant={ButtonVariant.Outlined}
+						color={ButtonColor.Secondary}
+						size={ButtonSize.MD}
+						onClick={() => setLayer('dialog')}
+					>
+						Open dialog
+					</Button>
+				</div>
+			</div>
+			<div className={styles.strip} data-testid="page-strip">
+				Bottom strip
+			</div>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				title="Span details"
+				open={layer === 'inspector'}
+				onClose={() => setLayer(null)}
+			>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="base"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
+					An inspector leaves the page usable, so the stack stays above the strip.
+				</Typography>
+			</Drawer>
+			<Dialog title="Rename view" open={layer === 'dialog'} onClose={() => setLayer(null)}>
+				<Typography
+					as="p"
+					variant="paragraph"
+					size="base"
+					weight="regular"
+					color="inherit"
+					textOverflow="wrap"
+				>
+					The backdrop covers the strip, so the stack drops to the edge of the window.
+				</Typography>
+			</Dialog>
+		</PersistToastsProvider>
+	);
+}
+
+/**
+ * `pageInset` keeps the stacks above the fixed chrome of the page, a strip along the bottom here.
+ * The stack drops to the edge of the window while a `Dialog`, an `AlertDialog`, a `task` `Drawer`
+ * or a `Command` palette covers the strip with its backdrop, and stays above it beside an
+ * `inspector` `Drawer`, which leaves the page usable.
+ */
+export const PageInset: Story = {
+	argTypes: {
+		variant: { table: { disable: true } },
+		title: { table: { disable: true } },
+		description: { table: { disable: true } },
+		actionLabel: { table: { disable: true } },
+		count: { table: { disable: true } },
+		callTimeout: { table: { disable: true } },
+	},
+	render: () => <PageInsetDemo />,
+	play: async ({ canvasElement }) => {
+		const page = canvasElement.ownerDocument;
+		const canvas = within(page.body);
+		const bottom = () =>
+			Number.parseFloat(
+				getComputedStyle(
+					page.querySelector('[data-slot="toaster"][data-position="bottom-right"]') as HTMLElement,
+				).bottom,
+			);
+
+		toast.dismiss();
+		await userEvent.click(canvas.getByRole('button', { name: 'Raise a toast' }));
+		await canvas.findByText('Bottom right');
+		await waitFor(() => expect(bottom()).toBe(EDGE_GAP + STRIP_HEIGHT));
+
+		// Beside an inspector the strip is still in sight, so the stack stays above it.
+		await userEvent.click(canvas.getByRole('button', { name: 'Open drawer' }));
+		await canvas.findByRole('dialog', { name: 'Span details' });
+		await expect(bottom()).toBe(EDGE_GAP + STRIP_HEIGHT);
+		await userEvent.click(canvas.getByRole('button', { name: 'Close' }));
+		await waitFor(() => expect(canvas.queryByRole('dialog', { name: 'Span details' })).toBeNull());
+
+		// Under the backdrop of a dialog the strip is covered, so the stack drops to the window edge.
+		await userEvent.click(canvas.getByRole('button', { name: 'Open dialog' }));
+		await canvas.findByRole('dialog', { name: 'Rename view' });
+		await waitFor(() => expect(bottom()).toBe(EDGE_GAP));
+
+		await userEvent.click(canvas.getByRole('button', { name: 'Close' }));
+		await waitFor(() => expect(bottom()).toBe(EDGE_GAP + STRIP_HEIGHT));
 	},
 };

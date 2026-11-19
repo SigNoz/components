@@ -4,6 +4,7 @@ import { ToastVariant } from './constants.js';
 import type { ToasterProps, ToastOptions, ToastVariantType } from './types.js';
 
 const EDGES = ['top', 'right', 'bottom', 'left'] as const;
+const INSET_EDGES = ['top', 'bottom'] as const;
 
 /**
  * What the toast manager is given to add or update a toast of `variant`, without the `id`.
@@ -53,6 +54,25 @@ export function viewportOffsetStyle(offset: ToasterProps['offset']): CSSProperti
 		EDGES.filter((edge) => offset[edge] != null).map((edge) => [
 			`--toast-internal-viewport-offset-${edge}`,
 			toCssLength(offset[edge] as number | string),
+		]),
+	) as CSSProperties;
+}
+
+/**
+ * Writes `pageInset` as the `--toast-internal-viewport-page-inset-*` properties the stylesheet
+ * reads, for the edges it names.
+ *
+ * @access private
+ */
+export function viewportPageInsetStyle(pageInset: ToasterProps['pageInset']): CSSProperties {
+	if (pageInset == null) {
+		return {};
+	}
+
+	return Object.fromEntries(
+		INSET_EDGES.filter((edge) => pageInset[edge] != null).map((edge) => [
+			`--toast-internal-viewport-page-inset-${edge}`,
+			toCssLength(pageInset[edge] as number | string),
 		]),
 	) as CSSProperties;
 }

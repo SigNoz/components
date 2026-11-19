@@ -1,6 +1,7 @@
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import { forwardRef, type ReactNode, useMemo, useState } from 'react';
 import { mergeRefs } from '../../lib/merge-refs.js';
+import { useIsModalLayerOpen } from '../../lib/modal-layer.js';
 import { useRightEdgeCover } from '../../lib/right-edge-cover.js';
 import { useElementWidth } from '../../lib/use-element-width.js';
 import { cn } from '../../lib/utils.js';
@@ -8,7 +9,7 @@ import { usePersistToasts } from '../persist-toasts.js';
 import { useContainingBlockRightInset } from '../use-containing-block-right-inset.js';
 import styles from '../toast.module.scss';
 import type { ToasterProps, ToastPositionType } from '../types.js';
-import { viewportOffsetStyle } from '../utils.js';
+import { viewportOffsetStyle, viewportPageInsetStyle } from '../utils.js';
 
 /**
  * @access private
@@ -29,13 +30,14 @@ export type ToastViewportProps = Omit<
  * @access private
  */
 export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(function ToastViewport(
-	{ position, isDefault, offset, testId, ...props },
+	{ position, isDefault, offset, pageInset, testId, ...props },
 	ref,
 ) {
 	const [element, setElement] = useState<HTMLDivElement | null>(null);
 	const mergedRef = useMemo(() => mergeRefs(ref, setElement), [ref]);
 	const spread = usePersistToasts();
 	const windowCover = useRightEdgeCover();
+	const isUnderModal = useIsModalLayerOpen();
 	// A right stack moves beside an open `Drawer`, and stays in the window by its rendered width,
 	// which a max size or a keyword size can make other than its `inline-size`.
 	const measured = windowCover > 0 && position.endsWith('right') ? element : null;
@@ -57,6 +59,7 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 			className={cn(styles['toaster'], spread && styles['toaster--spread'])}
 			style={{
 				...viewportOffsetStyle(offset),
+				...viewportPageInsetStyle(pageInset),
 				...(isBesideDrawer && {
 					'--toast-internal-right-edge-cover': `${rightEdgeCover}px`,
 					'--toast-internal-rendered-inline-size': `${width}px`,
@@ -70,6 +73,7 @@ export const ToastViewport = forwardRef<HTMLDivElement, ToastViewportProps>(func
 			data-slot="toaster"
 			data-position={position}
 			data-beside-drawer={isBesideDrawer || undefined}
+			data-under-modal={isUnderModal || undefined}
 		/>
 	);
 });

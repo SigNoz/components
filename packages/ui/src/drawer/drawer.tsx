@@ -14,6 +14,7 @@ import type { DialogChildren, NoHandle } from '../dialog/types.js';
 import { useCloseHandleOnUnmount } from '../dialog/use-close-handle-on-unmount.js';
 import { useDialogHandleState } from '../dialog/use-dialog-handle-state.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useReportModalLayer } from '../lib/modal-layer.js';
 import { PopupContainer } from '../lib/popup-container.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import { Skeleton } from '../skeleton/index.js';
@@ -118,6 +119,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 		requestClose,
 	});
 	const isModal = layerType === 'task';
+	useReportModalLayer(isOpen && isModal);
 
 	return (
 		<DrawerPrimitive.Root
