@@ -13,10 +13,11 @@
  * right above the opening `<Toaster` tag. Keep every prop on that opening tag line.
  */
 import { assertType, describe, test } from 'vitest';
-import type { ToastOffset } from '../index.js';
+import type { ToastOffset, ToastPageInset } from '../index.js';
 import { Toaster } from '../toaster.js';
 
 declare const offset: ToastOffset;
+declare const pageInset: ToastPageInset;
 
 // Props held in a variable and spread skip the excess property check a literal attribute gets, so
 // these catch a rejected prop that reaches the toaster through a spread.
@@ -52,6 +53,36 @@ describe('offset', () => {
 		assertType(<Toaster offset={{ top: null }} />);
 		// @ts-expect-error - an array is not a distance
 		assertType(<Toaster offset={[8, 8]} />);
+	});
+});
+
+describe('pageInset', () => {
+	test('accepts the edges it names, a number or a string each', () => {
+		assertType(<Toaster pageInset={{ bottom: 24 }} />);
+		assertType(<Toaster pageInset={{ top: '2rem', bottom: 'var(--bottom-strip-height, 0px)' }} />);
+		assertType(<Toaster pageInset={{}} />);
+		assertType(<Toaster pageInset={pageInset} />);
+	});
+
+	test('rejects an edge that is not top or bottom', () => {
+		// @ts-expect-error - the chrome of the page insets only the top and the bottom
+		assertType(<Toaster pageInset={{ left: 8 }} />);
+		// @ts-expect-error - `inline` is not an edge
+		assertType(<Toaster pageInset={{ inline: 8 }} />);
+	});
+
+	test('rejects a single value, it has to name an edge', () => {
+		// @ts-expect-error - a number is not an object of edges
+		assertType(<Toaster pageInset={24} />);
+		// @ts-expect-error - a string is not an object of edges
+		assertType(<Toaster pageInset="var(--bottom-strip-height, 0px)" />);
+	});
+
+	test('rejects a value that is not a length', () => {
+		// @ts-expect-error - `true` is not a distance
+		assertType(<Toaster pageInset={{ bottom: true }} />);
+		// @ts-expect-error - leave the edge out instead of passing `null`
+		assertType(<Toaster pageInset={{ top: null }} />);
 	});
 });
 

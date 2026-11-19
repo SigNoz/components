@@ -26,6 +26,18 @@ export interface ToastOffset {
 	left?: number | string;
 }
 
+export interface ToastPageInset {
+	/**
+	 * The space the fixed chrome of the page takes at the top edge of the window, such as a header.
+	 * A number is written as `px`, a string is a CSS length.
+	 */
+	top?: number | string;
+	/**
+	 * The space the fixed chrome of the page takes at the bottom edge of the window, as `top`.
+	 */
+	bottom?: number | string;
+}
+
 export interface ToasterProps extends Pick<ComponentPropsWithoutRef<'div'>, 'id'>, AriaAttributes {
 	/**
 	 * Where a toast raised with no `position` stacks. Each position keeps a stack of its own.
@@ -44,6 +56,16 @@ export interface ToasterProps extends Pick<ComponentPropsWithoutRef<'div'>, 'id'
 	 * @default 16
 	 */
 	offset?: number | string | ToastOffset;
+	/**
+	 * The space the fixed chrome of the page, such as a header or a bottom strip, takes at the top
+	 * and the bottom edge of the window, so a stack sits `offset` beyond it. A number is written as
+	 * `px` and a string is a CSS length, so a height the page publishes needs no measuring:
+	 * `var(--bottom-strip-height, 0px)`.
+	 *
+	 * A stack reads only the edge its position sits against, and drops the inset while a modal
+	 * layer covers the page.
+	 */
+	pageInset?: ToastPageInset;
 	/**
 	 * How many toasts the stack shows. The rest wait behind until one closes.
 	 *

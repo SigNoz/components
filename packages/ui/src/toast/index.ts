@@ -127,10 +127,12 @@
  * | `--toast-viewport-offset-right` | `var(--toast-internal-viewport-offset-right, var...` |
  * | `--toast-viewport-offset-top` | `var(--toast-internal-viewport-offset-top, var(-...` |
  * | `--toast-viewport-padding` | `0` |
+ * | `--toast-viewport-page-inset-bottom` | `var(--toast-internal-viewport-page-inset-bottom...` |
+ * | `--toast-viewport-page-inset-top` | `var(--toast-internal-viewport-page-inset-top, 0px)` |
  * | `--toast-viewport-pointer-events` | `none` |
  * | `--toast-viewport-position` | `fixed` |
  * | `--toast-viewport-transition-duration` | `240ms` |
- * | `--toast-viewport-transition-property` | `right` |
+ * | `--toast-viewport-transition-property` | `top, right, bottom` |
  * | `--toast-viewport-transition-timing-function` | `cubic-bezier(0.2, 0, 0, 1)` |
  * | `--toast-viewport-z-index` | `999999999` |
  * | `--toast-warning-icon` | `-` |
@@ -147,6 +149,7 @@ export type {
 	ToasterProps,
 	ToastOffset,
 	ToastOptions,
+	ToastPageInset,
 	ToastPositionType,
 	ToastPromiseOptions,
 	ToastVariantType,
