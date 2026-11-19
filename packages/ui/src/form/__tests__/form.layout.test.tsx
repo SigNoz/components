@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import type { CSSProperties } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../../button/index.js';
@@ -183,7 +184,8 @@ describe('Form layout', () => {
 		);
 	});
 
-	it('keeps an inline message longer than a narrow field on one line', () => {
+	it('cuts an inline message wider than its field to one line, and shows it whole on hover', async () => {
+		const user = userEvent.setup();
 		// The room is built from these two tokens, which the unit tests do not load.
 		const tokens = {
 			inlineSize: 960,
@@ -206,34 +208,67 @@ describe('Form layout', () => {
 
 		const message = screen.getByTestId('errors-message');
 		const field = message.closest('[data-slot="field"]') as HTMLElement;
+		const text = message.querySelector<HTMLElement>('[data-slot="field-row-text"]') as HTMLElement;
 
-		expect(message.getBoundingClientRect().width).toBeGreaterThan(
-			field.getBoundingClientRect().width,
-		);
+		expect(message.getBoundingClientRect().width).toBe(field.getBoundingClientRect().width);
 		expect(message.getBoundingClientRect().height).toBe(18);
 		expect(Math.round(message.getBoundingClientRect().bottom)).toBeLessThanOrEqual(
 			Math.round(screen.getByTestId('form').getBoundingClientRect().bottom),
 		);
+		await waitFor(() => expect(text).toHaveAttribute('data-truncated'));
+		await user.hover(text);
+
+		const tooltip = await screen.findByRole('tooltip');
+		expect(tooltip).toHaveTextContent('Pick at least one level.');
+		// Below the row, so it does not cover the checkbox the message is about.
+		expect(tooltip.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+			message.getBoundingClientRect().bottom,
+		);
 	});
 
-	it('wraps a long inline message at the width of a field wider than 320px', () => {
+	it('keeps an inline message that fits whole, with no tooltip', async () => {
+		const user = userEvent.setup();
 		render(
 			<div style={{ inlineSize: 960 }}>
 				<Form onSubmit={noop} layout="inline" testId="form">
-					<InputField
-						label="Query"
-						testId="query"
-						width={480}
-						error="The query has to name a service, an operation and a time range before it can run."
+					<InputField label="Min duration" testId="duration" width={160} error="Too long." />
+				</Form>
+			</div>,
+		);
+		const text = screen
+			.getByTestId('duration-message')
+			.querySelector<HTMLElement>('[data-slot="field-row-text"]') as HTMLElement;
+
+		await user.hover(text);
+
+		expect(text).not.toHaveAttribute('data-truncated');
+		await waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument());
+	});
+
+	it('lets a message wrap in a vertical form, with no tooltip', async () => {
+		const user = userEvent.setup();
+		render(
+			<div
+				style={{ inlineSize: 120, '--paragraph-small-400-line-height': '18px' } as CSSProperties}
+			>
+				<Form onSubmit={noop} testId="form">
+					<CheckboxField
+						label="Only errors"
+						color="primary"
+						testId="errors"
+						error="Pick at least one level."
 					/>
 				</Form>
 			</div>,
 		);
+		const message = screen.getByTestId('errors-message');
+		const text = message.querySelector<HTMLElement>('[data-slot="field-row-text"]') as HTMLElement;
 
-		const message = screen.getByTestId('query-message');
-		const field = message.closest('[data-slot="field"]') as HTMLElement;
+		await user.hover(text);
 
-		expect(message.getBoundingClientRect().width).toBe(field.getBoundingClientRect().width);
+		expect(message.getBoundingClientRect().height).toBeGreaterThan(18);
+		expect(text).not.toHaveAttribute('data-truncated');
+		await waitFor(() => expect(screen.queryByRole('tooltip')).not.toBeInTheDocument());
 	});
 
 	it('adds no padding of its own', () => {

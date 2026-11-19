@@ -1,6 +1,8 @@
 import { Field as BaseField } from '@base-ui/react/field';
 import { SolidAlertCircle, SolidAlertTriangle, SolidCheckCircle2 } from '@signozhq/icons';
+import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
 import { cn, partTestId } from '../../lib/utils.js';
+import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import styles from '../field.module.scss';
 import type { FieldStatusType } from '../types.js';
 import type { FieldParts } from '../use-field-parts.js';
@@ -41,6 +43,10 @@ export type FieldRowProps = {
 export function FieldRow({ row, status, id, testId, registered, className }: FieldRowProps) {
 	const isMessage = row.kind === 'message';
 	const StatusIcon = isMessage && status !== undefined ? STATUS_ICONS[status] : null;
+	// The row wraps, except where a layout keeps it to one line and cuts it, as an inline `Form`
+	// does. A cut text shows in full in a tooltip, below the row: above it, the tooltip would cover
+	// the control the message is about, and catch the click that goes to it.
+	const [isTruncated, textRef] = useIsLabelTruncated(true);
 	const props = {
 		id,
 		className: cn(styles['field__row'], className),
@@ -54,7 +60,16 @@ export function FieldRow({ row, status, id, testId, registered, className }: Fie
 					<StatusIcon aria-hidden="true" />
 				</span>
 			)}
-			<span className={styles['field__row-text']}>{row.content}</span>
+			<TooltipAnchor content={isTruncated ? row.content : null} contentProps={{ side: 'bottom' }}>
+				<span
+					ref={textRef}
+					className={styles['field__row-text']}
+					data-slot="field-row-text"
+					data-truncated={isTruncated || undefined}
+				>
+					{row.content}
+				</span>
+			</TooltipAnchor>
 		</>
 	);
 
