@@ -134,8 +134,9 @@ state.
 new row 16px below when the width runs out. In a row the fields line up on their bottom edge with
 the buttons, so a label that wraps to two lines does not push its control out of line. A message or
 a description hangs under its field instead of making the row taller, so the controls stay in line
-while one shows, and the row keeps one line of room for it below. Keep it to one line: a longer one
-wraps under its field and runs into what follows.
+while one shows, and the row keeps one line of room for it below. It stays as wide as its field: a
+longer one, such as a message under a checkbox and its label, is cut to that one line with an
+ellipsis, and its whole text shows in a tooltip below it on hover.
 
 Any element is allowed as a child, not only `Field`. A row of action buttons is your own
 container. A two-column layout, or a row of two fields inside a vertical form, is your own grid:

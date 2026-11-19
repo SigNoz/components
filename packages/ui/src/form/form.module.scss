@@ -14,12 +14,22 @@
 		// The row lines up the bottom edge of each field, and a message or a description is the
 		// bottom of its field, so one under a single field would push every other field and the
 		// buttons down. It hangs under its field instead, and the row keeps one line of room for it.
+		//
+		// A text wider than its field, such as a message under a checkbox and its label, is cut to
+		// that one line with an ellipsis instead of wrapping into what follows. The field shows the
+		// whole text in a tooltip.
 		> :is([data-slot='field'], [data-slot='field-group'])
 			> :is([data-slot='field-message'], [data-slot='field-description']) {
 			position: var(--form-inline-message-position, absolute);
 			inset-block-start: var(--form-inline-message-inset-block-start, 100%);
 			inset-inline: var(--form-inline-message-inset-inline, 0);
 			margin-block-start: var(--form-inline-message-margin-block-start, var(--spacing-4));
+
+			[data-slot='field-row-text'] {
+				overflow: var(--form-inline-message-overflow, clip visible);
+				text-overflow: var(--form-inline-message-text-overflow, ellipsis);
+				white-space: var(--form-inline-message-white-space, nowrap);
+			}
 		}
 
 		&:has(

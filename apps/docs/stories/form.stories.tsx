@@ -1,5 +1,6 @@
 import {
 	Button,
+	CheckboxField,
 	Dialog,
 	Field,
 	Form,
@@ -234,8 +235,9 @@ export const Inline: Story = {
 };
 
 /**
- * The same row with a description on one field and an error on another: each hangs under its
- * field, and the controls and the button stay in one line.
+ * The same row with a description on one field and errors on two others: each hangs under its
+ * field, and the controls and the button stay in one line. The checkbox's error is longer than the
+ * checkbox and its label, and stays on one line.
  */
 export const InlineWithMessages: Story = {
 	decorators: [
@@ -277,6 +279,12 @@ export const InlineWithMessages: Story = {
 				error="Use 60000 ms or less."
 				testId="duration"
 			/>
+			<CheckboxField
+				label="Only errors"
+				color="primary"
+				error="Pick at least one level."
+				testId="errors"
+			/>
 			<Button type="submit" variant="solid" color="primary" size="md" testId="apply">
 				Apply filters
 			</Button>
@@ -289,6 +297,15 @@ export const InlineWithMessages: Story = {
 		await expect(bottom('environment')).toBe(bottom('service'));
 		await expect(bottom('duration')).toBe(bottom('service'));
 		await expect(bottom('apply')).toBe(bottom('service'));
+
+		const message = canvas.getByTestId('errors-message');
+		const text = message.lastElementChild as HTMLElement;
+		await expect(text.getBoundingClientRect().height).toBe(
+			Number.parseFloat(getComputedStyle(text).lineHeight),
+		);
+		await expect(message.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+			canvas.getByTestId('filters').getBoundingClientRect().bottom,
+		);
 	},
 };
 
