@@ -62,10 +62,16 @@ export function RadioGroupItem({
 	});
 
 	const itemEl = (
+		// A press on the text takes the focus to the nearest element that can hold it. Without
+		// `tabIndex` that is `<body>`, and the radio that had the focus blurs with no `relatedTarget`,
+		// which the group's `onBlur` counts as leaving the group. With it, the label holds the focus
+		// until the click moves it to the radio, and an `Input` or a `Button` in the text still takes
+		// it on its own. `-1` keeps the label out of the tab order.
 		<label
 			data-slot="radio-group-item"
 			data-disabled={disabled === true || undefined}
 			className={styles['radio-group__item-wrapper']}
+			tabIndex={-1}
 		>
 			<Radio.Root
 				value={value}

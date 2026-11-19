@@ -1,5 +1,12 @@
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
-import { type CSSProperties, type MutableRefObject, type ReactNode, useMemo } from 'react';
+import {
+	type CSSProperties,
+	type FocusEvent,
+	type MutableRefObject,
+	type ReactNode,
+	type RefObject,
+	useMemo,
+} from 'react';
 import { toCssLength } from '../../lib/css-length.js';
 import { useLayerZIndex } from '../../lib/layer-z-index.js';
 import { usePopupContainer } from '../../lib/popup-container.js';
@@ -23,6 +30,8 @@ import { type ComboboxVirtualScroller, ComboboxVirtualRows } from './combobox-vi
  * @access private
  */
 export type ComboboxPopupProps = {
+	popupRef: RefObject<HTMLDivElement>;
+	onBlur: (event: FocusEvent<HTMLElement>) => void;
 	trigger: Element | null;
 	accessibleName: string | undefined;
 	labelledBy: string | undefined;
@@ -50,6 +59,8 @@ export type ComboboxPopupProps = {
  * @access private
  */
 export function ComboboxPopup({
+	popupRef,
+	onBlur,
 	trigger,
 	accessibleName,
 	labelledBy,
@@ -99,11 +110,13 @@ export function ComboboxPopup({
 		<BaseCombobox.Portal container={container === undefined ? popupContainer : container}>
 			<ComboboxPositioner trigger={trigger}>
 				<BaseCombobox.Popup
+					ref={popupRef}
 					data-slot="combobox-popup"
 					aria-label={accessibleName}
 					aria-labelledby={labelledBy}
 					className={styles['combobox__popup']}
 					style={popupStyle}
+					onBlur={onBlur}
 				>
 					<ComboboxSearch searchInputProps={searchInputProps} comboboxTestId={testId} />
 					<div

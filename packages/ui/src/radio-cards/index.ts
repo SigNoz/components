@@ -54,6 +54,7 @@
  * | `--radio-cards-indicator-unchecked-inline-size` | `0` |
  * | `--radio-cards-indicator-unchecked-overflow` | `hidden` |
  * | `--radio-cards-inline-size` | `100%` |
+ * | `--radio-cards-invalid-border-color` | `var(--destructive)` |
  * | `--radio-cards-item-align-items` | `flex-start` |
  * | `--radio-cards-item-border-radius` | `var(--radius-1)` |
  * | `--radio-cards-item-border-style` | `solid` |
@@ -101,11 +102,15 @@
 // #endregion css-tokens
 
 export { RadioCards } from './radio-cards.js';
+export { RadioCardsField } from './presets/radio-cards-field.js';
 export { RadioCardsTextOverflow } from './constants.js';
 export type {
 	RadioCardsClearType,
 	RadioCardsDisableType,
+	RadioCardsFieldMultipleProps,
+	RadioCardsFieldProps,
 	RadioCardsItemType,
+	RadioCardsMultipleNullableType,
 	RadioCardsMultipleProps,
 	RadioCardsProps,
 	RadioCardsReadOnlyType,

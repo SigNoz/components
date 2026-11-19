@@ -1,5 +1,5 @@
 import { Popover as BasePopover } from '@base-ui/react/popover';
-import type { ReactNode, RefObject } from 'react';
+import type { FocusEvent, ReactNode, RefObject } from 'react';
 import type { Modifiers } from 'react-day-picker';
 import { Button } from '../../button/button.js';
 import { Calendar } from '../../calendar/calendar.js';
@@ -27,6 +27,8 @@ const CALENDAR_COMPONENTS = { DayButton: DatePickerDayButton };
 export type DatePickerPopupProps = {
 	trigger: Element | null;
 	popupRef: RefObject<HTMLDivElement>;
+	onBlur: (event: FocusEvent<HTMLElement>) => void;
+	onFocus: () => void;
 	container: DatePickerImplProps['container'];
 	showTime: boolean;
 	/**
@@ -58,6 +60,8 @@ export type DatePickerPopupProps = {
 export function DatePickerPopup({
 	trigger,
 	popupRef,
+	onBlur,
+	onFocus,
 	container,
 	showTime,
 	startDay,
@@ -90,6 +94,8 @@ export function DatePickerPopup({
 					data-slot="date-picker-popup"
 					aria-label={showTime ? DatePickerText.ChooseDateAndTime : DatePickerText.ChooseDate}
 					className={styles['date-picker__popup']}
+					onBlur={onBlur}
+					onFocus={onFocus}
 					initialFocus={() =>
 						popupRef.current?.querySelector<HTMLElement>(
 							`[data-slot="calendar-button"][data-day="${formatIsoDay(startDay)}"]:not([data-outside])`,

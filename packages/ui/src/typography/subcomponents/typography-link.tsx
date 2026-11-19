@@ -1,3 +1,4 @@
+import { splitSpacingProps } from '../../lib/spacing.js';
 import { forwardRef, useCallback, useEffect, useRef } from 'react';
 import { useRenderLink } from '../../lib/use-render-link.js';
 import { useIsLabelTruncated } from '../../lib/useIsLabelTruncated.js';
@@ -10,7 +11,6 @@ import {
 	isFlexDisplay,
 	isTypographyTruncated,
 	resolveTypographyDisplay,
-	splitTypographySpacing,
 	wrapTextRuns,
 } from '../utils.js';
 
@@ -117,7 +117,7 @@ export const TypographyLink = forwardRef<HTMLElement, TypographyLinkProps>(funct
 	}: TypographyLinkProps & RejectedProps,
 	ref,
 ) {
-	const [spacing, props] = splitTypographySpacing(rest);
+	const [spacing, props] = splitSpacingProps(rest);
 	const resolvedDisplay = resolveTypographyDisplay('a', display);
 	const hasEllipsis = textOverflow === 'ellipsis';
 	const [isTruncated, measureRef] = useIsLabelTruncated(hasEllipsis, isTypographyTruncated);

@@ -1,6 +1,7 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as SliderStories from './slider.stories';
 import * as SliderComponentsStories from './slider-components.stories';
+import * as SliderFieldStories from './slider-field.stories';
 
 <Meta of={SliderStories} />
 
@@ -151,6 +152,55 @@ input. `Slider.Range` submits two values under the same `name`, the lower bound 
 accepted so a form can pass the same field props to every control, and has no effect: a slider always
 holds a value.
 
+## In a form
+
+`SliderField` renders the slider inside a `Field` from one object: the field's `label`, `description`,
+`labelTooltip`, `error` and `required`, and every prop of `Slider`. The label names the thumb, and the
+description or the message below it describes the thumb. It renders the same DOM as a hand-written
+`Field` around a `Slider`, so use it when the form has no reason to hold the two apart.
+
+```tsx
+import { SliderField } from '@signozhq/ui';
+
+export default function SamplingRate({ rate, setRate, errors }) {
+	return (
+		<SliderField
+			label="Sampling rate"
+			description="Share of requests that are traced."
+			color="primary"
+			value={rate}
+			onChange={setRate}
+			error={errors.rate?.message}
+		/>
+	);
+}
+```
+
+A slider has no frame, so a status shows on the label and the message, and `error` or
+`status="danger"` sets `aria-invalid` on the thumb and turns its border red. `required` only draws
+the asterisk after the label: a slider always holds a value, so the thumb takes no `required` or
+`aria-required`.
+
+The ref is the native input of the thumb, not the root of the slider, so react-hook-form can move
+the focus to it after a failed submit.
+
+`SliderField.Range` does the same for `Slider.Range`, inside a `Field.Group`. The legend names the
+group, the range takes the same name, and its thumbs keep `Minimum` and `Maximum`. The description
+and the message stay on the group, and `error` sets `aria-invalid` on both thumbs and turns their
+border red. The ref is the input of the first thumb.
+
+```tsx
+<SliderField.Range
+	label="Duration"
+	color="primary"
+	max={100000}
+	value={duration}
+	onChange={setDuration}
+	formatValue={(value) => `${value} ms`}
+	error={errors.duration?.message}
+/>
+```
+
 ## Layout
 
 The slider fills the width of its parent and has no margin. The track runs from edge to edge, and a
@@ -216,6 +266,18 @@ The root carries `data-color` and `data-text-overflow`, and `data-disabled`, `da
 
 Otherwise use the `data-slot` attributes, never the hashed class names.
 
+### `SliderField`
+
+`SliderField` keeps `testId` on the root, and the field parts take it as
+their prefix. The field root gets none, and neither does the `<fieldset>` of `SliderField.Range`.
+
+| Element       | `data-testid`                   |
+| ------------- | ------------------------------- |
+| label         | `` `${testId}-label` ``         |
+| label tooltip | `` `${testId}-label-tooltip` `` |
+| description   | `` `${testId}-description` ``   |
+| message       | `` `${testId}-message` ``       |
+
 ## Slider props
 
 <Controls of={SliderStories.Default} />
@@ -223,3 +285,7 @@ Otherwise use the `data-slot` attributes, never the hashed class names.
 ## Slider.Range props
 
 <Controls of={SliderComponentsStories.Range} />
+
+## SliderField props
+
+<Controls of={SliderFieldStories.Default} />

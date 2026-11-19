@@ -1,26 +1,14 @@
 import { isValidElement, type CSSProperties, type ReactNode } from 'react';
 import { isBlankText } from '../lib/blank-text.js';
 import { toOptionalCssLength } from '../lib/css-length.js';
-import { splitProps, toSpacingValue } from '../lib/spacing.js';
+import { type SpacingProps, toSpacingValue } from '../lib/spacing.js';
 import { hasRenderableContent } from '../lib/utils.js';
-import { CardSpacingPropNames } from './constants.js';
 import type { CardLoadingParts, CardProps } from './types.js';
-
-const SPACING_PROP_NAMES: ReadonlySet<string> = new Set(CardSpacingPropNames);
 
 const SIDES = ['Top', 'Right', 'Bottom', 'Left'] as const;
 
 type CardSide = (typeof SIDES)[number];
 type CardSpacingProp = 'margin' | 'padding';
-type CardSpacingPropName = (typeof CardSpacingPropNames)[number];
-
-/**
- * The margin and padding props of a card.
- *
- * @access private
- */
-export type CardSpacingProps = Pick<CardProps, CardSpacingPropName>;
-
 /**
  * The size props of a card, which arrive as `--card-internal-*` custom properties.
  *
@@ -28,27 +16,10 @@ export type CardSpacingProps = Pick<CardProps, CardSpacingPropName>;
  */
 export type CardSizeProps = Pick<CardProps, 'width' | 'maxWidth' | 'height' | 'minHeight' | 'gap'>;
 
-function resolveSide(
-	spacing: CardSpacingProps,
-	prop: CardSpacingProp,
-	side: CardSide,
-): CardSpacingProps[CardSpacingPropName] {
+function resolveSide(spacing: SpacingProps, prop: CardSpacingProp, side: CardSide): unknown {
 	const axis = side === 'Top' || side === 'Bottom' ? 'Y' : 'X';
 
 	return spacing[`${prop}${side}` as const] ?? spacing[`${prop}${axis}` as const] ?? spacing[prop];
-}
-
-/**
- * Splits the margin and padding props from the rest of the props.
- *
- * @access private
- */
-export function splitCardSpacing<Props extends object>(
-	props: Props,
-): [CardSpacingProps, Omit<Props, CardSpacingPropName>] {
-	const [spacing, rest] = splitProps(props, SPACING_PROP_NAMES);
-
-	return [spacing as CardSpacingProps, rest as Omit<Props, CardSpacingPropName>];
 }
 
 /**
@@ -57,7 +28,7 @@ export function splitCardSpacing<Props extends object>(
  *
  * @access private
  */
-export function isFlushBody(spacing: CardSpacingProps): boolean {
+export function isFlushBody(spacing: SpacingProps): boolean {
 	return SIDES.every((side) => (resolveSide(spacing, 'padding', side) ?? 8) === 0);
 }
 
@@ -68,7 +39,7 @@ export function isFlushBody(spacing: CardSpacingProps): boolean {
  *
  * @access private
  */
-export function getCardStyle(size: CardSizeProps, spacing: CardSpacingProps): CSSProperties {
+export function getCardStyle(size: CardSizeProps, spacing: SpacingProps): CSSProperties {
 	const internal: Record<string, string | undefined> = {
 		'--card-internal-width': toOptionalCssLength(size.width),
 		'--card-internal-max-width': toOptionalCssLength(size.maxWidth),

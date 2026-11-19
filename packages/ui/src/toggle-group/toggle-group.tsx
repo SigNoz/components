@@ -5,8 +5,13 @@ import {
 	type ReactElement,
 	type RefAttributes,
 	useMemo,
+	useRef,
 } from 'react';
 import { toCssLength } from '../lib/css-length.js';
+import { fieldInvalidDataProps, useFieldContext } from '../lib/field-context.js';
+import { onFocusLeave } from '../lib/focus-leave.js';
+import { mergeRefs } from '../lib/merge-refs.js';
+import { useControlledValue } from '../lib/use-controlled-value.js';
 import { useOverflowScroll } from '../lib/use-overflow-scroll.js';
 import type { RejectedProps } from '../lib/utils.js';
 import { TooltipProviderIfMissing } from '../tooltip/subcomponents/tooltip-provider.js';
@@ -16,15 +21,18 @@ import { ToggleGroupScrollButton } from './subcomponents/toggle-group-scroll-but
 import styles from './toggle-group.module.scss';
 import type { ToggleGroupProps, ValidateToggleGroupProps } from './types.js';
 
+const NO_VALUES: string[] = [];
+
 /**
  * Base UI holds the pressed state as an array whatever the selection mode is, so a `single` bar's
- * string goes in as a one entry array and the empty string as none at all.
+ * string goes in as a one entry array and the empty string as none at all. `null` and `undefined`
+ * stay as they are, for `useControlledValue` to tell a written value from a missing one.
  *
  * @access private
  */
-function toGroupValue(value: string | string[] | undefined): string[] | undefined {
-	if (value === undefined) {
-		return undefined;
+function toGroupValue(value: string | string[] | null | undefined): string[] | null | undefined {
+	if (value === undefined || value === null) {
+		return value;
 	}
 
 	if (Array.isArray(value)) {
@@ -44,6 +52,9 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		value,
 		defaultValue,
 		onChange,
+		nullable,
+		onBlur,
+		name,
 		disabled = false,
 		disabledTooltip,
 		readOnly = false,
@@ -58,6 +69,15 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 	}: ToggleGroupProps & RejectedProps,
 	ref,
 ) {
+	// Base UI puts role="group" on the list inside the root, so the legend has to name the list.
+	const field = useFieldContext();
+	const listNameProps =
+		field?.kind === 'group' &&
+		props['aria-label'] === undefined &&
+		props['aria-labelledby'] === undefined
+			? { 'aria-labelledby': field.labelId }
+			: undefined;
+
 	const isMultiple = type === ToggleGroupType.Multiple;
 
 	// `readOnly` outranks `disabled`: while the value is locked the bar is not disabled at all, and
@@ -65,34 +85,46 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 	const isReadOnly = readOnly === true;
 	const isDisabled = isReadOnly ? false : disabled;
 
-	const groupValue = useMemo(() => toGroupValue(value), [value]);
-	const groupDefaultValue = useMemo(() => toGroupValue(defaultValue), [defaultValue]);
+	// The hidden inputs only render while a button is pressed, so the root stands for the bar.
+	const rootRef = useRef<HTMLDivElement>(null);
+	const mergedRef = useMemo(() => mergeRefs(ref, rootRef), [ref]);
 
-	const onValueChange = useMemo(
-		() =>
-			(next: string[], eventDetails: ToggleGroupPrimitive.ChangeEventDetails): void => {
-				// Base UI reads `isCanceled` after this call, so vetoing here holds the group where
-				// it was rather than reporting a move we then have to undo.
-				if (!allowClear && next.length === 0) {
-					eventDetails.cancel();
-					return;
-				}
+	// The bar keeps the pressed list itself, even uncontrolled, so it knows which button a form
+	// library's `focus()` has to land on. Base UI always gets the list as a controlled one.
+	const controlledValue = useMemo(() => toGroupValue(value), [value]);
+	const [pressedValues, setPressedValues] = useControlledValue<string[]>({
+		component: 'ToggleGroup',
+		value: controlledValue,
+		defaultValue: toGroupValue(defaultValue) ?? undefined,
+		empty: NO_VALUES,
+		formResetRef: rootRef,
+	});
 
-				if (onChange === undefined) {
-					return;
-				}
+	function onValueChange(
+		next: string[],
+		eventDetails: ToggleGroupPrimitive.ChangeEventDetails,
+	): void {
+		// Base UI reads `isCanceled` after this call, so vetoing here holds the group where
+		// it was rather than reporting a move we then have to undo.
+		if (!allowClear && next.length === 0) {
+			eventDetails.cancel();
+			return;
+		}
 
-				if (isMultiple) {
-					(onChange as (next: string[]) => void)(next);
-					return;
-				}
+		setPressedValues(next);
 
-				// Only `allowClear` reaches this with nothing pressed, and the empty string is what
-				// a `single` bar calls that.
-				(onChange as (next: string) => void)(next[0] ?? '');
-			},
-		[onChange, isMultiple, allowClear],
-	);
+		if (onChange === undefined) {
+			return;
+		}
+
+		if (isMultiple) {
+			(onChange as (next: string[]) => void)(next);
+			return;
+		}
+
+		// Only allowClear reaches this with nothing pressed.
+		(onChange as (next: string | null) => void)(next[0] ?? (nullable ? null : ''));
+	}
 
 	const {
 		viewportRef,
@@ -102,9 +134,14 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 		scrollTowardsStart,
 		scrollTowardsEnd,
 	} = useOverflowScroll({
-		activeKey: (groupValue ?? groupDefaultValue)?.[0],
+		activeKey: pressedValues[0],
 		activeItemSelector: '[data-slot="toggle-group-button"][data-pressed]',
 	});
+
+	const focusTargetItem =
+		items.find((item) => pressedValues.includes(item.value)) ??
+		items.find((item) => item.disabled !== true) ??
+		items[0];
 
 	const toggleGroupStyle = {
 		...(width != null && { '--toggle-group-internal-inline-size': toCssLength(width) }),
@@ -115,15 +152,19 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 
 	return (
 		<div
-			ref={ref}
+			ref={mergedRef}
 			data-slot="toggle-group"
 			data-variant={variant}
 			data-color={color}
 			data-size={size}
 			data-disabled={isDisabled || undefined}
 			data-readonly={isReadOnly || undefined}
+			// The bar is a plain `<div>`, which takes no `aria-invalid`, and Base UI has no field around
+			// it, so the status of the field is marked here for the stylesheet.
+			{...fieldInvalidDataProps(field)}
 			className={styles['toggle-group']}
 			style={toggleGroupStyle}
+			onBlur={onFocusLeave(onBlur)}
 			{...props}
 			{...(testId === undefined ? {} : { 'data-testid': testId })}
 		>
@@ -143,10 +184,10 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 					className={styles['toggle-group__viewport']}
 				>
 					<ToggleGroupPrimitive
+						{...listNameProps}
 						data-slot="toggle-group-list"
 						className={styles['toggle-group__list']}
-						value={groupValue}
-						defaultValue={groupDefaultValue}
+						value={pressedValues}
 						onValueChange={onValueChange}
 						multiple={isMultiple}
 					>
@@ -159,6 +200,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 								groupDisabledTooltip={disabledTooltip}
 								groupReadOnly={isReadOnly}
 								groupReadOnlyTooltip={readOnlyTooltip}
+								focusTarget={item === focusTargetItem ? field?.focusTarget : undefined}
 							/>
 						))}
 					</ToggleGroupPrimitive>
@@ -173,6 +215,18 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
 					/>
 				)}
 			</TooltipProviderIfMissing>
+			{name !== undefined &&
+				items.map((item) =>
+					pressedValues.includes(item.value) && item.disabled !== true ? (
+						<input
+							key={item.value}
+							type="hidden"
+							name={name}
+							value={item.value}
+							disabled={isDisabled}
+						/>
+					) : null,
+				)}
 		</div>
 	);
 });
@@ -185,6 +239,17 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  *
  * Visual values are `--toggle-group-*` custom properties, defaults in the `css-tokens` region of
  * [./index.ts](./index.ts).
+ *
+ * ### Inside a `Field.Group`
+ *
+ * A surrounding `Field.Group` names the `role="group"` list of the bar with its legend, unless the
+ * bar has an `aria-label` or an `aria-labelledby` of its own. The bar takes no `aria-invalid` and no
+ * `aria-required`, since `role="group"` allows neither. `ToggleGroupField` renders both from one
+ * set of props.
+ *
+ * While a `Field` or a `Field.Group` around the bar is in `danger`, the root carries `data-invalid`
+ * and the outline of the bar takes `--destructive`. The seams between the options and a pressed
+ * option stay as they are.
  *
  * ### Items
  *
@@ -215,10 +280,19 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * `allowClear` hands that press back. A `single` bar then reports the empty string, which is also
  * what `value=""` means, and a `multiple` bar reports the empty array.
  *
+ * `nullable` is for a bar bound to a nullable schema field (zod `.nullable()`). `null` is the
+ * empty `value`, and a `single` bar with `allowClear` reports `null` instead of the empty string.
+ *
  * A bar that starts with nothing pressed stays that way until the first press either way.
  *
  * Pressed is the filled state, and hovering an unpressed button paints half that fill, so the hover
  * previews the press.
+ *
+ * ### In a form
+ *
+ * With `name`, each pressed button submits its `value` under it, so a `multiple` bar submits one
+ * entry per pressed button. A disabled bar submits nothing, and a read-only one still does. A form
+ * reset brings an uncontrolled bar back to `defaultValue`, without `onChange`.
  *
  * ### Disabled and read-only
  *
@@ -306,6 +380,7 @@ const ToggleGroupImpl = forwardRef<HTMLDivElement, ToggleGroupProps>(function To
  * | `data-variant`, `data-color`, `data-size` | mirrors the prop |
  * | `data-disabled` | present only while the whole bar is disabled |
  * | `data-readonly` | present only while the bar's value is locked |
+ * | `data-invalid` | present only while a `Field` or a `Field.Group` around the bar is in `danger` |
  *
  * | `data-slot` | rendered |
  * |---|---|

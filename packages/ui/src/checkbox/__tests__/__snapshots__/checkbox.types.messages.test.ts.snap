@@ -2,7 +2,7 @@
 
 exports[`Checkbox type error messages > prints a message that names the constraint that failed 1`] = `
 {
-  "color > is required, the checked fill is a semantic statement the call site makes > \`color\` has no default, the call site has to pick the checked fill": "TS2741: Property 'color' is missing in type '{}' but required in type '{ [key: \`data-\${string}\`]: unknown; color: CheckboxColorType; textOverflow?: CheckboxTextOverflowType | undefined; name?: string | undefined; required?: boolean | undefined; ... 8 more ...; containerRef?: Ref<...> | undefined; }'.",
+  "color > is required, the checked fill is a semantic statement the call site makes > \`color\` has no default, the call site has to pick the checked fill": "TS2741: Property 'color' is missing in type '{}' but required in type '{ [key: \`data-\${string}\`]: unknown; color: CheckboxColorType; textOverflow?: CheckboxTextOverflowType | undefined; name?: string | undefined; required?: boolean | undefined; ... 9 more ...; containerRef?: Ref<...> | undefined; }'.",
   "color > rejects a color outside the palette > \`cherry\` is the legacy palette, not a CheckboxColor": "TS2322: Type '"cherry"' is not assignable to type 'CheckboxColorType'.",
   "color > rejects a color outside the palette > \`robin\` is the legacy palette, not a CheckboxColor": "TS2322: Type '"robin"' is not assignable to type 'CheckboxColorType'.",
   "color > rejects secondary, which Badge and Switch keep and Checkbox dropped > \`secondary\` is not a CheckboxColor, the checkbox palette dropped it": "TS2322: Type '"secondary"' is not assignable to type 'CheckboxColorType'.",
@@ -24,6 +24,6 @@ exports[`Checkbox type error messages > prints a message that names the constrai
   "value, defaultValue and onChange > rejects the Radix and antd spellings > the change handler is called \`onChange\`": "TS2322: Type '() => void' is not assignable to type 'never'.",
   "value, defaultValue and onChange > rejects the Radix and antd spellings > the controlled prop is called \`value\`": "TS2322: Type 'true' is not assignable to type 'never'.",
   "value, defaultValue and onChange > rejects the Radix and antd spellings > the uncontrolled prop is called \`defaultValue\`": "TS2322: Type 'true' is not assignable to type 'never'.",
-  "value, defaultValue and onChange > rejects value and defaultValue together > \`value\` makes the checkbox controlled for life, \`defaultValue\` is dead beside it": "TS2741: Property ''\`value\` makes the checkbox controlled for its whole life, so \`defaultValue\` never applies, drop one of the two'' is missing in type '{ color: "primary"; value: true; defaultValue: true; onChange: () => void; }' but required in type 'ACheckboxIsControlledOrUncontrolledNeverBoth'.",
+  "value, defaultValue and onChange > rejects value and defaultValue together > \`value\` and \`defaultValue\` are one or the other": "TS2741: Property ''\`value\` and \`defaultValue\` both set the checked state, pass \`value\` or \`defaultValue\`, not both'' is missing in type '{ color: "primary"; value: true; defaultValue: true; onChange: () => void; }' but required in type 'ACheckboxIsControlledOrUncontrolledNeverBoth'.",
 }
 `;

@@ -89,6 +89,7 @@
  * | `--slider-thumb-cursor` | `grab` |
  * | `--slider-thumb-focus-visible-outline` | `1px solid var(--ring)` |
  * | `--slider-thumb-focus-visible-outline-offset` | `1px` |
+ * | `--slider-thumb-invalid-border-color` | `var(--destructive)` |
  * | `--slider-thumb-size` | `18px` |
  * | `--slider-thumb-z-index` | `1` |
  * | `--slider-touch-action` | `none` |
@@ -106,3 +107,4 @@
 export { SliderColor, SliderTextOverflow } from './constants.js';
 export type * from './types.js';
 export { Slider } from './slider.js';
+export { SliderField } from './presets/slider-field.js';

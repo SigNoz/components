@@ -344,6 +344,7 @@
 // #endregion css-tokens
 
 export { Combobox } from './combobox.js';
+export { ComboboxField } from './presets/combobox-field.js';
 export {
 	COMBOBOX_CUSTOM_GROUP_LABEL,
 	COMBOBOX_EMPTY_CONTENT,
@@ -351,6 +352,7 @@ export {
 	ComboboxItemKind,
 } from './constants.js';
 export type {
+	ComboboxFieldProps,
 	ComboboxFooterActionType,
 	ComboboxGroupChildType,
 	ComboboxGroupItemType,

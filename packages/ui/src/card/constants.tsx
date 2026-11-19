@@ -1,5 +1,3 @@
-import { MarginPropNames } from '../lib/spacing.js';
-
 export const CardTextOverflow = {
 	Wrap: 'wrap',
 	Ellipsis: 'ellipsis',
@@ -16,19 +14,3 @@ export const CardSpacing = [
  * the `headerSuffix` control, and hiding the header would drop the actions silently.
  */
 export const CARD_EMPTY_TITLE = '<No title>';
-
-/**
- * The names of the margin and padding props.
- *
- * @access private
- */
-export const CardSpacingPropNames = [
-	...MarginPropNames,
-	'padding',
-	'paddingX',
-	'paddingY',
-	'paddingTop',
-	'paddingRight',
-	'paddingBottom',
-	'paddingLeft',
-] as const;

@@ -1,4 +1,12 @@
-import type { AriaAttributes, ComponentProps, CSSProperties, ReactNode, Ref } from 'react';
+import type {
+	AriaAttributes,
+	ComponentProps,
+	CSSProperties,
+	FocusEvent,
+	ReactNode,
+	Ref,
+} from 'react';
+import type { FieldLabelAndMessageProps } from '../field/types.js';
 import type { CheckboxColor, CheckboxTextOverflow } from './constants.js';
 
 export type CheckboxColorType = (typeof CheckboxColor)[keyof typeof CheckboxColor];
@@ -101,7 +109,7 @@ interface TheTestIdPropIsCalledTestId {
 }
 
 interface ACheckboxIsControlledOrUncontrolledNeverBoth {
-	'`value` makes the checkbox controlled for its whole life, so `defaultValue` never applies, drop one of the two': never;
+	'`value` and `defaultValue` both set the checked state, pass `value` or `defaultValue`, not both': never;
 }
 
 /**
@@ -187,6 +195,10 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 * of the check mark, announced as `aria-checked="mixed"`, for a parent in a tree whose
 		 * children are partly selected.
 		 *
+		 * `undefined` on the first render leaves the checkbox uncontrolled, starting at `defaultValue`.
+		 * A value that arrives later is followed, with one warning, and from then on `undefined`
+		 * shows it unchecked.
+		 *
 		 * @note Use with `onChange`. For an uncontrolled checkbox use `defaultValue` instead,
 		 * never both.
 		 *
@@ -207,6 +219,13 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 * @note Never called while `disabled` or `readOnly`.
 		 */
 		onChange?: (checked: boolean) => void;
+		/**
+		 * Called when the checkbox loses focus, for a form that marks the field as touched or
+		 * validates on blur, such as react-hook-form's `field.onBlur`.
+		 *
+		 * @note Also called while `disabled` or `readOnly`: both keep the checkbox focusable.
+		 */
+		onBlur?: (event: FocusEvent<HTMLElement>) => void;
 		/**
 		 * Forwarded to the checkbox itself as `data-testid`. Survives the tooltip trigger cloning
 		 * the element, which a raw `data-testid` prop does not. The wrapper is addressed with
@@ -245,3 +264,16 @@ export type CheckboxProps = Pick<ComponentProps<'button'>, 'id' | 'children' | '
 		 */
 		[key: `data-${string}`]: unknown;
 	};
+
+/**
+ * The props of `CheckboxField`: the field's label, description and status, and every prop of
+ * `Checkbox` except the three the field takes over.
+ *
+ * `label` is the checkbox text, so `children` is not a prop. `required` is the field's: it adds the
+ * asterisk and sets `aria-required` on the checkbox, never the native `required`. `textOverflow`
+ * is not a prop either: the text wraps, so the asterisk and the info icon after it are never cut
+ * off.
+ * `labelIcon` is not a prop, since the box already sits where an icon before the text would.
+ */
+export type CheckboxFieldProps = Omit<CheckboxProps, 'children' | 'required' | 'textOverflow'> &
+	Omit<FieldLabelAndMessageProps, 'labelIcon'>;

@@ -23,6 +23,9 @@ const inputRef = createRef<HTMLInputElement>();
 const textAreaRef = createRef<HTMLTextAreaElement>();
 declare const maybeDisabled: boolean | undefined;
 declare const maybeReadOnly: boolean | undefined;
+declare const runtimeNullable: boolean;
+declare const nullableText: string | null;
+declare const reportsNull: (value: string | null) => void;
 declare const registration: {
 	name: string;
 	onChange: (event: unknown) => Promise<boolean>;
@@ -194,5 +197,72 @@ describe('Input.Number', () => {
 		assertType(<Input.Number type="number" />);
 		// @ts-expect-error - the control is always a number field
 		assertType(<Input.Number pattern="[0-9]+" />);
+	});
+});
+
+describe('nullable', () => {
+	test('value takes null and undefined with nullable, on every text member', () => {
+		assertType(<Input nullable value={null} onChange={noop} aria-label="Nickname" />);
+		assertType(<Input nullable value={undefined} onChange={noop} aria-label="Nickname" />);
+		assertType(<Input nullable value={nullableText} onChange={noop} aria-label="Nickname" />);
+		assertType(<Input.Password nullable value={nullableText} aria-label="Secret" />);
+		assertType(<Input.TextArea nullable value={nullableText} aria-label="Notes" />);
+	});
+
+	test('rejects a nullable decided at run time', () => {
+		// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+		assertType(<Input nullable={runtimeNullable} value={nullableText} aria-label="Nickname" />);
+		// @ts-expect-error - `nullable` only takes `true`, also without a `null` value
+		assertType(<Input nullable={runtimeNullable} value="Ada" aria-label="Nickname" />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on Input.Password too
+		assertType(<Input.Password nullable={runtimeNullable} value={nullableText} aria-label="Secret" />);
+		// oxfmt-ignore
+		// @ts-expect-error - `nullable` only takes `true`, on Input.TextArea too
+		assertType(<Input.TextArea nullable={runtimeNullable} value={nullableText} aria-label="Notes" />);
+	});
+
+	test('rejects nullable={false}, which is the same as leaving it out', () => {
+		// @ts-expect-error - `nullable` only takes `true`
+		assertType(<Input nullable={false} value={null} aria-label="Nickname" />);
+		// @ts-expect-error - `nullable` only takes `true`, also without a `null` value
+		assertType(<Input nullable={false} value="Ada" aria-label="Nickname" />);
+		// @ts-expect-error - `nullable` only takes `true`, on Input.Password too
+		assertType(<Input.Password nullable={false} value={null} aria-label="Secret" />);
+		// @ts-expect-error - `nullable` only takes `true`, on Input.TextArea too
+		assertType(<Input.TextArea nullable={false} value={null} aria-label="Notes" />);
+	});
+
+	test('without nullable the value is what it was', () => {
+		assertType(<Input value="Ada" onChange={noop} aria-label="Nickname" />);
+		// @ts-expect-error - `null` needs `nullable` on Input
+		assertType(<Input value={null} aria-label="Nickname" />);
+		// @ts-expect-error - a `string | null` value needs `nullable` on Input
+		assertType(<Input value={nullableText} aria-label="Nickname" />);
+		// @ts-expect-error - `null` needs `nullable` on Input.Password
+		assertType(<Input.Password value={null} aria-label="Secret" />);
+		// @ts-expect-error - `null` needs `nullable` on Input.TextArea
+		assertType(<Input.TextArea value={null} aria-label="Notes" />);
+	});
+
+	test('accepts a react-hook-form register() spread with or without nullable', () => {
+		assertType(<Input aria-label="Nickname" {...registration} />);
+		assertType(<Input nullable aria-label="Nickname" {...registration} />);
+	});
+
+	test('onChange stays the native event', () => {
+		assertType(<Input nullable value={null} onChange={(_event) => noop()} aria-label="Nickname" />);
+		// @ts-expect-error - the change event is native, it cannot report `null`
+		assertType(<Input nullable value={null} onChange={reportsNull} aria-label="Nickname" />);
+	});
+
+	test('Input.Number takes nullable too, and keeps its number value', () => {
+		assertType(<Input.Number nullable value={undefined} onChange={noop} aria-label="Count" />);
+		// @ts-expect-error - `nullable` only takes `true`, a `boolean` is not accepted
+		assertType(<Input.Number nullable={runtimeNullable} value={null} aria-label="Count" />);
+		// @ts-expect-error - `nullable` only takes `true`
+		assertType(<Input.Number nullable={false} value={null} aria-label="Count" />);
+		// @ts-expect-error - the value is a number, `null` while empty
+		assertType(<Input.Number nullable value="5" aria-label="Count" />);
 	});
 });

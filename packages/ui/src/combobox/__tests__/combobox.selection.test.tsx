@@ -68,7 +68,7 @@ describe('Combobox single selection', () => {
 		});
 	});
 
-	it('follows a controlled value, even when it is undefined', async () => {
+	it('follows a controlled value and leaves it to the parent', async () => {
 		const onChange = vi.fn();
 		const { rerender } = render(
 			<Combobox
@@ -76,7 +76,7 @@ describe('Combobox single selection', () => {
 				searchInputProps={{ placeholder: 'Search' }}
 				aria-label="Framework"
 				items={FRAMEWORKS}
-				value={undefined}
+				value="react"
 				onChange={onChange}
 			/>,
 		);
@@ -84,7 +84,7 @@ describe('Combobox single selection', () => {
 		await userEvent.click(screen.getByRole('option', { name: 'Vue' }));
 
 		expect(onChange).toHaveBeenCalledWith('vue');
-		expect(trigger()).not.toHaveTextContent('Vue');
+		expect(trigger()).toHaveTextContent('React');
 
 		rerender(
 			<Combobox

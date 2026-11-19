@@ -129,6 +129,12 @@
 	}
 }
 
+// `aria-invalid` sits on the thumb's input, so the thumb reads it through `:has()`. The track and
+// the fill have no border, so the thumb's is the one that changes.
+.slider__thumb:has([aria-invalid='true']) {
+	border-color: var(--slider-thumb-invalid-border-color, var(--destructive));
+}
+
 .slider[data-dragging] {
 	.slider__control,
 	.slider__thumb {
