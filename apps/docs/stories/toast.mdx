@@ -227,6 +227,26 @@ and on focus inside it. At the bottom it grows upward.
 <Toaster limit={5} />
 ```
 
+## Page inset
+
+When the app has fixed chrome at an edge, such as a strip along the bottom, `pageInset` is the space
+it takes there. A stack sits `offset` beyond it, so a toast never covers the chrome. A number is in
+px and a string is any CSS length, so it can read a variable the app publishes on `body`, and
+nothing is measured in JS.
+
+```tsx
+<Toaster position="bottom-right" pageInset={{ bottom: 'var(--bottom-strip-height, 0px)' }} />
+```
+
+While a `Dialog`, an `AlertDialog` or a `task` `Drawer` is open, its backdrop covers the chrome, and
+the stacks slide to `offset` from the edge of the window instead. They slide back as the layer
+starts to close. An `inspector` `Drawer` leaves the page usable, so the inset stays. The Page Inset story
+shows it. Any open layer counts, even one in a `container` that covers only part of the window.
+
+The same spaces are custom properties, set from the CSS of the app: `--toast-viewport-page-inset-top`
+and `--toast-viewport-page-inset-bottom`. Each one beats the prop for its edge, and a modal layer
+drops it too. While a layer is open, every viewport has `data-under-modal`.
+
 ## Dialogs and drawers
 
 The toasts portal into `document.body`, or into the panel of the `Dialog` or `Drawer` the
@@ -234,14 +254,15 @@ The toasts portal into `document.body`, or into the panel of the `Dialog` or `Dr
 
 They stack above dialogs, popovers and tooltips, because a toast often reports what a click inside
 one of them just did. Over a modal dialog the button stays clickable, and clicking it does not
-close the dialog. A toast does not move for a dialog.
+close the dialog. A toast does not move for a dialog, except that it drops its `pageInset`.
 
 While a `Drawer` is open, the right stacks move left of its panel, so a toast does not cover its
 header or its footer, and they move back as it closes. The left and center stacks stay where they
 are, so on a narrow page a moved stack can meet one of them. The Beside A Drawer story shows it.
 
-To keep a toast clear of a header or footer of the app, set `offset` or
-`--toast-viewport-offset-top` and `--toast-viewport-offset-bottom` from the app.
+To keep a toast clear of a header or footer of the app, set `pageInset`. `offset` and
+`--toast-viewport-offset-top` and `--toast-viewport-offset-bottom` hold under a dialog too, so a
+space the backdrop covers belongs in `pageInset`.
 
 ## Empty text
 

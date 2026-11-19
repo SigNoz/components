@@ -18,6 +18,7 @@ import { useCloseHandleOnUnmount } from '../dialog/use-close-handle-on-unmount.j
 import { useDialogHandleState } from '../dialog/use-dialog-handle-state.js';
 import { DrawerStackReset } from '../drawer/drawer-stack-context.js';
 import { mergeRefs } from '../lib/merge-refs.js';
+import { useReportModalLayer } from '../lib/modal-layer.js';
 import { PopupContainer } from '../lib/popup-container.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import styles from './alert-dialog.module.scss';
@@ -55,6 +56,7 @@ const AlertDialogImpl = forwardRef<HTMLDivElement, AlertDialogProps<unknown> & R
 		const handleState = useDialogHandleState(handle);
 		useCloseHandleOnUnmount(handle);
 		const isOpen = handle ? handleState.open : (open ?? false);
+		useReportModalLayer(isOpen);
 
 		// What a pending `onConfirm` answers: the open state, or with a handle the state of the handle,
 		// which also changes when it is opened again with another payload. Once that changes, the
