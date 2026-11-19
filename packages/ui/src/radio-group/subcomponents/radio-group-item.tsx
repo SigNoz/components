@@ -5,7 +5,6 @@ import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
 import { RADIO_GROUP_EMPTY_LABEL, RadioGroupTextOverflow } from '../constants.js';
 import styles from '../radio-group.module.scss';
 import type { RadioGroupItemType, RadioGroupTextOverflowType } from '../types.js';
-import { keepFocusOnTextPress } from '../utils.js';
 
 /**
  * @access private
@@ -63,12 +62,16 @@ export function RadioGroupItem({
 	});
 
 	const itemEl = (
-		// eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- only a pointer presses the text, the arrows already move the focus between the radios
+		// A press on the text takes the focus to the nearest element that can hold it. Without
+		// `tabIndex` that is `<body>`, and the radio that had the focus blurs with no `relatedTarget`,
+		// which the group's `onBlur` counts as leaving the group. With it, the label holds the focus
+		// until the click moves it to the radio, and an `Input` or a `Button` in the text still takes
+		// it on its own. `-1` keeps the label out of the tab order.
 		<label
 			data-slot="radio-group-item"
 			data-disabled={disabled === true || undefined}
 			className={styles['radio-group__item-wrapper']}
-			onMouseDown={keepFocusOnTextPress}
+			tabIndex={-1}
 		>
 			<Radio.Root
 				value={value}

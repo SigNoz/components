@@ -69,15 +69,14 @@ const CheckboxFieldImpl = forwardRef<HTMLSpanElement, CheckboxFieldProps>(functi
 				</span>
 			</Checkbox>
 			{parts.row !== null && (
-				<div className={styles['checkbox-field__row']} data-slot="checkbox-field-row">
-					<FieldRow
-						row={parts.row}
-						status={parts.status}
-						id={parts.rowId}
-						testId={testId}
-						registered
-					/>
-				</div>
+				<FieldRow
+					row={parts.row}
+					status={parts.status}
+					id={parts.rowId}
+					testId={testId}
+					registered
+					className={styles['checkbox-field__row']}
+				/>
 			)}
 			{parts.hasLabelTooltip && (
 				// Base UI lists the descriptions in the order they mount. The key mounts the tooltip text
@@ -138,13 +137,12 @@ type Checked<T extends CheckboxFieldProps> = T &
  *
  * There is no `${testId}-label`, since the label is the text of the `Checkbox`.
  *
- * The data attributes are those of `Field` and `Checkbox`, plus two `data-slot`s of its own. Use
+ * The data attributes are those of `Field` and `Checkbox`, plus one `data-slot` of its own. Use
  * them, never the hashed class names.
  *
  * | `data-slot` | rendered |
  * |---|---|
  * | `checkbox-field-label` | always, wraps the label text |
- * | `checkbox-field-row` | while a description or a message shows, wraps that row |
  *
  * @example
  * ```tsx

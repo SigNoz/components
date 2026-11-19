@@ -91,6 +91,34 @@ describe('RadioGroup onBlur', () => {
 		expect(onBlur).toHaveBeenCalledTimes(1);
 	});
 
+	it('lets an input inside a label take the focus on a click', async () => {
+		render(
+			<RadioGroup
+				color="primary"
+				textOverflow="visible"
+				items={[
+					{ label: '7 days', value: '7' },
+					{
+						label: (
+							<>
+								Custom <input aria-label="Days" />
+							</>
+						),
+						value: 'custom',
+					},
+				]}
+				aria-label="Retention"
+			/>,
+		);
+
+		await browserUser.click(screen.getByText('7 days'));
+		await browserUser.click(screen.getByRole('textbox', { name: 'Days' }));
+		await browserUser.keyboard('12');
+
+		expect(screen.getByRole('textbox', { name: 'Days' })).toHaveFocus();
+		expect(screen.getByRole('textbox', { name: 'Days' })).toHaveValue('12');
+	});
+
 	it('is called when the focus leaves from the radio it moved to', async () => {
 		const user = userEvent.setup();
 		const onBlur = vi.fn();

@@ -154,7 +154,7 @@ describe('CheckboxField description and message', () => {
 
 		const box = screen.getByRole('checkbox').getBoundingClientRect();
 		const text = screen.getByText('Send alerts').getBoundingClientRect();
-		const row = screen.getByTestId('alerts-description').getBoundingClientRect();
+		const row = screen.getByText('Sent to the on-call channel').getBoundingClientRect();
 
 		tokens.remove();
 

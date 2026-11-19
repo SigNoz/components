@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import type { CSSProperties } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../../button/index.js';
+import { CheckboxField } from '../../checkbox/presets/checkbox-field.js';
 import { InputField } from '../../input/presets/input-field.js';
 import { Form } from '../form.js';
 
@@ -123,6 +124,40 @@ describe('Form layout', () => {
 
 		expect(screen.getByTestId('environment').getBoundingClientRect().bottom).toBe(
 			screen.getByTestId('service').getBoundingClientRect().bottom,
+		);
+	});
+
+	it('keeps the inline controls in line while a checkbox field shows a description', () => {
+		// The room is built from these two tokens, which the unit tests do not load.
+		const tokens = {
+			inlineSize: 960,
+			'--spacing-4': '8px',
+			'--paragraph-small-400-line-height': '18px',
+		} as CSSProperties;
+		render(
+			<div style={tokens}>
+				<Form onSubmit={noop} layout="inline" testId="form">
+					<InputField label="Service" testId="service" width={160} description="Supports *." />
+					<CheckboxField
+						label="Only errors and warnings"
+						testId="errors"
+						description="Hides info."
+					/>
+				</Form>
+			</div>,
+		);
+
+		const description = screen.getByTestId('errors-description');
+		const field = description.closest('[data-slot="field"]') as HTMLElement;
+
+		expect(field.getBoundingClientRect().bottom).toBe(
+			screen.getByTestId('service').getBoundingClientRect().bottom,
+		);
+		expect(description.getBoundingClientRect().top).toBeGreaterThanOrEqual(
+			field.getBoundingClientRect().bottom,
+		);
+		expect(Math.round(description.getBoundingClientRect().bottom)).toBeLessThanOrEqual(
+			Math.round(screen.getByTestId('form').getBoundingClientRect().bottom),
 		);
 	});
 

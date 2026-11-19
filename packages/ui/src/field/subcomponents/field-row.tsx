@@ -1,6 +1,6 @@
 import { Field as BaseField } from '@base-ui/react/field';
 import { SolidAlertCircle, SolidAlertTriangle, SolidCheckCircle2 } from '@signozhq/icons';
-import { partTestId } from '../../lib/utils.js';
+import { cn, partTestId } from '../../lib/utils.js';
 import styles from '../field.module.scss';
 import type { FieldStatusType } from '../types.js';
 import type { FieldParts } from '../use-field-parts.js';
@@ -24,6 +24,12 @@ export type FieldRowProps = {
 	 * `aria-describedby`. A group has no Base UI field, its `<fieldset>` lists the row itself.
 	 */
 	registered: boolean;
+	/**
+	 * A class of the preset that owns the row, added to the row's own. `CheckboxField` uses it to
+	 * start the row under its text. The row stays a direct child of the field, which is what the
+	 * field's own layout and an inline `Form` look for.
+	 */
+	className?: string;
 };
 
 /**
@@ -32,12 +38,12 @@ export type FieldRowProps = {
  *
  * @access private
  */
-export function FieldRow({ row, status, id, testId, registered }: FieldRowProps) {
+export function FieldRow({ row, status, id, testId, registered, className }: FieldRowProps) {
 	const isMessage = row.kind === 'message';
 	const StatusIcon = isMessage && status !== undefined ? STATUS_ICONS[status] : null;
 	const props = {
 		id,
-		className: styles['field__row'],
+		className: cn(styles['field__row'], className),
 		'data-slot': isMessage ? 'field-message' : 'field-description',
 		'data-testid': partTestId(testId, isMessage ? 'message' : 'description'),
 	};
