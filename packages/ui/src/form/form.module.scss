@@ -14,11 +14,17 @@
 		// The row lines up the bottom edge of each field, and a message or a description is the
 		// bottom of its field, so one under a single field would push every other field and the
 		// buttons down. It hangs under its field instead, and the row keeps one line of room for it.
+		//
+		// It sizes to its text, so a message longer than a narrow field, such as a checkbox and its
+		// label, stays on that one line instead of wrapping into what follows. It wraps at the width
+		// of its field or 320px, whichever is wider.
 		> :is([data-slot='field'], [data-slot='field-group'])
 			> :is([data-slot='field-message'], [data-slot='field-description']) {
 			position: var(--form-inline-message-position, absolute);
 			inset-block-start: var(--form-inline-message-inset-block-start, 100%);
 			inset-inline: var(--form-inline-message-inset-inline, 0);
+			inline-size: var(--form-inline-message-inline-size, max-content);
+			max-inline-size: var(--form-inline-message-max-inline-size, max(100%, 320px));
 			margin-block-start: var(--form-inline-message-margin-block-start, var(--spacing-4));
 		}
 

@@ -183,6 +183,59 @@ describe('Form layout', () => {
 		);
 	});
 
+	it('keeps an inline message longer than a narrow field on one line', () => {
+		// The room is built from these two tokens, which the unit tests do not load.
+		const tokens = {
+			inlineSize: 960,
+			'--spacing-4': '8px',
+			'--paragraph-small-400-line-height': '18px',
+		} as CSSProperties;
+		render(
+			<div style={tokens}>
+				<Form onSubmit={noop} layout="inline" testId="form">
+					<InputField label="Service" testId="service" width={160} />
+					<CheckboxField
+						label="Only errors"
+						color="primary"
+						testId="errors"
+						error="Pick at least one level."
+					/>
+				</Form>
+			</div>,
+		);
+
+		const message = screen.getByTestId('errors-message');
+		const field = message.closest('[data-slot="field"]') as HTMLElement;
+
+		expect(message.getBoundingClientRect().width).toBeGreaterThan(
+			field.getBoundingClientRect().width,
+		);
+		expect(message.getBoundingClientRect().height).toBe(18);
+		expect(Math.round(message.getBoundingClientRect().bottom)).toBeLessThanOrEqual(
+			Math.round(screen.getByTestId('form').getBoundingClientRect().bottom),
+		);
+	});
+
+	it('wraps a long inline message at the width of a field wider than 320px', () => {
+		render(
+			<div style={{ inlineSize: 960 }}>
+				<Form onSubmit={noop} layout="inline" testId="form">
+					<InputField
+						label="Query"
+						testId="query"
+						width={480}
+						error="The query has to name a service, an operation and a time range before it can run."
+					/>
+				</Form>
+			</div>,
+		);
+
+		const message = screen.getByTestId('query-message');
+		const field = message.closest('[data-slot="field"]') as HTMLElement;
+
+		expect(message.getBoundingClientRect().width).toBe(field.getBoundingClientRect().width);
+	});
+
 	it('adds no padding of its own', () => {
 		render(
 			<Form onSubmit={noop} testId="form">
