@@ -50,3 +50,55 @@
 .roomBelow {
 	margin-bottom: 16rem;
 }
+
+/* A menu that opens upward is portalled above the button, so the section keeps room for it. */
+.roomAbove {
+	padding-top: 13rem;
+}
+
+.slotsFrame {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: flex-start;
+	width: 100%;
+}
+
+/*
+ * What the slot content draws is its own. Each class below squares the corners that meet a member
+ * and drops the start border where the member keeps its end border, so the join reads as one line.
+ */
+
+/* A select as small as the group. */
+.slotSm {
+	--select-trigger-min-block-size: 1.5rem;
+	--select-trigger-padding-block: var(--spacing-1);
+}
+
+/* Leads the group: the end corners meet the first member, and the select draws the shared line. */
+.prefixSelect {
+	--select-trigger-border-radius: var(--radius-1) 0 0 var(--radius-1);
+}
+
+/* Follows the members and meets the editor: every corner is square, the start border is dropped. */
+.suffixSelect {
+	--select-trigger-border-radius: 0;
+}
+
+.suffixSelect [data-slot='select-trigger'] {
+	border-inline-start-width: 0;
+}
+
+.suffixRow {
+	display: flex;
+	align-items: center;
+}
+
+/* Closes the group: the end corners are its own, the start ones meet what comes before. */
+.suffixEditor {
+	--input-border-radius: 0 var(--radius-1) var(--radius-1) 0;
+}
+
+.suffixEditor [data-slot='input'] {
+	border-inline-start-width: 0;
+}

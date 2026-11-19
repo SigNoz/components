@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { type CSSProperties, createRef } from 'react';
+import { createRef } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ButtonGroup } from '../button-group.js';
-import { BASE, ITEMS, noop, silenceConsoleError } from './button-group.test-utils.js';
+import { BASE, ITEMS, noop, silenceConsoleError, TOKENS } from './button-group.test-utils.js';
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -82,7 +82,7 @@ describe('ButtonGroup rendering', () => {
 					{
 						value: 'next',
 						icon: <svg data-testid="icon" />,
-						ariaLabel: 'Next page',
+						'aria-label': 'Next page',
 						onClick: noop,
 					},
 				]}
@@ -102,7 +102,37 @@ describe('ButtonGroup rendering', () => {
 			/>,
 		);
 
-		expect(screen.getByRole('link', { name: 'Docs' })).toHaveAttribute('href', '/docs');
+		const link = screen.getByRole('link', { name: 'Docs' });
+		expect(link).toHaveAttribute('href', '/docs');
+		expect(link).not.toHaveAttribute('role');
+		expect(link).toHaveAttribute('data-slot', 'button-group-item');
+	});
+
+	it('draws the label, the prefix and the suffix in the slots of Button', () => {
+		render(
+			<ButtonGroup
+				{...BASE}
+				items={[
+					{
+						value: 'docs',
+						label: 'Docs',
+						prefix: <svg data-testid="prefix" />,
+						suffix: <svg data-testid="suffix" />,
+						onClick: noop,
+					},
+				]}
+			/>,
+		);
+
+		const button = screen.getByRole('button', { name: 'Docs' });
+		expect(button.querySelector('[data-slot="button-label"]')).toHaveTextContent('Docs');
+		expect(button.querySelector('[data-slot="button-prefix-slot"]')).toContainElement(
+			screen.getByTestId('prefix'),
+		);
+		expect(button.querySelector('[data-slot="button-suffix-slot"]')).toContainElement(
+			screen.getByTestId('suffix'),
+		);
+		expect(button.querySelector('[data-slot="button-group-item-label"]')).toBeNull();
 	});
 
 	it('drops the rendered element own children, so the label and slots stay', () => {
@@ -127,7 +157,7 @@ describe('ButtonGroup rendering', () => {
 		const link = screen.getByRole('link', { name: 'Docs' });
 		expect(link).toHaveAttribute('data-owner', 'nav');
 		expect(link).toContainElement(screen.getByTestId('prefix'));
-		expect(link.querySelector('[data-slot="button-group-item-label"]')).toHaveTextContent('Docs');
+		expect(link.querySelector('[data-slot="button-label"]')).toHaveTextContent('Docs');
 		expect(screen.queryByText('Ignored')).not.toBeInTheDocument();
 	});
 
@@ -139,7 +169,11 @@ describe('ButtonGroup rendering', () => {
 
 		render(<ButtonGroup {...BASE} items={[{ value: 'empty', label, onClick: noop }]} />);
 
-		expect(screen.getByRole('button', { name: '<No label>' })).toBeInTheDocument();
+		const button = screen.getByRole('button', { name: '<No label>' });
+		expect(button.querySelector('[data-slot="button-group-item-label"]')).toHaveAttribute(
+			'data-empty-label',
+			'true',
+		);
 		expect(error).toHaveBeenCalledWith(expect.stringContaining('"empty" renders no label'));
 	});
 
@@ -166,27 +200,13 @@ describe('ButtonGroup rendering', () => {
 	});
 });
 
-/**
- * The package tokens are not loaded here, so the frame declares the ones the sizes read, with the
- * numbers `@signozhq/design-tokens` ships.
- */
-const TEXT_TOKENS = {
-	'--spacing-2': '4px',
-	'--spacing-4': '8px',
-	'--spacing-6': '12px',
-	'--label-small-500-font-size': '11px',
-	'--label-small-500-line-height': '1',
-	'--label-base-500-font-size': '13px',
-	'--label-base-500-line-height': '1',
-} as CSSProperties;
-
 describe('ButtonGroup member size', () => {
 	it.each([
 		['sm', 24],
 		['md', 32],
 	] as const)('keeps the height of %s', (size, height) => {
 		render(
-			<div style={TEXT_TOKENS}>
+			<div style={TOKENS}>
 				<ButtonGroup {...BASE} size={size} items={ITEMS} />
 			</div>,
 		);
@@ -201,7 +221,7 @@ describe('ButtonGroup member size', () => {
 
 		const label = screen
 			.getByRole('button', { name: 'Week' })
-			.querySelector('[data-slot="button-group-item-label"]');
+			.querySelector('[data-slot="button-label"]');
 		if (!label) {
 			throw new Error('No label rendered');
 		}

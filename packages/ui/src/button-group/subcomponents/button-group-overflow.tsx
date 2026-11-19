@@ -6,10 +6,10 @@ import {
 	type TooltipContentStackEntry,
 } from '../../tooltip/tooltip-content-stack-context.js';
 import type {
+	ButtonGroupJoinType,
 	ButtonGroupPositionType,
 	ButtonGroupResolvedItem,
 	ButtonGroupState,
-	ButtonGroupTextOverflowType,
 } from '../types.js';
 import { toMenuRow } from '../utils.js';
 import { ButtonGroupMember } from './button-group-member.js';
@@ -20,8 +20,15 @@ import { ButtonGroupMember } from './button-group-member.js';
 export type ButtonGroupOverflowProps = {
 	collapsed: ButtonGroupResolvedItem[];
 	group: ButtonGroupState;
-	textOverflow: ButtonGroupTextOverflowType;
 	position: ButtonGroupPositionType;
+	/**
+	 * How the ellipsis meets the last visible member, `undefined` when nothing is visible.
+	 */
+	joinStart: ButtonGroupJoinType | undefined;
+	/**
+	 * How the ellipsis meets the suffix, `undefined` without one.
+	 */
+	joinEnd: ButtonGroupJoinType | undefined;
 };
 
 /**
@@ -32,8 +39,9 @@ export type ButtonGroupOverflowProps = {
 export function ButtonGroupOverflow({
 	collapsed,
 	group,
-	textOverflow,
 	position,
+	joinStart,
+	joinEnd,
 }: ButtonGroupOverflowProps): ReactElement {
 	const tooltipEntries: TooltipContentStackEntry[] =
 		group.loading && hasTooltipContent(group.loadingTooltip)
@@ -58,15 +66,21 @@ export function ButtonGroupOverflow({
 			{...(group.testId === undefined ? {} : { testId: `${group.testId}-overflow` })}
 		>
 			<ButtonGroupMember
-				icon={<Ellipsis />}
+				icon
 				aria-label={`Show ${collapsed.length} more ${collapsed.length === 1 ? 'option' : 'options'}`}
 				data-overflow="true"
+				look={group.look}
+				size={group.size}
 				position={position}
-				textOverflow={textOverflow}
+				joinStart={joinStart}
+				joinEnd={joinEnd}
+				textOverflow={group.textOverflow}
 				disabled={group.loading}
 				loading={group.loading}
 				tooltipEntries={tooltipEntries}
-			/>
+			>
+				<Ellipsis />
+			</ButtonGroupMember>
 		</Dropdown>
 	);
 }
