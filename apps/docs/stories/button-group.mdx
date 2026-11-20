@@ -1,14 +1,14 @@
-import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
+import { Meta, Controls, Primary, Canvas } from '@storybook/addon-docs/blocks';
 import * as ButtonGroupStories from './button-group.stories';
 
 <Meta of={ButtonGroupStories} />
 
 # ButtonGroup
 
-A cluster of adjacent actions that reads as one control. It renders `<div role="group">` and one
-Base UI `Button` per entry of `items`, collapses the members that do not fit into a menu, and
-forwards every `aria-*` and `data-*` attribute to the root. Neighbors share a single hairline, and
-only the outer corners are rounded.
+A row of related actions. It renders `<div role="group">` and one `Button` per entry of `items`,
+collapses the members that do not fit into a menu, and forwards every `aria-*` and `data-*`
+attribute to the root. Neighbors meet by their two variants: a shared hairline, a 1px seam or a
+gap.
 
 Every member is an action. A group has no selected member: for a view state with one option
 picked, use `ToggleGroup`. For a single action, use `Button`. For actions that do not need to stay
@@ -38,8 +38,11 @@ export default function DashboardActions() {
 }
 ```
 
-`variant="outlined"` and `color="secondary"` are the only values the design spec draws today. The
-props are kept so every call site states its treatment.
+`variant` and `color` take the pairs `Button` takes: `solid` and `link` with any of the eight
+colors, `outlined`, `dashed` and `ghost` with `secondary`. An item can set its own pair, `variant`
+and `color` together, to sit in the group in another treatment. The
+[ButtonGroupShowcase](?path=/story/primitive-components-buttongroup--button-group-showcase) story
+draws every pair, and the mixed rows where neighbors meet.
 
 <Primary />
 
@@ -58,7 +61,7 @@ mix inside one group.
 An item is one of three shapes:
 
 - A text member: `label`, with an optional `prefix` and `suffix` icon.
-- An icon member: `icon` and `ariaLabel`. The name is required because there is no text to read.
+- An icon member: `icon` and `aria-label`. The name is required because there is no text to read.
 - A link member: `render`, a router `Link` in practice. The label and icons still come from the
   item. A link member takes no `onClick`, the handler goes on the element you render. The
   element's own children are dropped, so write `<Link to="/docs" />`, not
@@ -72,8 +75,8 @@ import { ChevronLeft, ChevronRight, Download } from '@signozhq/icons';
 	color="secondary"
 	size="md"
 	items={[
-		{ value: 'previous', icon: <ChevronLeft />, ariaLabel: 'Previous page', onClick: previous },
-		{ value: 'next', icon: <ChevronRight />, ariaLabel: 'Next page', onClick: next },
+		{ value: 'previous', icon: <ChevronLeft />, 'aria-label': 'Previous page', onClick: previous },
+		{ value: 'next', icon: <ChevronRight />, 'aria-label': 'Next page', onClick: next },
 		{ value: 'export', label: 'Export', prefix: <Download />, onClick: exportCsv },
 		{ value: 'docs', label: 'Docs', render: <Link to="/docs" /> },
 	]}
@@ -81,11 +84,75 @@ import { ChevronLeft, ChevronRight, Download } from '@signozhq/icons';
 ```
 
 `value` keys the list and names the member's test id, so it is unique within the group: two items
-sharing one are indistinguishable to the component.
+sharing one are indistinguishable to the component. Every other `Button` prop but `size`,
+`children`, `className` and `style` goes on the item as it is, as the showcase shows.
 
 A label that renders nothing (`null`, `false` or an empty string) falls back to the text
 `<No label>`, marks its label element with `data-empty-label` and logs an error. The member is
 never dropped: an action that disappears leaves the group without saying so.
+
+## Menus
+
+A member takes `menu` instead of `onClick` to open a `Dropdown` of rows, the chevron of a split
+button for instance. The member is the menu's trigger, so it stays focusable and keeps its tooltips.
+`items` are the rows `Dropdown` takes, and `side` and `align` say where the popup sits.
+`contentMaxWidth` and `contentMaxHeight` cap its size.
+
+```tsx
+import { ChevronUp, Plus } from '@signozhq/icons';
+
+<ButtonGroup
+	variant="solid"
+	color="primary"
+	size="md"
+	items={[
+		{ value: 'add', label: 'Add panel', onClick: addPanel },
+		{
+			value: 'section',
+			icon: <ChevronUp />,
+			'aria-label': 'Choose section',
+			menu: {
+				side: 'top',
+				align: 'end',
+				contentMaxWidth: 320,
+				items: [
+					{
+						type: 'group',
+						value: 'add-to-section',
+						label: 'Add to section',
+						items: [
+							{
+								type: 'radio-group',
+								name: 'section',
+								value: section,
+								onChange: setSection,
+								items: SECTIONS,
+							},
+						],
+					},
+					{ type: 'separator', value: 'before-new-section' },
+					{
+						type: 'item',
+						value: 'new-section',
+						label: 'New section',
+						prefix: <Plus />,
+						onClick: newSection,
+					},
+				],
+			},
+		},
+	]}
+/>;
+```
+
+<Canvas of={ButtonGroupStories.SplitButtonMenu} sourceState="none" />
+
+- A menu member has no `onClick`, the rows carry the actions. A text member and an icon member both
+  take `menu`, and an icon member still needs its `aria-label`.
+- `items` takes no `submenu` rows. A collapsed member becomes a submenu row of the overflow menu, and
+  a submenu cannot hold another one.
+- The menu does not open while the member or the group is `disabled` or `loading`. The member shows
+  the reason the way any member does.
 
 ## Overflow
 
@@ -93,7 +160,8 @@ The group is `width` wide when you set it, and sizes to its members otherwise. I
 `maxWidth`, `100%` of its container by default. A number is written as `px` for both.
 
 When the members do not fit, they collapse from the end behind an ellipsis member. The ellipsis
-opens a `Dropdown` that lists exactly the collapsed members.
+opens a `Dropdown` that lists exactly the collapsed members. The showcase walks a group through
+narrower frames, with mixed variants too, and holds the menu open.
 
 - No ellipsis while everything fits.
 - When the first member no longer fits beside the ellipsis, only the ellipsis stays.
@@ -103,15 +171,50 @@ opens a `Dropdown` that lists exactly the collapsed members.
 
 Put the member that matters most first: collapse always starts at the end.
 
-A menu row shows the label alone, with no icons. An icon member uses its `ariaLabel` as the row
+A menu row shows the label alone, with no icons. An icon member uses its `aria-label` as the row
 text. A link member stays a link, so middle click still works from the menu. A member's disabled or
 loading reason comes with it into the menu. While the group is disabled or loading, the menu does
 not open, and the ellipsis shows the group's reason.
 
+## Prefix and suffix
+
+`prefix` and `suffix` put your own content inside the group, before the first member and after the
+last one, a select or an inline editor for instance. Both take any node.
+
+```tsx
+<ButtonGroup
+	variant="outlined"
+	color="secondary"
+	size="sm"
+	items={queryActions}
+	suffix={
+		<>
+			<DataSourceSelect value={source} onChange={setSource} />
+			<FunctionEditor />
+		</>
+	}
+/>
+```
+
+<Canvas of={ButtonGroupStories.PrefixAndSuffix} sourceState="none" />
+
+- The slots never collapse. The members make room for them, so the row still collapses from the
+  end. The ellipsis sits before the suffix.
+- A slot meets its neighbor the way a member in the group's `variant` would, so the corners between
+  them are square in an `outlined`, `dashed` or `solid` group.
+- The corners and the border of the content are yours to style. In an `outlined` or `dashed` group
+  the first member drops its start border and the last segment keeps its end border. So a prefix
+  draws the line it shares with the first member, and a suffix drops its own start border.
+- `disabled` and `loading` do not reach the slots.
+
+A group that is too narrow keeps both slots and collapses its members, a menu member included:
+
+<Canvas of={ButtonGroupStories.SlotsWithOverflow} sourceState="none" />
+
 ## Text overflow
 
-A label is capped at 120px (`--button-group-label-max-inline-size`). `textOverflow` picks what
-happens past it:
+A label is capped at 120px. `textOverflow` picks what happens past it, and an item's own
+`textOverflow` wins:
 
 - `ellipsis` (default) truncates it, marks the member with `data-truncated` and shows the full text
   in a tooltip, only while it is truncated.
@@ -181,12 +284,18 @@ menu with the same keys.
 | Group                                   | `testId`                                                    |
 | Member, visible or in the overflow menu | `` `${testId}-item-${value}` ``, or the item's own `testId` |
 | Ellipsis                                | `` `${testId}-overflow` ``                                  |
+| Prefix                                  | `` `${testId}-prefix` ``                                    |
+| Suffix                                  | `` `${testId}-suffix` ``                                    |
 
 The group also carries `data-slot="button-group"`, `data-variant`, `data-color`, `data-size`,
 `data-text-overflow`, and `data-overflowing` while a member is collapsed. Each member carries
 `data-slot="button-group-item"`, `data-position` (`only`, `start`, `middle` or `end`), and
-`data-truncated` while its label does not fit.
+`data-truncated` while its label does not fit. The slots carry `data-slot="button-group-prefix"` and
+`data-slot="button-group-suffix"`, with `data-join-end` on the prefix and `data-join-start` on the
+suffix: how each one meets the segment next to it.
 
+- The rows of a member's menu are not named by the group. Give a row its own `testId`, or query it by
+  role. A collapsed member's submenu row in the overflow menu has the member's test id.
 - Assert `aria-disabled` rather than `toBeDisabled()`, because members never carry the native
   attribute.
 - The group keeps a hidden copy of every member to measure the row, so `getByText('Export')` finds

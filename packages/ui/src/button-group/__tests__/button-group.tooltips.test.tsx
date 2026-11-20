@@ -12,7 +12,7 @@ import { BASE, noop } from './button-group.test-utils.js';
 const GROUP_REASON = 'This dashboard is locked';
 const ITEM_REASON = 'Monthly views need a paid plan';
 
-beforeAll(() => mockLabelMeasurement('button-group-item-label'));
+beforeAll(() => mockLabelMeasurement('button-label'));
 afterEach(resetLabelMeasurement);
 
 describe('ButtonGroup tooltips', () => {

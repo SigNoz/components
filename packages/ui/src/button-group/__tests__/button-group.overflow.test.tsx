@@ -46,21 +46,22 @@ function expectRowToFit(group: HTMLElement): void {
 }
 
 describe('countVisibleMembers', () => {
-	// Three 85px members sharing borders, a 32px ellipsis pulling back by 1px.
+	// Three 85px members sharing borders, a 32px ellipsis pulling back by 1px after each.
 	const ends = [85, 169, 253];
+	const pullBack = [-1, -1, -1];
 
 	it('keeps every member when the full row fits', () => {
-		expect(countVisibleMembers(ends, 32, -1, 253)).toBe(3);
+		expect(countVisibleMembers(ends, 32, pullBack, 253)).toBe(3);
 	});
 
 	it('drops members from the end until the row plus the ellipsis fits', () => {
-		expect(countVisibleMembers(ends, 32, -1, 252)).toBe(2);
-		expect(countVisibleMembers(ends, 32, -1, 199)).toBe(1);
+		expect(countVisibleMembers(ends, 32, pullBack, 252)).toBe(2);
+		expect(countVisibleMembers(ends, 32, pullBack, 199)).toBe(1);
 	});
 
 	it('keeps the ellipsis alone when not even one member fits beside it', () => {
-		expect(countVisibleMembers(ends, 32, -1, 115)).toBe(0);
-		expect(countVisibleMembers(ends, 32, -1, 10)).toBe(0);
+		expect(countVisibleMembers(ends, 32, pullBack, 115)).toBe(0);
+		expect(countVisibleMembers(ends, 32, pullBack, 10)).toBe(0);
 	});
 });
 

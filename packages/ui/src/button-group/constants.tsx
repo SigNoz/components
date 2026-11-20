@@ -1,18 +1,30 @@
 /**
- * The visual treatment of the group.
+ * The visual treatment, the same five as `Button`. Set on the group, and per member on an item.
  *
- * `outlined` is the only value the design spec draws: a group shares one hairline between its
- * members, and the outlined variant is the only one with a border to share.
+ * `outlined` and `dashed` members share one hairline with each other, `solid` members are split by
+ * a 1px seam, and a `ghost` or `link` member keeps its own corners with a gap on either side.
  */
 export const ButtonGroupVariant = {
+	Solid: 'solid',
 	Outlined: 'outlined',
+	Dashed: 'dashed',
+	Ghost: 'ghost',
+	Link: 'link',
 } as const;
 
 /**
- * The colour treatment. `secondary` is the only value the design spec draws today.
+ * The colour treatment, the same eight as `Button`. `solid` and `link` take any of them, the other
+ * variants only `secondary`.
  */
 export const ButtonGroupColor = {
+	Primary: 'primary',
 	Secondary: 'secondary',
+	Danger: 'danger',
+	Warning: 'warning',
+	Success: 'success',
+	Info: 'info',
+	Archive: 'archive',
+	HighlightDanger: 'highlight-danger',
 } as const;
 
 /**
@@ -40,6 +52,26 @@ export const ButtonGroupPosition = {
 	Start: 'start',
 	Middle: 'middle',
 	End: 'end',
+} as const;
+
+/**
+ * How a member meets its neighbour, picked from the two variants. Sets the margin between them and
+ * whether the corners they meet at stay rounded.
+ *
+ * - `shared`: two bordered members (`outlined`, `dashed`) sit flush and the second drops its start
+ *   border, so the line between them is drawn once. Square corners.
+ * - `seam`: a `solid` member next to another `solid`, `outlined` or `dashed` one, split by a 1px
+ *   seam. Square corners.
+ * - `gap`: a `ghost` member next to anything but a `link`, 4px apart. Rounded corners.
+ * - `wide-gap`: a `link` member next to anything, 8px apart. Rounded corners.
+ *
+ * @access private
+ */
+export const ButtonGroupJoin = {
+	Shared: 'shared',
+	Seam: 'seam',
+	Gap: 'gap',
+	WideGap: 'wide-gap',
 } as const;
 
 /**

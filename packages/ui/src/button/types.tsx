@@ -6,6 +6,7 @@ import type {
 	ReactElement,
 	ReactNode,
 } from 'react';
+import type { TooltipContentStackEntry } from '../tooltip/tooltip-content-stack-context.js';
 
 export type SizeType = (typeof ButtonSize)[keyof typeof ButtonSize];
 export type VariantType = (typeof ButtonVariant)[keyof typeof ButtonVariant];
@@ -316,9 +317,33 @@ export interface ButtonBaseProps
 export type ButtonProps = ButtonBaseProps & VariantColorType & IconPrefixSuffixType;
 
 /**
- * `className` and `style`, for the library's own components that build on `Button`. The package
- * does not export them: outside it a button is styled through its props and `--button-*` tokens.
+ * What the library's own components that build on `Button` may pass on top of {@link ButtonProps}.
+ * The package does not export them: outside it a button is styled through its props and
+ * `--button-*` tokens, and renders a `<button>`.
  *
  * @access private
  */
-export type ButtonStyleProps = Pick<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'style'>;
+export type ButtonInternalProps = Pick<
+	ButtonHTMLAttributes<HTMLButtonElement>,
+	'className' | 'style'
+> & {
+	/**
+	 * Renders the button as this element instead of a `<button>`, a router `Link` in practice, so
+	 * an anchor stays a link: no `role="button"`, middle click and "open in new tab" work.
+	 *
+	 * @note Only while the button is idle. A disabled or loading button renders the plain
+	 * `<button>`: middle click and the context menu still reach an anchor, so the only way to block
+	 * one is not to render it.
+	 *
+	 * @note The element's own children are dropped, the button renders its slots inside it.
+	 */
+	render?: ReactElement;
+	/**
+	 * Tooltip entries stacked above the button's own (`loadingTooltip`, `disabledTooltip`, the
+	 * truncated label), for a component that has reasons of its own to give, such as a group.
+	 *
+	 * @note While set, the tooltip trigger is always mounted, so the button never remounts, and
+	 * never drops focus, when an entry appears.
+	 */
+	tooltipEntries?: TooltipContentStackEntry[];
+};

@@ -131,7 +131,7 @@ describe('ButtonGroup keeps focus', () => {
 						{
 							value: 'refresh',
 							icon: <svg />,
-							ariaLabel: 'Refresh',
+							'aria-label': 'Refresh',
 							loading,
 							loadingTooltip: 'Refreshing',
 							onClick: () => setLoading(true),
