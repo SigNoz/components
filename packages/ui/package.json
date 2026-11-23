@@ -475,12 +475,12 @@
 		"react-compiler:strict-check": "node scripts/check-react-compiler-strict.mjs"
 	},
 	"dependencies": {
-		"@base-ui/react": "1.8.0",
+		"@base-ui/react": "1.9.0",
 		"@tanstack/react-virtual": "^3.14.26",
 		"clsx": "^2.1.1",
 		"react-compiler-runtime": "^1.0.0",
 		"react-day-picker": "^9.8.1",
-		"react-resizable-panels": "4.21.0"
+		"react-resizable-panels": "4.24.0"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "workspace:*",
