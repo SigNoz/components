@@ -1,4 +1,5 @@
 import { Button as BaseUiButton } from '@base-ui/react/button';
+import { useRender } from '@base-ui/react/use-render';
 import {
 	cloneElement,
 	forwardRef,
@@ -9,6 +10,7 @@ import {
 	useMemo,
 } from 'react';
 import { cn, type RejectedProps } from '../lib/utils.js';
+import { withoutChildren } from '../lib/without-children.js';
 import { Spinner } from '../spinner/spinner.js';
 import { TooltipAnchor } from '../tooltip/subcomponents/tooltip-anchor.js';
 import { TooltipStack } from '../tooltip/subcomponents/tooltip-stack.js';
@@ -18,7 +20,7 @@ import {
 } from '../tooltip/tooltip-content-stack-context.js';
 import styles from './button.module.scss';
 import { ButtonTextOverflow, ButtonVariant } from './constants.js';
-import type { ButtonProps, ButtonStyleProps, ValidateButtonProps } from './types.js';
+import type { ButtonInternalProps, ButtonProps, ValidateButtonProps } from './types.js';
 import { useIsLabelTruncated } from '../lib/useIsLabelTruncated.js';
 import { toCssLength } from '../lib/css-length';
 
@@ -76,7 +78,7 @@ function ButtonSuffix({ suffix }: { suffix?: ReactElement | null }): ReactElemen
 	);
 }
 
-const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>(function Button(
+const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonInternalProps>(function Button(
 	{
 		className,
 		variant,
@@ -97,6 +99,8 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 		maxWidth,
 		textOverflow = ButtonTextOverflow.Ellipsis,
 		style,
+		render,
+		tooltipEntries,
 		...props
 	},
 	ref,
@@ -108,7 +112,9 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 	const hasLoadingTooltip = Boolean(loading && hasTooltipContent(loadingTooltip));
 
 	const tooltipContent = useMemo(() => {
-		const items: TooltipContentStackEntry[] = [];
+		const items: TooltipContentStackEntry[] = (tooltipEntries ?? []).filter((entry) =>
+			hasTooltipContent(entry.content),
+		);
 
 		if (hasLoadingTooltip) {
 			items.push({ id: 'loading-tooltip', content: loadingTooltip });
@@ -124,6 +130,7 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 
 		return items.length === 0 ? null : <TooltipStack items={items} />;
 	}, [
+		tooltipEntries,
 		hasLoadingTooltip,
 		loadingTooltip,
 		hasDisabledTooltip,
@@ -132,7 +139,11 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 		children,
 	]);
 
-	const hasTooltip = hasOverflowTooltip || disabledTooltip != null || loadingTooltip != null;
+	const hasTooltip =
+		hasOverflowTooltip ||
+		disabledTooltip != null ||
+		loadingTooltip != null ||
+		tooltipEntries !== undefined;
 
 	// the only click event is not supported by default to disable by base-ui
 	// https://github.com/mui/base-ui/blob/e8526f762853350691ee3a9bd7ead9d3d6e95bd3/packages/react/src/internals/use-button/useButton.ts#L104
@@ -161,30 +172,43 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 		);
 	const suffixEl = icon === true ? null : suffix;
 
-	const buttonEl = (
-		<BaseUiButton
-			data-slot="button"
-			data-color={color}
-			data-variant={variant}
-			data-size={size}
-			data-icon={icon ?? false}
-			data-text-overflow={textOverflow}
-			data-truncated={isLabelOverflowing || undefined}
-			data-no-loading-effect={noLoadingEffect || undefined}
-			className={cn(styles['button'], className)}
-			disabled={disabled || loading}
-			focusableWhenDisabled
-			aria-busy={loading || undefined}
-			ref={ref}
-			onDoubleClick={onDoubleClickImpl}
-			style={buttonStyle}
-			{...props}
-			{...(testId === undefined ? {} : { 'data-testid': testId })}
-		>
+	const sharedProps = {
+		'data-slot': 'button',
+		'data-color': color,
+		'data-variant': variant,
+		'data-size': size,
+		'data-icon': icon ?? false,
+		'data-text-overflow': textOverflow,
+		'data-truncated': isLabelOverflowing || undefined,
+		'data-no-loading-effect': noLoadingEffect || undefined,
+		className: cn(styles['button'], className),
+		'aria-busy': loading || undefined,
+		onDoubleClick: onDoubleClickImpl,
+		style: buttonStyle,
+		...props,
+		...(testId === undefined ? {} : { 'data-testid': testId }),
+	};
+	const content = (
+		<>
 			{variant === ButtonVariant.Dashed && <ButtonDashedBorder />}
 			<ButtonPrefix prefix={prefixEl} />
 			{childrenEl}
 			<ButtonSuffix suffix={suffixEl} />
+		</>
+	);
+
+	// A link renders the caller's element through `useRender` rather than Base UI `Button` with
+	// `nativeButton={false}`, which would stamp `role="button"` on the anchor.
+	const linkEl = useRender({
+		enabled: render !== undefined && !disabled && !loading,
+		render: render === undefined ? undefined : withoutChildren(render),
+		ref,
+		props: { ...sharedProps, children: content },
+	});
+
+	const buttonEl = linkEl ?? (
+		<BaseUiButton ref={ref} disabled={disabled || loading} focusableWhenDisabled {...sharedProps}>
+			{content}
 		</BaseUiButton>
 	);
 
@@ -202,10 +226,17 @@ const ButtonImpl = forwardRef<HTMLButtonElement, ButtonProps & ButtonStyleProps>
 	);
 });
 
-// The public button drops `className` and `style` at runtime too, so a value that gets past the
-// types does not replace the button's own class. `InternalButton` keeps both.
+// The public button drops `className`, `style` and the other internal props at runtime too, so a
+// value that gets past the types does not replace the button's own class or element.
+// `InternalButton` keeps them.
 const PublicButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-	{ className: _className, style: _style, ...props }: ButtonProps & RejectedProps,
+	{
+		className: _className,
+		style: _style,
+		render: _render,
+		tooltipEntries: _tooltipEntries,
+		...props
+	}: ButtonProps & RejectedProps & Omit<ButtonInternalProps, 'className' | 'style'>,
 	ref,
 ) {
 	return <ButtonImpl ref={ref} {...props} />;
@@ -355,18 +386,18 @@ export const Button = PublicButton as <T extends ButtonProps>(
 ) => ReactElement;
 
 /**
- * `Button` plus `className` and `style`, for the library's own components that build on it. Not
+ * `Button` plus {@link ButtonInternalProps}, for the library's own components that build on it. Not
  * exported from the package.
  *
  * @access private
  */
-export const InternalButton = ButtonImpl as <T extends ButtonProps & ButtonStyleProps>(
+export const InternalButton = ButtonImpl as <T extends ButtonProps & ButtonInternalProps>(
 	props: T &
 		ValidateButtonProps<T> &
 		Record<
 			Exclude<
 				keyof T,
-				keyof ButtonProps | keyof ButtonStyleProps | keyof RefAttributes<HTMLButtonElement>
+				keyof ButtonProps | keyof ButtonInternalProps | keyof RefAttributes<HTMLButtonElement>
 			>,
 			never
 		> &
