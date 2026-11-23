@@ -45,7 +45,7 @@ jobs:
           pnpm build
 
       - name: Run Chromatic
-        uses: chromaui/action@v18.14.3
+        uses: chromaui/action@v18.15.1
         # On `pull_request` the action reports the PR head commit and branch. A squash
         # merge leaves that commit unreachable from main, so the baseline lands under a
         # SHA later runs can't resolve and TurboSnap falls back to an ancient build.
