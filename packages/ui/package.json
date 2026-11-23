@@ -486,7 +486,7 @@
 		"@repo/typescript-config": "workspace:*",
 		"@testing-library/jest-dom": "^6.6.3",
 		"@testing-library/react": "^16.3.3",
-		"@testing-library/user-event": "^14.6.8",
+		"@testing-library/user-event": "^14.6.12",
 		"@types/node": "25.9.9",
 		"@types/react": "^18.2.61",
 		"@vitejs/plugin-react": "^6.3.0",
@@ -494,7 +494,7 @@
 		"@vitest/coverage-v8": "^5.1.0",
 		"oxc-transform-react": "^0.158.0",
 		"publint": "0.3.25",
-		"vite": "8.3.7",
+		"vite": "8.3.8",
 		"vitest": "^5.1.0"
 	},
 	"peerDependencies": {
