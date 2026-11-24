@@ -34,7 +34,7 @@ import type {
 import { useDrawerStack } from './use-drawer-stack.js';
 import { useFocusFallback } from './use-focus-fallback.js';
 import { useReportRightEdgeCover } from './use-report-right-edge-cover.js';
-import { letPageKeysThrough, toDrawerCloseReason } from './utils.js';
+import { letNestedDrawerKeysThrough, letPageKeysThrough, toDrawerCloseReason } from './utils.js';
 
 const NO_STEPS: readonly DrawerTrailStepType[] = [];
 
@@ -170,10 +170,13 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 							// may not undo the modal.
 							style={stackStyle}
 							aria-modal={isModal ? 'true' : undefined}
-							// Base UI stops the arrow keys, `Home` and `End` at every popup. A modal keeps that
-							// unless only inspectors are open over it, and an inspector leaves the page usable, so
-							// its shortcuts get them.
-							onKeyDown={isModal && !coveredByInspector ? undefined : letPageKeysThrough}
+							// Base UI stops the arrow keys, `Home` and `End` at every popup. An inspector leaves the
+							// page usable, so its shortcuts get them, and so does a modal with only inspectors open
+							// over it. Any other modal keeps its own keys, but not those of a drawer nested in it,
+							// which already decided.
+							onKeyDown={
+								isModal && !coveredByInspector ? letNestedDrawerKeysThrough : letPageKeysThrough
+							}
 							data-testid={testId}
 							data-type={resolvedType}
 							data-width={width}
