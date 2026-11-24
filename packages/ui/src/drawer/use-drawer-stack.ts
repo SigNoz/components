@@ -52,6 +52,10 @@ type DrawerStackState = {
 	 * Its own `stack` while a nested drawer is open over it.
 	 */
 	covered: DrawerStackType | undefined;
+	/**
+	 * Whether the drawers open over it are all inspectors, which leave it usable.
+	 */
+	coveredByInspector: boolean;
 	style: CSSProperties | undefined;
 	value: DrawerStackContextValue;
 	/**
@@ -63,8 +67,8 @@ type DrawerStackState = {
 
 /**
  * How a drawer stacks with the drawers it is declared in and the ones declared inside it: the
- * breadcrumb trail it ends, its width from its parent, and whether a nested drawer covers it, in
- * which case it takes no input.
+ * breadcrumb trail it ends, its width from its parent, and whether a nested drawer covers it. Under
+ * a task or a step of its trail it takes no input; under an inspector overlay it stays usable.
  *
  * @access private
  */
@@ -114,24 +118,29 @@ export function useDrawerStack({
 		leaveTrail(trail, reason);
 	};
 
-	const [coverCount, setCoverCount] = useState(0);
-	const cover = useCallback(() => {
-		setCoverCount((count) => count + 1);
+	const [blockingCoverCount, setBlockingCoverCount] = useState(0);
+	const [inspectorCoverCount, setInspectorCoverCount] = useState(0);
+	const cover = useCallback((blocksInput: boolean) => {
+		const setCount = blocksInput ? setBlockingCoverCount : setInspectorCoverCount;
+		setCount((count) => count + 1);
 		return () => {
-			setCoverCount((count) => count - 1);
+			setCount((count) => count - 1);
 		};
 	}, []);
-	const isCovered = coverCount > 0;
-	useInert(popupRef, isCovered);
+	const isCovered = blockingCoverCount > 0 || inspectorCoverCount > 0;
+	useInert(popupRef, blockingCoverCount > 0);
 
 	const coverParent = parent?.cover;
+	// A step of a trail hides the drawer it opens from, and a task is modal. An inspector overlay
+	// leaves the drawer under it usable, as it leaves the page.
+	const blocksParent = layerType === 'task' || trailParent !== null;
 	useEffect(() => {
 		if (!isOpen || !coverParent) {
 			return undefined;
 		}
 
-		return coverParent();
-	}, [isOpen, coverParent]);
+		return coverParent(blocksParent);
+	}, [isOpen, coverParent, blocksParent]);
 
 	const parentWidth = useElementWidth(parent?.panel ?? null);
 
@@ -142,6 +151,7 @@ export function useDrawerStack({
 		layerType,
 		closePosition: resolvedClosePosition,
 		covered: isCovered ? resolvedStack : undefined,
+		coveredByInspector: blockingCoverCount === 0 && inspectorCoverCount > 0,
 		style:
 			parentWidth === undefined
 				? undefined

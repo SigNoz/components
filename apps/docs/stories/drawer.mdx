@@ -259,8 +259,9 @@ such as node, then pod, then trace, then log.
 
 `stack="overlay"` opens the nested drawer over the outer one, at 80% of its width, so the outer one
 stays in sight. Use it for a short look at something next to the record, such as the log line
-behind an error. The outer drawer takes no input until the nested one closes, and the nested
-drawer's own `type` sets its backdrop.
+behind an error. Under a nested `task` the outer drawer takes no input until the nested one closes.
+Under a nested `inspector` it stays usable, so a press on another row behind the log line shows that
+one, and the arrow keys reach the page. The nested drawer's own `type` sets its backdrop.
 
 The two combine: a drawer in a trail with `stack="overlay"` opens an overlay over the trail, and the
 overlay may start a trail of its own.
