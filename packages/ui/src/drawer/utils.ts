@@ -45,6 +45,24 @@ export function letPageKeysThrough(
 }
 
 /**
+ * Lets the arrow keys, `Home` and `End` through a modal drawer when they come from a drawer nested
+ * in it. Every drawer between that one and this one has let them through already, and a nested
+ * `task` stops them before they get here. Keys from this drawer's own panel, or from a popup
+ * portalled out of it such as a menu, stay stopped.
+ *
+ * @access private
+ */
+export function letNestedDrawerKeysThrough(
+	event: Parameters<NonNullable<Drawer.Popup.Props['onKeyDown']>>[0],
+): void {
+	const panel =
+		event.target instanceof Element ? event.target.closest('[data-slot="drawer-popup"]') : null;
+	if (panel !== null && panel !== event.currentTarget) {
+		letPageKeysThrough(event);
+	}
+}
+
+/**
  * The reason `onClose` reports for a Base UI change reason, or `undefined` for one it does not
  * report. A drawer with no trigger, no `actionsRef` and no snap points closes for the four reasons
  * of `DrawerCloseReasonType`, and on Android for the back gesture, which Base UI reports as
