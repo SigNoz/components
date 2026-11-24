@@ -20,6 +20,7 @@ import type {
 	ComboboxProps,
 	ComboboxSearchInputProps,
 } from '../types.js';
+import { useRenderedItemsReport } from '../use-rendered-items-report.js';
 import { type ComboboxEntry, flattenComboboxRows } from '../utils.js';
 import { ComboboxFooterAction } from './combobox-footer-action.js';
 import { ComboboxRows } from './combobox-rows.js';
@@ -98,6 +99,7 @@ export function ComboboxPopup({
 		() => (virtualized ? flattenComboboxRows(entries) : []),
 		[virtualized, entries],
 	);
+	const reportRenderedItems = useRenderedItemsReport(open, onRenderedItemsChange);
 
 	const popupStyle = {
 		...(contentMaxWidth != null && {
@@ -156,15 +158,13 @@ export function ComboboxPopup({
 									optionCount={optionCount}
 									scrollElement={viewportElement}
 									scrollerRef={scrollerRef}
-									open={open}
-									onRenderedItemsChange={onRenderedItemsChange}
+									reportRenderedItems={reportRenderedItems}
 									{...rowProps}
 								/>
 							) : (
 								<ComboboxRows
 									entries={entries}
-									open={open}
-									onRenderedItemsChange={onRenderedItemsChange}
+									reportRenderedItems={reportRenderedItems}
 									{...rowProps}
 								/>
 							)}

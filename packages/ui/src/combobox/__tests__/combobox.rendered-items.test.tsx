@@ -89,7 +89,7 @@ describe('Combobox onRenderedItemsChange', () => {
 		expect(onRenderedItemsChange).toHaveBeenCalledTimes(1);
 	});
 
-	it('reports nothing while closed, and again when the popup opens again', async () => {
+	it('reports no rows once on close, and the rows again when the popup opens again', async () => {
 		const onRenderedItemsChange = vi.fn();
 		render(
 			<Combobox
@@ -107,17 +107,18 @@ describe('Combobox onRenderedItemsChange', () => {
 		expect(onRenderedItemsChange).toHaveBeenLastCalledWith(['vue']);
 
 		// Closing clears the query, which brings every row back into the list Base UI keeps mounted
-		// after the popup closes. Nobody sees them, so nothing is reported.
+		// after the popup closes. Nobody sees them, so the report is an empty set, and only one.
 		await userEvent.keyboard('{Escape}');
 		await waitFor(() => {
 			expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
 		});
 
-		expect(onRenderedItemsChange).toHaveBeenCalledTimes(3);
+		expect(onRenderedItemsChange).toHaveBeenCalledTimes(4);
+		expect(onRenderedItemsChange).toHaveBeenLastCalledWith([]);
 
 		await openCombobox();
 
-		expect(onRenderedItemsChange).toHaveBeenCalledTimes(4);
+		expect(onRenderedItemsChange).toHaveBeenCalledTimes(5);
 		expect(onRenderedItemsChange).toHaveBeenLastCalledWith(['react', 'vue', 'angular', 'svelte']);
 	});
 
@@ -136,6 +137,52 @@ describe('Combobox onRenderedItemsChange', () => {
 		await openCombobox();
 
 		expect(onRenderedItemsChange).not.toHaveBeenCalled();
+	});
+
+	it('does not report the same rows again when loading ends', async () => {
+		const onRenderedItemsChange = vi.fn();
+		const renderFrameworks = (loading: boolean) => (
+			<Combobox
+				placeholder="Select a framework..."
+				searchInputProps={{ placeholder: 'Search' }}
+				aria-label="Framework"
+				items={FRAMEWORKS}
+				loading={loading}
+				onRenderedItemsChange={onRenderedItemsChange}
+			/>
+		);
+		const { rerender } = render(renderFrameworks(false));
+		await openCombobox();
+
+		// A caller whose `loading` follows the check the report starts would loop on a second report.
+		rerender(renderFrameworks(true));
+		rerender(renderFrameworks(false));
+
+		expect(screen.getByRole('option', { name: 'Vue' })).toBeInTheDocument();
+		expect(onRenderedItemsChange).toHaveBeenCalledTimes(1);
+	});
+
+	it('reports the rows on screen to a callback passed again while open', async () => {
+		const first = vi.fn();
+		const second = vi.fn();
+		const renderFrameworks = (onRenderedItemsChange: ((values: string[]) => void) | undefined) => (
+			<Combobox
+				placeholder="Select a framework..."
+				searchInputProps={{ placeholder: 'Search' }}
+				aria-label="Framework"
+				items={FRAMEWORKS}
+				onRenderedItemsChange={onRenderedItemsChange}
+			/>
+		);
+		const { rerender } = render(renderFrameworks(first));
+		await openCombobox();
+
+		rerender(renderFrameworks(undefined));
+		rerender(renderFrameworks(second));
+
+		expect(first).toHaveBeenCalledTimes(1);
+		expect(second).toHaveBeenCalledTimes(1);
+		expect(second).toHaveBeenLastCalledWith(['react', 'vue', 'angular', 'svelte']);
 	});
 
 	describe('virtualized', () => {
@@ -160,9 +207,37 @@ describe('Combobox onRenderedItemsChange', () => {
 			const reported: string[] = onRenderedItemsChange.mock.lastCall?.[0] ?? [];
 			const mounted = screen.getAllByRole('option').map((option) => option.textContent);
 
+			// Not only the last call: the render before the viewport is measured holds no rows.
+			for (const [values] of onRenderedItemsChange.mock.calls) {
+				expect(values).not.toEqual([]);
+			}
 			expect(reported[0]).toBe('host-001');
 			expect(reported.length).toBeLessThan(50);
 			expect(reported).toEqual(mounted);
+		});
+
+		it('reports once, with the rows around the selected value, when it opens far down the list', async () => {
+			const onRenderedItemsChange = vi.fn();
+			render(
+				<Combobox
+					placeholder="Select a framework..."
+					searchInputProps={{ placeholder: 'Search' }}
+					aria-label="Framework"
+					items={HOSTS}
+					defaultValue="host-300"
+					virtualized
+					onRenderedItemsChange={onRenderedItemsChange}
+				/>,
+			);
+			await openCombobox();
+
+			await waitFor(() => {
+				expect(onRenderedItemsChange).toHaveBeenCalled();
+			});
+
+			// The first render holds the top rows, then the list scrolls to the selected one.
+			expect(onRenderedItemsChange.mock.calls[0]?.[0]).toContain('host-300');
+			expect(onRenderedItemsChange).toHaveBeenCalledTimes(1);
 		});
 
 		it('reports the new slice when the list scrolls', async () => {

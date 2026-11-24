@@ -113,7 +113,7 @@ export const comboboxArgTypes: Meta<typeof Combobox>['argTypes'] = {
 	onRenderedItemsChange: {
 		control: false,
 		description:
-			'Called with the `value` of every `item` row the open list renders, each time that set changes. With `virtualized`, the rows in view plus a few on each side. For work that should only run for rows someone can see, such as a permission check per row.',
+			'Called with the `value` of every `item` row the open list renders, each time that set changes. With `virtualized`, the rows in view plus a few on each side, once a scroll stops. Called with `[]` when the popup closes. For work that should only run for rows someone can see, such as a permission check per row.',
 		table: { category: 'Events', type: { summary: '(values: string[]) => void' } },
 	},
 	loading: {
