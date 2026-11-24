@@ -42,6 +42,8 @@ export type ComboboxPopupProps = {
 	entries: readonly ComboboxEntry[];
 	optionCount: number;
 	virtualized: boolean;
+	open: boolean;
+	onRenderedItemsChange: ((values: string[]) => void) | undefined;
 	scrollerRef: MutableRefObject<ComboboxVirtualScroller | null>;
 	loading: boolean;
 	loadingContent: ReactNode;
@@ -71,6 +73,8 @@ export function ComboboxPopup({
 	entries,
 	optionCount,
 	virtualized,
+	open,
+	onRenderedItemsChange,
 	scrollerRef,
 	loading,
 	loadingContent,
@@ -152,10 +156,17 @@ export function ComboboxPopup({
 									optionCount={optionCount}
 									scrollElement={viewportElement}
 									scrollerRef={scrollerRef}
+									open={open}
+									onRenderedItemsChange={onRenderedItemsChange}
 									{...rowProps}
 								/>
 							) : (
-								<ComboboxRows entries={entries} {...rowProps} />
+								<ComboboxRows
+									entries={entries}
+									open={open}
+									onRenderedItemsChange={onRenderedItemsChange}
+									{...rowProps}
+								/>
 							)}
 						</BaseCombobox.List>
 					</div>

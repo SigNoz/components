@@ -343,6 +343,24 @@ export function flattenComboboxOptions(entries: readonly ComboboxEntry[]): Combo
 }
 
 /**
+ * The values of the `item` rows among `rows`, in order. Hints, the create row, custom values,
+ * headings and separators are left out: none of them is a row of `items` the caller can act on.
+ *
+ * @access private
+ */
+export function itemRowValues(rows: readonly (ComboboxVirtualRow | undefined)[]): string[] {
+	const values: string[] = [];
+
+	for (const row of rows) {
+		if (row?.kind === 'item') {
+			values.push(row.value);
+		}
+	}
+
+	return values;
+}
+
+/**
  * The entries as one list of rows, group headings included, for the virtual list.
  *
  * @access private

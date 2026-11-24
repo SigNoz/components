@@ -542,6 +542,19 @@ type ComboboxBaseProps = Pick<ComponentProps<'div'>, 'id'> &
 		 */
 		virtualized?: boolean;
 		/**
+		 * Called with the `value` of every `item` row the list renders, in list order, each time that
+		 * set changes: when the popup opens, when the search filters the rows, and, with
+		 * `virtualized`, when a scroll brings other rows in. For work that should only run for rows
+		 * someone can see, such as checking a permission per row and disabling the denied ones.
+		 *
+		 * @note With `virtualized` the set is the rows in view plus a few on each side, so a short
+		 * scroll does not wait on them. Without it, every row that survives the search.
+		 *
+		 * @note Hints, the create row and selected values that are not in `items` are left out. Not
+		 * called while `loading` or while the popup is closed.
+		 */
+		onRenderedItemsChange?: (values: string[]) => void;
+		/**
 		 * How wide the popup may get, written as `--combobox-internal-max-inline-size`. A number is
 		 * written as `px`.
 		 *

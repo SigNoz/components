@@ -2,7 +2,13 @@ import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import type { ReactNode } from 'react';
 import { partTestId } from '../../lib/utils.js';
 import styles from '../combobox.module.scss';
-import type { ComboboxEntry, ComboboxGroupEntry } from '../utils.js';
+import { useRenderedItemsReport } from '../use-rendered-items-report.js';
+import {
+	type ComboboxEntry,
+	type ComboboxGroupEntry,
+	flattenComboboxOptions,
+	itemRowValues,
+} from '../utils.js';
 import { ComboboxRow } from './combobox-row.js';
 
 /**
@@ -13,6 +19,14 @@ export type ComboboxRowsProps = {
 	comboboxTestId: string | undefined;
 	multiple: boolean;
 	createLabel: ((query: string) => ReactNode) | undefined;
+};
+
+/**
+ * @access private
+ */
+export type ComboboxRowsRootProps = ComboboxRowsProps & {
+	open: boolean;
+	onRenderedItemsChange: ((values: string[]) => void) | undefined;
 };
 
 function ComboboxSeparator(): ReactNode {
@@ -56,7 +70,18 @@ function ComboboxGroup({
  *
  * @access private
  */
-export function ComboboxRows({ entries, ...rowProps }: ComboboxRowsProps): ReactNode {
+export function ComboboxRows({
+	entries,
+	open,
+	onRenderedItemsChange,
+	...rowProps
+}: ComboboxRowsRootProps): ReactNode {
+	useRenderedItemsReport(
+		itemRowValues(flattenComboboxOptions(entries)),
+		open,
+		onRenderedItemsChange,
+	);
+
 	return entries.map((entry) => {
 		if (entry.kind === 'separator') {
 			return <ComboboxSeparator key={entry.key} />;

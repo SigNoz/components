@@ -110,6 +110,12 @@ export const comboboxArgTypes: Meta<typeof Combobox>['argTypes'] = {
 		description: 'Called with the new value: `string | undefined`, or `string[]` with `multiple`.',
 		table: { category: 'Events', type: { summary: '(value) => void' } },
 	},
+	onRenderedItemsChange: {
+		control: false,
+		description:
+			'Called with the `value` of every `item` row the open list renders, each time that set changes. With `virtualized`, the rows in view plus a few on each side. For work that should only run for rows someone can see, such as a permission check per row.',
+		table: { category: 'Events', type: { summary: '(values: string[]) => void' } },
+	},
 	loading: {
 		control: 'boolean',
 		description:

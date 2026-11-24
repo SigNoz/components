@@ -4,7 +4,8 @@ import { type MutableRefObject, type ReactNode, useImperativeHandle, useMemo } f
 import { cn } from '../../lib/utils.js';
 import { COMBOBOX_ESTIMATED_ROW_SIZE } from '../constants.js';
 import styles from '../combobox.module.scss';
-import type { ComboboxVirtualRow } from '../utils.js';
+import { useRenderedItemsReport } from '../use-rendered-items-report.js';
+import { type ComboboxVirtualRow, itemRowValues } from '../utils.js';
 import { ComboboxRow } from './combobox-row.js';
 
 /**
@@ -24,6 +25,8 @@ export type ComboboxVirtualRowsProps = {
 	optionCount: number;
 	scrollElement: HTMLDivElement | null;
 	scrollerRef: MutableRefObject<ComboboxVirtualScroller | null>;
+	open: boolean;
+	onRenderedItemsChange: ((values: string[]) => void) | undefined;
 	comboboxTestId: string | undefined;
 	multiple: boolean;
 	createLabel: ((query: string) => ReactNode) | undefined;
@@ -43,6 +46,8 @@ export function ComboboxVirtualRows({
 	optionCount,
 	scrollElement,
 	scrollerRef,
+	open,
+	onRenderedItemsChange,
 	...rowProps
 }: ComboboxVirtualRowsProps): ReactNode {
 	// TanStack Virtual hands back one mutable instance whose methods change what they return on
@@ -75,6 +80,14 @@ export function ComboboxVirtualRows({
 		overscan: 8,
 	});
 
+	const virtualRows = virtualizer.getVirtualItems();
+
+	useRenderedItemsReport(
+		itemRowValues(virtualRows.map((virtualRow) => rows[virtualRow.index])),
+		open,
+		onRenderedItemsChange,
+	);
+
 	useImperativeHandle(
 		scrollerRef,
 		() => ({
@@ -95,7 +108,7 @@ export function ComboboxVirtualRows({
 			className={styles['combobox__virtual-list']}
 			style={{ blockSize: virtualizer.getTotalSize() }}
 		>
-			{virtualizer.getVirtualItems().map((virtualRow) => {
+			{virtualRows.map((virtualRow) => {
 				const row = rows[virtualRow.index];
 
 				if (row === undefined) {
