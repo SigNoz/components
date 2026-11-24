@@ -61,10 +61,11 @@ export type DrawerStackContextValue = {
 	 */
 	trailClosePosition: DrawerClosePositionType;
 	/**
-	 * Called by a nested drawer while it is open. The drawer takes no input until every cleanup it
-	 * returned has run.
+	 * Called by a nested drawer while it is open, with whether it blocks input. Under one that does,
+	 * the drawer takes no input until every cleanup it returned has run; an inspector overlay leaves
+	 * it usable.
 	 */
-	cover: () => () => void;
+	cover: (blocksInput: boolean) => () => void;
 };
 
 const DrawerStackContext = createContext<DrawerStackContextValue | null>(null);

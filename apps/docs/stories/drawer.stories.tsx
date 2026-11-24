@@ -18,6 +18,7 @@ import {
 	Dialog,
 	Drawer,
 	type DrawerProps,
+	type DrawerTypeType,
 	Input,
 	Skeleton,
 	Tooltip,
@@ -966,7 +967,7 @@ export const DialogOverADrawer: Story = {
 	},
 };
 
-function PodWithLogs(): ReactElement {
+function PodWithLogs({ podType = 'inspector' }: { podType?: DrawerTypeType }): ReactElement {
 	const pod = PODS[0];
 	const [podOpen, setPodOpen] = useState(true);
 	const [logOpen, setLogOpen] = useState(true);
@@ -978,7 +979,7 @@ function PodWithLogs(): ReactElement {
 				Open pod
 			</Button>
 			<Drawer
-				type="inspector"
+				type={podType}
 				stack="overlay"
 				open={podOpen}
 				onClose={() => setPodOpen(false)}
@@ -1032,7 +1033,7 @@ function PodWithLogs(): ReactElement {
 
 /**
  * `stack="overlay"`: a drawer opened from another one covers it at 80% of its width, so the pod
- * stays in sight. The pod takes no input until the log closes, and `Esc` closes the log first.
+ * stays in sight. The log is an inspector, so the pod stays usable, and `Esc` closes the log first.
  */
 export const StackAsOverlay: Story = {
 	parameters: {
@@ -1059,6 +1060,30 @@ export const StackAsOverlay: Story = {
 		await expect(getNode('overlay-pod')).not.toHaveAttribute('data-covered');
 
 		// Opened again from the pod, so the snapshot shows the stack.
+		await userEvent.click(
+			within(getNode('overlay-pod')).getByRole('button', { name: LOGS[1].body }),
+		);
+		await waitFor(() => expect(getNode('overlay-log')).toHaveTextContent(LOGS[1].body));
+	},
+};
+
+/**
+ * An inspector over a `task`: the pod is modal to the page, but the log over it leaves it usable,
+ * so a press on another row shows that log without closing the one open.
+ */
+export const InspectorOverATask: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: false, modes: allModes },
+		controls: { disable: true },
+	},
+	render: () => <PodWithLogs podType="task" />,
+	play: async () => {
+		await waitForEffects();
+		await waitFor(() => expect(getNode('overlay-log')).toBeVisible());
+
+		await expect(getNode('overlay-pod')).toHaveAttribute('data-covered', 'overlay');
+		await expect(getNode('overlay-pod').inert).toBe(false);
+
 		await userEvent.click(
 			within(getNode('overlay-pod')).getByRole('button', { name: LOGS[1].body }),
 		);
