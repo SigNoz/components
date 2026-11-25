@@ -122,7 +122,7 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 	onClose: {
 		control: false,
 		description:
-			'Called when the user asks to close the drawer, with the reason: `escape-key`, `outside-press` (the backdrop of a `task`), `close-press`, `swipe` (towards the right edge on a touch screen), `crumb-press` (an earlier crumb of a breadcrumb trail) or `parent-close` (the drawer it is nested in closed from the app, which closes this one whatever the handler does). The drawer stays open until `open` becomes `false`. An `inspector` never reports `outside-press`. Required with `open`, and never passed with a `handle`.',
+			'Called when the user asks to close the drawer, with the reason: `escape-key`, `outside-press` (the backdrop of a `task`), `close-press`, `swipe` (towards the right edge on a touch screen), `crumb-press` (an earlier crumb of a breadcrumb trail) or `parent-close` (the drawer it is nested in closed from the app; this one unmounts with it whatever the handler does, so set `open` to `false`, or it is back when that drawer opens again). The drawer stays open until `open` becomes `false`. An `inspector` never reports `outside-press`. Required with `open`, and never passed with a `handle`.',
 		table: {
 			category: 'Events',
 			type: {

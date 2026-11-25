@@ -58,9 +58,12 @@ export function useNestedDrawers({
 		};
 	};
 
+	// Each drawer over this one closes in a `flushSync` that renders the app again, so the
+	// `onClose` of this render may read state that is gone by then.
+	const requestCloseRef = useRef(requestClose);
 	const closeWithNested = (reason: DrawerCloseReasonType): void => {
 		if (closeTopFirst([...nestedRef.current], reason)) {
-			requestClose(reason);
+			requestCloseRef.current(reason);
 		}
 	};
 
@@ -113,6 +116,7 @@ export function useNestedDrawers({
 	const closeWithParentRef = useRef(closeWithParent);
 	const reopenUnderRef = useRef(reopenUnder);
 	useIsomorphicLayoutEffect(() => {
+		requestCloseRef.current = requestClose;
 		closeRef.current = closeWithNested;
 		closeWithParentRef.current = closeWithParent;
 		reopenUnderRef.current = reopenUnder;

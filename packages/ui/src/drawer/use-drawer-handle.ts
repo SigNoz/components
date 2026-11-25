@@ -12,9 +12,10 @@ import type { DrawerHandleType } from './types.js';
  * payload in place, which is how ↑/↓ step through the rows.
  *
  * With a handle the drawer closes itself on `Esc`, the close button, a swipe, a press on the
- * backdrop of a `task` and a press on an earlier crumb of a breadcrumb trail. `handle.close()`
- * closes it from inside, such as a form after its save succeeds. So `open` and `onClose` are never
- * passed with a handle, and a drawer that must refuse a close uses `open`.
+ * backdrop of a `task`, a press on an earlier crumb of a breadcrumb trail, and when the drawer it
+ * is nested in closes. `handle.close()` closes it from inside, such as a form after its save
+ * succeeds. So `open` and `onClose` are never passed with a handle, and a drawer that must refuse a
+ * close uses `open`.
  *
  * `onOpenChange` reports every open and close, whichever caused it.
  *

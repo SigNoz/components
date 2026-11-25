@@ -194,6 +194,17 @@ describe('leaveTrail', () => {
 
 		expect(log).toEqual(['pod:swipe', 'node:swipe']);
 	});
+
+	it('skips a drawer that is closed already', () => {
+		const log: string[] = [];
+		const trace = { ...drawer('trace', log), isOpen: () => false };
+		const trail = [entry('cluster', drawer('cluster', log)), entry('trace', trace)];
+
+		leaveTrail(trail, 'close-press');
+
+		expect(log).toEqual(['cluster:close-press']);
+		expect(trace.close).not.toHaveBeenCalled();
+	});
 });
 
 describe('stepBackInTrail', () => {

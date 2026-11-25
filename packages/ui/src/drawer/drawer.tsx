@@ -320,6 +320,12 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * A drawer declared inside another one, in its body or a header slot, renders the way the outer
  * drawer's `stack` says, and takes its width from it.
  *
+ * Closing a drawer asks the drawers open over it to close first, the one on top first, with the
+ * same reason, and one that stays open keeps it open, such as a form that asks about unsaved
+ * edits. They close before its own `onClose` runs, so they stay closed when that `onClose` keeps it
+ * open. When the app closes it, with `open={false}` or `handle.close()`, the drawers open over it
+ * get `parent-close` and slide out with it.
+ *
  * With `stack="breadcrumb"`, the nested drawer drills down: it opens in place at the same width,
  * with no movement, and a trail of crumbs under its header leads back, the first crumb, a `...`
  * crumb that lists the earlier steps, and the last three. A press on a crumb closes every drawer

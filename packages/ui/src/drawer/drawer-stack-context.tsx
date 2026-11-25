@@ -34,7 +34,8 @@ export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
  */
 export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> & {
 	/**
-	 * Closes it with `parent-close`, which it cannot refuse.
+	 * Asks it to close with `parent-close`. It unmounts with the drawer below whatever its app
+	 * does, and one the app keeps open is back when the drawer below opens again.
 	 */
 	closeWithParent: () => void;
 	/**

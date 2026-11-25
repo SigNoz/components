@@ -479,12 +479,15 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * the drawers under it stay open.
 		 *
 		 * @note Drawers nested in it that are open get the same request first, the one on top
-		 * first, and one that stays open keeps this one open too.
+		 * first, and one that stays open keeps this one open too. A nested drawer counts as open
+		 * when its `onClose` returns, so set its `open` to `false` in the handler, not in a
+		 * `startTransition`, a timer or after an `await`, or the press closes only that drawer. A
+		 * router navigation that runs as a transition, such as `router.push` in Next.js, is one.
 		 *
 		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, each drawer
-		 * nested in it that is open gets `parent-close`, and a drawer on a handle closes. It closes
-		 * with the drawer below whatever the handler does, so treat `parent-close` as closed: do
-		 * not ask about unsaved edits.
+		 * nested in it that is open gets `parent-close`, and a drawer on a handle closes. It
+		 * unmounts with the drawer below whatever the handler does, so set `open` to `false` and do
+		 * not ask about unsaved edits: a drawer left open is back when the drawer below opens again.
 		 */
 		onClose?: (reason: DrawerCloseReasonType) => void;
 		/**

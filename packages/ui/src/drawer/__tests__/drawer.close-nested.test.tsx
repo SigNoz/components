@@ -33,9 +33,11 @@ function PodPage({ stack, onClosed, onAppClose }: PodPageProps): ReactNode {
 	const [editOpen, setEditOpen] = useState(false);
 	const [confirming, setConfirming] = useState(false);
 	const [name, setName] = useState('');
+	// Also drops the question, which the pod closing from the app does not close on its own.
 	const closeEdit = (): void => {
 		setEditOpen(false);
 		setName('');
+		setConfirming(false);
 	};
 
 	useEffect(() => {
@@ -83,10 +85,7 @@ function PodPage({ stack, onClosed, onAppClose }: PodPageProps): ReactNode {
 						color="danger"
 						confirmText="Discard"
 						cancelText="Keep editing"
-						onConfirm={() => {
-							setConfirming(false);
-							closeEdit();
-						}}
+						onConfirm={closeEdit}
 						onCancel={() => setConfirming(false)}
 					>
 						The edits to this pod are lost.
@@ -292,6 +291,48 @@ describe('Drawer closing with an unsaved form open over it', () => {
 	);
 });
 
+/**
+ * A pod with a log over it, both kept in one stack of names, and each `onClose` drops the last name
+ * from the stack it rendered with, not from the latest one.
+ */
+function StackPage(): ReactNode {
+	const [stack, setStack] = useState(['pod', 'log']);
+	const closeTop = (): void => {
+		setStack(stack.slice(0, -1));
+	};
+
+	return (
+		<Drawer type="task" open={stack.includes('pod')} onClose={closeTop} title="Pod" testId="pod">
+			<Drawer
+				type="inspector"
+				open={stack.includes('log')}
+				onClose={closeTop}
+				title="Log"
+				testId="log"
+			>
+				The log.
+			</Drawer>
+		</Drawer>
+	);
+}
+
+describe('Drawer closing with an app state of its own', () => {
+	it('calls its own onClose from the render after the drawers over it closed', async () => {
+		render(<StackPage />);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		await userEvent.click(screen.getByTestId('pod-close'));
+
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+		expect(document.querySelector('[data-testid="log"]')).toBeNull();
+	});
+});
+
 type HandleName = 'pod' | 'trace' | 'log';
 type Handles = Record<HandleName, DrawerHandleType>;
 
@@ -454,6 +495,32 @@ describe('Drawer closed from the app with drawers open over it', () => {
 		await waitForSettled();
 
 		expect(queryPanel('edit')).toBeNull();
+	});
+
+	it('drops the question of the form when the app closes it while the question is open', async () => {
+		let closeFromApp = (): void => {};
+		await openPodAndEdit('overlay', 'Ada', (close) => {
+			closeFromApp = close;
+		});
+		await userEvent.click(screen.getByTestId('pod-close'));
+		await waitForQuestion();
+
+		act(() => {
+			closeFromApp();
+		});
+		await waitFor(() => {
+			expect(queryPanel('pod')).toBeNull();
+		});
+		expect(screen.queryByRole('alertdialog')).toBeNull();
+
+		await userEvent.click(screen.getByRole('button', { name: 'Open pod' }));
+		await userEvent.click(await screen.findByRole('button', { name: 'Edit pod' }));
+		await waitFor(() => {
+			expect(panel('edit')).toBeVisible();
+		});
+		await waitForSettled();
+
+		expect(screen.queryByRole('alertdialog')).toBeNull();
 	});
 
 	it('closes every drawer on a handle over it in the same commit, so they slide out together', async () => {
