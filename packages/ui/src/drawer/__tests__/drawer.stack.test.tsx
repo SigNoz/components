@@ -185,9 +185,9 @@ describe('Drawer nested with stack="overlay"', () => {
 		});
 	});
 
-	it('takes no input on the drawer below while the nested one is open', async () => {
+	it('takes no input on the drawer below while a nested task is open', async () => {
 		const user = userEvent.setup();
-		await renderChain({ rootStack: 'overlay' });
+		await renderChain({ rootStack: 'overlay', childType: 'task' });
 
 		expect(panelOf('root')).toHaveAttribute('data-covered');
 		expect(panelOf('root').inert).toBe(true);
@@ -200,6 +200,22 @@ describe('Drawer nested with stack="overlay"', () => {
 		expect(panelOf('root')).not.toHaveAttribute('data-covered');
 		expect(panelOf('root').inert).toBe(false);
 	});
+
+	it.each(['task', 'inspector'] as const)(
+		'leaves the %s below usable while a nested inspector is open',
+		async (rootType) => {
+			await renderChain({ rootStack: 'overlay', rootType });
+
+			expect(panelOf('root')).toHaveAttribute('data-covered', 'overlay');
+			expect(panelOf('root').inert).toBe(false);
+
+			const inRoot = within(panelOf('root')).getByRole('button', { name: 'Open child' });
+			await browserUser.click(inRoot);
+
+			expect(document.activeElement).toBe(inRoot);
+			expect(panelOf('child')).toBeVisible();
+		},
+	);
 
 	it('lets the type of the nested drawer set its own backdrop', async () => {
 		await renderChain({ rootStack: 'overlay', rootType: 'inspector', childType: 'task' });
@@ -361,10 +377,15 @@ describe('Drawer nested with stack="breadcrumb"', () => {
 });
 
 describe('Drawer with a breadcrumb trail and then an overlay', () => {
-	it('opens the overlay over the trail, which takes no input until it closes', async () => {
+	it('opens a task overlay over the trail, which takes no input until it closes', async () => {
 		const user = userEvent.setup();
 		render(
-			<Chain rootStack="breadcrumb" childStack="overlay" open={['root', 'child', 'grandchild']} />,
+			<Chain
+				rootStack="breadcrumb"
+				childStack="overlay"
+				grandchildType="task"
+				open={['root', 'child', 'grandchild']}
+			/>,
 		);
 		await waitFor(() => {
 			expect(panelOf('grandchild')).toBeVisible();

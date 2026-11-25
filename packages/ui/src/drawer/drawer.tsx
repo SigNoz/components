@@ -34,7 +34,7 @@ import type {
 import { useDrawerStack } from './use-drawer-stack.js';
 import { useFocusFallback } from './use-focus-fallback.js';
 import { useReportRightEdgeCover } from './use-report-right-edge-cover.js';
-import { letPageKeysThrough, toDrawerCloseReason } from './utils.js';
+import { letNestedDrawerKeysThrough, letPageKeysThrough, toDrawerCloseReason } from './utils.js';
 
 const NO_STEPS: readonly DrawerTrailStepType[] = [];
 
@@ -101,6 +101,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 		layerType,
 		closePosition: resolvedClosePosition,
 		covered,
+		coveredByInspector,
 		style: stackStyle,
 		value: stackValue,
 		requestCloseFromPanel,
@@ -169,9 +170,13 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 							// may not undo the modal.
 							style={stackStyle}
 							aria-modal={isModal ? 'true' : undefined}
-							// Base UI stops the arrow keys, `Home` and `End` at every popup. A modal keeps that, and
-							// an inspector leaves the page usable, so its shortcuts get them.
-							onKeyDown={isModal ? undefined : letPageKeysThrough}
+							// Base UI stops the arrow keys, `Home` and `End` at every popup. An inspector leaves the
+							// page usable, so its shortcuts get them, and so does a modal with only inspectors open
+							// over it. Any other modal keeps its own keys, but not those of a drawer nested in it,
+							// which already decided.
+							onKeyDown={
+								isModal && !coveredByInspector ? letNestedDrawerKeysThrough : letPageKeysThrough
+							}
 							data-testid={testId}
 							data-type={resolvedType}
 							data-width={width}
@@ -337,8 +342,9 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * again, so it keeps no scroll or state of its own.
  *
  * With `stack="overlay"`, the nested drawer opens over the outer one at 80% of its width, so the
- * outer one stays in sight. The outer one takes no input until the nested one closes, and the
- * nested drawer's own `type` sets its backdrop.
+ * outer one stays in sight. Under a nested `task` the outer one takes no input until the nested one
+ * closes; under a nested `inspector` it stays usable, and the arrow keys reach the page from both.
+ * The nested drawer's own `type` sets its backdrop.
  *
  * A drawer of a trail with `stack="overlay"` opens an overlay over the trail, and the overlay may
  * start a trail of its own.

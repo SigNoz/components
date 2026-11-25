@@ -43,8 +43,8 @@ export type DrawerClosePositionType = 'start' | 'end';
  * `breadcrumb` drills down: the nested drawer opens in place, at the same width, and a trail of
  * crumbs under its header leads back. Every drawer of the trail is one crumb.
  *
- * `overlay` opens the nested drawer over this one, 20% narrower so this one stays in sight. This
- * one takes no input until the nested drawer closes.
+ * `overlay` opens the nested drawer over this one, 20% narrower so this one stays in sight. Under a
+ * nested `task` this one takes no input until it closes; under a nested `inspector` it stays usable.
  */
 export type DrawerStackType = 'overlay' | 'breadcrumb';
 
@@ -373,8 +373,9 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * all of them.
 		 *
 		 * `overlay` opens the nested drawer over this one, at 80% of its width, so this one stays in
-		 * sight but takes no input until the nested drawer closes. The nested drawer's `type` sets
-		 * its own backdrop.
+		 * sight. Under a nested `task` it takes no input until that one closes; under a nested
+		 * `inspector` it stays usable, and the arrow keys reach the page. The nested drawer's `type`
+		 * sets its own backdrop.
 		 *
 		 * @note A nested drawer takes its width from this one, so its own `width` does not apply.
 		 * The trails nest: a drawer of a trail with `stack="overlay"` opens an overlay, and the

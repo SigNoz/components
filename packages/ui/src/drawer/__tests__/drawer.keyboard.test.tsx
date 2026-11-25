@@ -343,25 +343,63 @@ describe('Drawer arrow keys with a widget inside an inspector', () => {
 	});
 });
 
-describe('Drawer arrow keys in nested drawers', () => {
-	it('an inspector in a task stays inside the task, which is modal', async () => {
-		render(
+/**
+ * A drawer of `parentType` with a drawer of `childType` open in it, each holding a button.
+ */
+async function openNested(parentType: DrawerTypeType, childType: DrawerTypeType): Promise<void> {
+	render(
+		parentType === 'task' ? (
 			<Drawer type="task" stack="overlay" open title="Parent" onClose={() => {}} testId="parent">
-				<Drawer
-					type="inspector"
-					stack="overlay"
-					open
-					title="Child"
-					onClose={() => {}}
-					testId="child"
-				>
-					<button type="button">Inside child</button>
-				</Drawer>
-			</Drawer>,
-		);
-		const inside = await screen.findByRole('button', { name: 'Inside child' });
-		await waitForSettled();
-		inside.focus();
+				<button type="button">Inside parent</button>
+				<NestedChild type={childType} />
+			</Drawer>
+		) : (
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				title="Parent"
+				onClose={() => {}}
+				testId="parent"
+			>
+				<button type="button">Inside parent</button>
+				<NestedChild type={childType} />
+			</Drawer>
+		),
+	);
+	await screen.findByRole('button', { name: 'Inside child' });
+	await waitForSettled();
+}
+
+function NestedChild({ type }: { type: DrawerTypeType }): ReactNode {
+	return type === 'task' ? (
+		<Drawer type="task" stack="overlay" open title="Child" onClose={() => {}} testId="child">
+			<button type="button">Inside child</button>
+		</Drawer>
+	) : (
+		<Drawer type="inspector" stack="overlay" open title="Child" onClose={() => {}} testId="child">
+			<button type="button">Inside child</button>
+		</Drawer>
+	);
+}
+
+describe('Drawer arrow keys in nested drawers', () => {
+	it.each(['Inside child', 'Inside parent'])(
+		'an inspector in a task lets the key reach the page from the button %s',
+		async (name) => {
+			await openNested('task', 'inspector');
+			screen.getByRole('button', { name }).focus();
+			const keys = listenOnDocument();
+
+			await press('ArrowDown');
+
+			expect(keys.bubbled.map((event) => event.key)).toEqual(['ArrowDown']);
+		},
+	);
+
+	it('a task in a task stays inside the tasks, which are modal', async () => {
+		await openNested('task', 'task');
+		screen.getByRole('button', { name: 'Inside child' }).focus();
 		const keys = listenOnDocument();
 
 		await press('ArrowDown');
