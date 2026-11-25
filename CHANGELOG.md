@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.1](https://github.com/SigNoz/components/compare/v0.4.0...v0.4.1) (2026-11-25)
+
+
+### Bug Fixes
+
+* **drawer:** keep the drawer below an inspector usable ([#532](https://github.com/SigNoz/components/issues/532)) ([3ec9994](https://github.com/SigNoz/components/commit/3ec99947bc52212cd95e4eebb3da3dca44ff9721))
+* recover debounce… ([f45aa88](https://github.com/SigNoz/components/commit/f45aa88df7ef1e926fa749654a03dcaa425d8c3a))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** bump the development-dependencies group with 15 updates ([#530](https://github.com/SigNoz/components/issues/530)) ([f45aa88](https://github.com/SigNoz/components/commit/f45aa88df7ef1e926fa749654a03dcaa425d8c3a))
+* **deps:** bump chromaui/action from 18.14.3 to 18.15.1 ([#528](https://github.com/SigNoz/components/issues/528)) ([2bd26f8](https://github.com/SigNoz/components/commit/2bd26f805bac7945d6d86dd31ce4867bd4d0eb49))
+
 ## [0.4.0](https://github.com/SigNoz/components/compare/v0.3.0...v0.4.0) (2026-11-19)
 
 
