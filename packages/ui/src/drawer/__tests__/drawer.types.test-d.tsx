@@ -211,7 +211,13 @@ describe('Drawer props', () => {
 				stack="overlay"
 				open
 				onClose={(
-					_reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press',
+					_reason:
+						| 'escape-key'
+						| 'outside-press'
+						| 'close-press'
+						| 'swipe'
+						| 'crumb-press'
+						| 'parent-close',
 				) => noop()}
 				title="T"
 			>

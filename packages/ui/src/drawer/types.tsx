@@ -115,14 +115,16 @@ export type DrawerTrailSelectReasonType = 'crumb-press' | 'escape-key';
 
 /**
  * Why a `Drawer` asks to close: `Esc`, a press on the backdrop of a `task`, the close button, a
- * swipe towards the edge on a touch screen, or a press on an earlier crumb of a breadcrumb trail.
+ * swipe towards the edge on a touch screen, a press on an earlier crumb of a breadcrumb trail, or
+ * the drawer it is nested in closing from the app.
  */
 export type DrawerCloseReasonType =
 	| 'escape-key'
 	| 'outside-press'
 	| 'close-press'
 	| 'swipe'
-	| 'crumb-press';
+	| 'crumb-press'
+	| 'parent-close';
 
 /**
  * Opens a `Drawer` from application state, and closes it from inside its content. Create one with
@@ -461,8 +463,9 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * Called when the user asks to close the drawer: `Esc` (`escape-key`), a press on the
 		 * backdrop of a `task` (`outside-press`), the close button (`close-press`), a swipe
-		 * towards the right edge on a touch screen (`swipe`), or a press on an earlier crumb of a
-		 * breadcrumb trail (`crumb-press`). The drawer stays open until `open` becomes `false`.
+		 * towards the right edge on a touch screen (`swipe`), a press on an earlier crumb of a
+		 * breadcrumb trail (`crumb-press`), or the drawer it is nested in closing from the app
+		 * (`parent-close`). The drawer stays open until `open` becomes `false`.
 		 *
 		 * @note Required with `open`, rejected with a `handle`: a drawer on a handle closes itself on
 		 * every request, and `useDrawerHandle(onOpenChange)` reports it. A drawer that must refuse a
@@ -476,9 +479,12 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * the drawers under it stay open.
 		 *
 		 * @note Drawers nested in it that are open get the same request first, the one on top
-		 * first, and one that stays open keeps this one open too. A drawer closed from the app
-		 * instead, with `open={false}` or `handle.close()`, takes its nested drawers with it without
-		 * their `onClose`: reset their state where the app closes it.
+		 * first, and one that stays open keeps this one open too.
+		 *
+		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, each drawer
+		 * nested in it that is open gets `parent-close`, and a drawer on a handle closes. It closes
+		 * with the drawer below whatever the handler does, so treat `parent-close` as closed: do
+		 * not ask about unsaved edits.
 		 */
 		onClose?: (reason: DrawerCloseReasonType) => void;
 		/**

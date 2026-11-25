@@ -36,6 +36,10 @@ type NestedDrawers = {
  * asked first, with the same reason, and one that stays open, such as a form behind an
  * unsaved-changes `AlertDialog`, keeps the drawer below open too.
  *
+ * When the app closes the drawer instead, with `open={false}` or `handle.close()`, the drawers
+ * still open over it get `parent-close` in the same commit, so they slide out with it rather than
+ * vanish when it unmounts. Each of them does the same for the drawers over it.
+ *
  * @access private
  */
 export function useNestedDrawers({
@@ -59,10 +63,28 @@ export function useNestedDrawers({
 		}
 	};
 
-	// The drawer below calls it when it closes, which may be renders after this one registered.
+	const wasOpenRef = useRef(isOpen);
+	useIsomorphicLayoutEffect(() => {
+		const closedNow = wasOpenRef.current && !isOpen;
+		wasOpenRef.current = isOpen;
+		if (!closedNow) {
+			return;
+		}
+
+		// A close the user asked for has closed every drawer over this one already.
+		for (const entry of [...nestedRef.current].reverse()) {
+			if (entry.isOpen()) {
+				entry.closeWithParent();
+			}
+		}
+	}, [isOpen]);
+
+	// The drawer below calls these when it closes, which may be renders after this one registered.
 	const closeRef = useRef(closeWithNested);
+	const requestCloseRef = useRef(requestClose);
 	useIsomorphicLayoutEffect(() => {
 		closeRef.current = closeWithNested;
+		requestCloseRef.current = requestClose;
 	});
 	useEffect(() => {
 		if (!isOpen || !nestInParent) {
@@ -72,6 +94,9 @@ export function useNestedDrawers({
 		return nestInParent({
 			close: (reason) => {
 				closeRef.current(reason);
+			},
+			closeWithParent: () => {
+				requestCloseRef.current('parent-close');
 			},
 			isOpen: readIsOpen,
 		});

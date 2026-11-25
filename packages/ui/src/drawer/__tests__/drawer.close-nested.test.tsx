@@ -1,11 +1,12 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { AlertDialog } from '../../alert-dialog/index.js';
 import { waitForSettled as waitForDialogSettled } from '../../dialog/__tests__/dialog.test-utils.js';
 import { Drawer } from '../drawer.js';
-import type { DrawerCloseReasonType, DrawerStackType } from '../types.js';
+import type { DrawerCloseReasonType, DrawerHandleType, DrawerStackType } from '../types.js';
+import { useDrawerHandle } from '../use-drawer-handle.js';
 import { slot, waitForSettled } from './drawer.test-utils.js';
 
 type Closed = (name: 'pod' | 'edit', reason: DrawerCloseReasonType) => void;
@@ -16,6 +17,10 @@ interface PodPageProps {
 	 */
 	stack: DrawerStackType;
 	onClosed: Closed;
+	/**
+	 * Receives the app's own close of the pod, the way a URL change or a stats card closes it.
+	 */
+	onAppClose?: (close: () => void) => void;
 }
 
 /**
@@ -23,7 +28,7 @@ interface PodPageProps {
  * asks "Discard changes?" before it closes with unsaved edits. Over the pod it is an inspector, so
  * the pod's close button stays in reach; in a trail it takes the pod's place.
  */
-function PodPage({ stack, onClosed }: PodPageProps): ReactNode {
+function PodPage({ stack, onClosed, onAppClose }: PodPageProps): ReactNode {
 	const [podOpen, setPodOpen] = useState(false);
 	const [editOpen, setEditOpen] = useState(false);
 	const [confirming, setConfirming] = useState(false);
@@ -32,6 +37,10 @@ function PodPage({ stack, onClosed }: PodPageProps): ReactNode {
 		setEditOpen(false);
 		setName('');
 	};
+
+	useEffect(() => {
+		onAppClose?.(() => setPodOpen(false));
+	});
 
 	return (
 		<>
@@ -57,7 +66,8 @@ function PodPage({ stack, onClosed }: PodPageProps): ReactNode {
 					open={editOpen}
 					onClose={(reason) => {
 						onClosed('edit', reason);
-						if (name === '') {
+						// The pod closed from the app: the form goes with it, so there is nothing to ask.
+						if (name === '' || reason === 'parent-close') {
 							closeEdit();
 						} else {
 							setConfirming(true);
@@ -98,9 +108,13 @@ function panel(name: 'pod' | 'edit'): HTMLElement {
 	return element as HTMLElement;
 }
 
-async function openPodAndEdit(stack: DrawerStackType, edits = 'Ada'): Promise<Closed> {
+async function openPodAndEdit(
+	stack: DrawerStackType,
+	edits = 'Ada',
+	onAppClose?: PodPageProps['onAppClose'],
+): Promise<Closed> {
 	const onClosed = vi.fn<Closed>();
-	render(<PodPage stack={stack} onClosed={onClosed} />);
+	render(<PodPage stack={stack} onClosed={onClosed} onAppClose={onAppClose} />);
 
 	await userEvent.click(screen.getByRole('button', { name: 'Open pod' }));
 	await waitFor(() => {
@@ -276,4 +290,139 @@ describe('Drawer closing with an unsaved form open over it', () => {
 			expect(queryPanel('edit')).toBeNull();
 		},
 	);
+});
+
+type HandleName = 'pod' | 'trace' | 'log';
+type Handles = Record<HandleName, DrawerHandleType>;
+
+/**
+ * A pod with a trace opened from it and a log opened from the trace, each on its own handle, so
+ * the app can close the pod from anywhere.
+ */
+function HandlePage({
+	onOpenChange,
+	onHandles,
+}: {
+	onOpenChange: (name: HandleName, open: boolean) => void;
+	onHandles: (handles: Handles) => void;
+}): ReactNode {
+	const pod = useDrawerHandle((open) => onOpenChange('pod', open));
+	const trace = useDrawerHandle((open) => onOpenChange('trace', open));
+	const log = useDrawerHandle((open) => onOpenChange('log', open));
+
+	useEffect(() => {
+		onHandles({ pod, trace, log });
+	});
+
+	return (
+		<Drawer handle={pod} type="task" stack="overlay" title="Pod" testId="pod">
+			<Drawer handle={trace} type="inspector" title="Trace" testId="trace">
+				<Drawer handle={log} type="inspector" title="Log" testId="log">
+					The log.
+				</Drawer>
+			</Drawer>
+		</Drawer>
+	);
+}
+
+/**
+ * Opens the pod, the trace and the log, and returns the handles and the `onOpenChange` calls made
+ * after that.
+ */
+async function openHandleChain(): Promise<{ handles: Handles; events: string[] }> {
+	const events: string[] = [];
+	const rendered: { handles?: Handles } = {};
+	render(
+		<HandlePage
+			onOpenChange={(name, open) => events.push(`${name} ${open}`)}
+			onHandles={(next) => {
+				rendered.handles = next;
+			}}
+		/>,
+	);
+	const { handles } = rendered;
+	if (!handles) {
+		throw new Error('HandlePage gave no handles');
+	}
+	for (const name of ['pod', 'trace', 'log'] as const) {
+		act(() => {
+			handles[name].open();
+		});
+		await waitFor(() => {
+			expect(document.querySelector(`[data-testid="${name}"]`)).not.toBeNull();
+		});
+	}
+	await waitForSettled();
+	events.length = 0;
+
+	return { handles, events };
+}
+
+function exiting(name: string): HTMLElement {
+	const element = document.querySelector<HTMLElement>(`[data-testid="${name}"]`);
+	expect(element).not.toBeNull();
+	expect(element).toHaveAttribute('data-ending-style');
+
+	return element as HTMLElement;
+}
+
+describe('Drawer closed from the app with drawers open over it', () => {
+	it('closes the form over it with parent-close, which skips the question', async () => {
+		let closeFromApp = (): void => {};
+		const onClosed = await openPodAndEdit('overlay', 'Ada', (close) => {
+			closeFromApp = close;
+		});
+
+		act(() => {
+			closeFromApp();
+		});
+
+		exiting('pod');
+		exiting('edit');
+		expect(vi.mocked(onClosed).mock.calls).toEqual([['edit', 'parent-close']]);
+
+		await waitFor(() => {
+			expect(queryPanel('pod')).toBeNull();
+		});
+		expect(screen.queryByRole('alertdialog')).toBeNull();
+
+		await userEvent.click(screen.getByRole('button', { name: 'Open pod' }));
+		await waitFor(() => {
+			expect(panel('pod')).toBeVisible();
+		});
+		await waitForSettled();
+
+		expect(queryPanel('edit')).toBeNull();
+	});
+
+	it('closes every drawer on a handle over it in the same commit, so they slide out together', async () => {
+		const { handles, events } = await openHandleChain();
+
+		act(() => {
+			handles.pod.close();
+		});
+
+		for (const name of ['pod', 'trace', 'log']) {
+			exiting(name);
+		}
+		expect(events).toEqual(['pod false', 'trace false', 'log false']);
+
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+		expect(events).toEqual(['pod false', 'trace false', 'log false']);
+	});
+
+	it('closes the drawers over it first when the user closes it, with no parent-close', async () => {
+		const { events } = await openHandleChain();
+
+		act(() => {
+			screen.getByTestId('pod-close').click();
+		});
+
+		for (const name of ['pod', 'trace', 'log']) {
+			exiting(name);
+		}
+		expect(events).toEqual(['log false', 'trace false', 'pod false']);
+	});
 });

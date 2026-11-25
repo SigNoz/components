@@ -27,11 +27,17 @@ export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
 };
 
 /**
- * A drawer open over another one, which the drawer below asks to close before it closes itself.
+ * A drawer open over another one, which the drawer below asks to close before it closes itself,
+ * and tells to close when the app closed the drawer below.
  *
  * @access private
  */
-export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'>;
+export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> & {
+	/**
+	 * Closes it with `parent-close`, which it cannot refuse.
+	 */
+	closeWithParent: () => void;
+};
 
 /**
  * What an open drawer tells the drawers opened inside it.
