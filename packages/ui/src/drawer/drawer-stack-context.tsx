@@ -27,6 +27,13 @@ export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
 };
 
 /**
+ * A drawer open over another one, which the drawer below asks to close before it closes itself.
+ *
+ * @access private
+ */
+export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'>;
+
+/**
  * What an open drawer tells the drawers opened inside it.
  *
  * @access private
@@ -66,6 +73,11 @@ export type DrawerStackContextValue = {
 	 * it usable.
 	 */
 	cover: (blocksInput: boolean) => () => void;
+	/**
+	 * Called by a nested drawer while it is open. Before the drawer closes, it asks each one to
+	 * close, the one opened last first, and stays open when one of them does.
+	 */
+	nest: (entry: NestedDrawerEntry) => () => void;
 };
 
 const DrawerStackContext = createContext<DrawerStackContextValue | null>(null);

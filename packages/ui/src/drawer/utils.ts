@@ -129,21 +129,24 @@ export function buildTrail({
 }
 
 /**
- * Asks each drawer of `entries` but the one of `keep` to close, the one on top first, each once,
- * and stops at the first one that stays open, such as a form that opens an unsaved-changes
- * `AlertDialog` instead. Returns whether every one closed.
+ * Asks each open drawer of `entries` but the one of `keep` to close, the one on top first, each
+ * once, and stops at the first one that stays open, such as a form that opens an unsaved-changes
+ * `AlertDialog` instead. Returns whether every one closed. A drawer already closed is skipped: the
+ * drawers nested in a drawer of a trail include the later ones of the trail, which closed first.
  *
  * Each request is flushed before the next, so `isOpen` reads what its `onClose` did.
+ *
+ * @access private
  */
-function closeTopFirst(
-	entries: readonly DrawerTrailEntry[],
+export function closeTopFirst(
+	entries: readonly Pick<DrawerTrailEntry, 'close' | 'isOpen'>[],
 	reason: DrawerCloseReasonType,
 	keep?: DrawerTrailEntry['close'],
 ): boolean {
 	const asked = new Set<DrawerTrailEntry['close']>(keep ? [keep] : []);
 
 	for (const entry of [...entries].reverse()) {
-		if (asked.has(entry.close)) {
+		if (asked.has(entry.close) || !entry.isOpen()) {
 			continue;
 		}
 		asked.add(entry.close);

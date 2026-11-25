@@ -13,6 +13,7 @@ import type {
 import { useCommittedOpen } from './use-committed-open.js';
 import { useElementWidth } from '../lib/use-element-width.js';
 import { useInert } from './use-inert.js';
+import { useNestedDrawers } from './use-nested-drawers.js';
 import { buildTrail, leaveTrail } from './utils.js';
 
 type UseDrawerStackOptions = {
@@ -60,7 +61,7 @@ type DrawerStackState = {
 	value: DrawerStackContextValue;
 	/**
 	 * In a trail, `Esc` is a step back and every other reason leaves the whole trail, the drawer on
-	 * top first.
+	 * top first. Every drawer open over one that closes is asked to close before it.
 	 */
 	requestCloseFromPanel: (reason: DrawerCloseReasonType) => void;
 };
@@ -69,6 +70,8 @@ type DrawerStackState = {
  * How a drawer stacks with the drawers it is declared in and the ones declared inside it: the
  * breadcrumb trail it ends, its width from its parent, and whether a nested drawer covers it. Under
  * a task or a step of its trail it takes no input; under an inspector overlay it stays usable.
+ * Before it closes, it asks the drawers open over it to close, the one on top first, so each one
+ * gets its own `onClose`, and it stays open when one of them does.
  *
  * @access private
  */
@@ -96,12 +99,18 @@ export function useDrawerStack({
 		trailParent?.trailClosePosition ?? (closePosition === 'start' ? 'start' : 'end');
 
 	const readIsOpen = useCommittedOpen(isOpen);
+	const { nest, closeWithNested } = useNestedDrawers({
+		nestInParent: parent?.nest,
+		isOpen,
+		readIsOpen,
+		requestClose,
+	});
 	const trail = buildTrail({
 		parentTrail: trailParent?.trail ?? [],
 		steps,
 		crumb,
 		title,
-		close: requestClose,
+		close: closeWithNested,
 		isOpen: readIsOpen,
 		onTrailSelect,
 	});
@@ -112,7 +121,7 @@ export function useDrawerStack({
 			return;
 		}
 		if (trail.length === 1 || reason === 'escape-key') {
-			requestClose(reason);
+			closeWithNested(reason);
 			return;
 		}
 		leaveTrail(trail, reason);
@@ -164,6 +173,7 @@ export function useDrawerStack({
 			trailEllipsis: trailParent ? trailParent.trailEllipsis : trailEllipsis,
 			trailClosePosition: resolvedClosePosition,
 			cover,
+			nest,
 		},
 		requestCloseFromPanel,
 	};

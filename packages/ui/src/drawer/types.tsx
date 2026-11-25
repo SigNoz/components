@@ -474,6 +474,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 *
 		 * @note In a breadcrumb trail, a drawer that stays open after its `onClose` stops the leave:
 		 * the drawers under it stay open.
+		 *
+		 * @note Drawers nested in it that are open get the same request first, the one on top
+		 * first, and one that stays open keeps this one open too. A drawer closed from the app
+		 * instead, with `open={false}` or `handle.close()`, takes its nested drawers with it without
+		 * their `onClose`: reset their state where the app closes it.
 		 */
 		onClose?: (reason: DrawerCloseReasonType) => void;
 		/**
