@@ -37,6 +37,11 @@ export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> & {
 	 * Closes it with `parent-close`, which it cannot refuse.
 	 */
 	closeWithParent: () => void;
+	/**
+	 * Tells it a drawer below it opened again, so a later `parent-close` reaches it and the drawers
+	 * over it.
+	 */
+	parentOpened: () => void;
 };
 
 /**

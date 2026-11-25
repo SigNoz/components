@@ -74,16 +74,33 @@ export function useNestedDrawers({
 			}
 		}
 	};
+	// Each drawer below sweeps the drawers over it again as it closes, so one whose app keeps it open
+	// would get `parent-close` once per drawer below. It gets it once, until it or a drawer below it
+	// opens again.
+	const parentClosedRef = useRef(false);
+	const reopenUnder = (): void => {
+		parentClosedRef.current = false;
+		for (const entry of nestedRef.current) {
+			entry.parentOpened();
+		}
+	};
 	const closeWithParent = (): void => {
+		if (parentClosedRef.current) {
+			return;
+		}
+		parentClosedRef.current = true;
 		closeNestedWithParent();
 		requestClose('parent-close');
 	};
 
 	const wasOpenRef = useRef(isOpen);
 	useIsomorphicLayoutEffect(() => {
-		const closedNow = wasOpenRef.current && !isOpen;
+		const wasOpen = wasOpenRef.current;
 		wasOpenRef.current = isOpen;
-		if (!closedNow) {
+		if (isOpen && !wasOpen) {
+			reopenUnder();
+		}
+		if (!wasOpen || isOpen) {
 			return;
 		}
 
@@ -94,9 +111,11 @@ export function useNestedDrawers({
 	// The drawer below calls these when it closes, which may be renders after this one registered.
 	const closeRef = useRef(closeWithNested);
 	const closeWithParentRef = useRef(closeWithParent);
+	const reopenUnderRef = useRef(reopenUnder);
 	useIsomorphicLayoutEffect(() => {
 		closeRef.current = closeWithNested;
 		closeWithParentRef.current = closeWithParent;
+		reopenUnderRef.current = reopenUnder;
 	});
 	useEffect(() => {
 		if (!isOpen || !nestInParent) {
@@ -109,6 +128,9 @@ export function useNestedDrawers({
 			},
 			closeWithParent: () => {
 				closeWithParentRef.current();
+			},
+			parentOpened: () => {
+				reopenUnderRef.current();
 			},
 			isOpen: readIsOpen,
 		});
