@@ -121,21 +121,28 @@ export function useNestedDrawers({
 		closeNestedWithParent();
 	}, [isOpen]);
 
-	// The app removed this drawer while it was open, which the effect above never sees. React cleans
-	// up a deleted tree from the top, so the drawers over this one still read as open here. Strict
-	// Mode's simulated unmount cleans up from the bottom, so a drawer that mounted with this one reads
-	// as closed and is left alone.
+	// The app removed this drawer while it was open, which the effect above never sees. That runs in
+	// the passive cleanup: a Suspense boundary that shows its fallback cleans up the layout effects
+	// of the drawers it hides and keeps them, open, for when it shows them again. By then every
+	// drawer over this one reads as closed, so they are told by `removedOpen`. React cleans up a
+	// deleted tree from the top, while Strict Mode's simulated unmount cleans up from the bottom, so
+	// a drawer that mounted with this one has left `nestedRef` and is left alone.
 	const removedOpenRef = useRef(false);
 	useIsomorphicLayoutEffect(() => {
 		removedOpenRef.current = false;
 
 		return () => {
 			removedOpenRef.current = wasOpenRef.current;
+		};
+	}, []);
+	useEffect(
+		() => () => {
 			if (wasOpenRef.current) {
 				closeNestedWithParent();
 			}
-		};
-	}, []);
+		},
+		[],
+	);
 
 	// The drawer below calls these when it closes, which may be renders after this one registered.
 	const closeRef = useRef(closeWithNested);

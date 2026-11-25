@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type ReactNode, StrictMode, useEffect, useState } from 'react';
+import { type ReactNode, StrictMode, Suspense, useEffect, useState } from 'react';
 import { type Mock, describe, expect, it, vi } from 'vitest';
 import { AlertDialog } from '../../alert-dialog/index.js';
 import { waitForSettled as waitForDialogSettled } from '../../dialog/__tests__/dialog.test-utils.js';
@@ -925,5 +925,61 @@ describe('Drawer closed from the app with a drawer it renders only while open', 
 		});
 		await waitForSettled();
 		expect(document.querySelector('[data-testid="log"]')).toBeNull();
+	});
+});
+
+const pending = new Promise<never>(() => {});
+
+/**
+ * Suspends while `suspends` is set, the way a lazy chart or a query does.
+ */
+function Loading({ suspends }: { suspends: boolean }): ReactNode {
+	if (suspends) {
+		throw pending;
+	}
+
+	return null;
+}
+
+/**
+ * A pod with a log over it, in a Suspense boundary that is already showing them.
+ */
+function SuspendingPage({
+	suspends,
+	onLogClose,
+}: {
+	suspends: boolean;
+	onLogClose: (reason: DrawerCloseReasonType) => void;
+}): ReactNode {
+	return (
+		<Suspense fallback={<p>Loading</p>}>
+			<Drawer type="task" stack="overlay" open onClose={() => {}} title="Pod" testId="pod">
+				<Drawer type="inspector" stack="overlay" open onClose={onLogClose} title="Log" testId="log">
+					The log.
+				</Drawer>
+			</Drawer>
+			<Loading suspends={suspends} />
+		</Suspense>
+	);
+}
+
+describe('Drawer hidden by a Suspense fallback with a drawer open over it', () => {
+	it('tells that drawer nothing, and both are back when the content is', async () => {
+		const onLogClose = vi.fn();
+		const { rerender } = render(<SuspendingPage suspends={false} onLogClose={onLogClose} />);
+		await waitForSettled();
+
+		act(() => {
+			rerender(<SuspendingPage suspends onLogClose={onLogClose} />);
+		});
+		expect(screen.getByText('Loading')).toBeInTheDocument();
+
+		act(() => {
+			rerender(<SuspendingPage suspends={false} onLogClose={onLogClose} />);
+		});
+		await waitForSettled();
+
+		expect(onLogClose).not.toHaveBeenCalled();
+		expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
 	});
 });
