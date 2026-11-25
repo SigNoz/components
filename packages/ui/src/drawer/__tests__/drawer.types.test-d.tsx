@@ -231,7 +231,7 @@ describe('Drawer props', () => {
 	test('accepts an onClose that reads the details, and one that takes the reason only', () => {
 		expectTypeOf<DrawerCloseDetailsType>().toEqualTypeOf<{ cancel: () => void }>();
 		expectTypeOf<NonNullable<DrawerProps['onClose']>>().toEqualTypeOf<
-			(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void
+			(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void | Promise<void>
 		>();
 		assertType(
 			<Drawer
@@ -278,6 +278,36 @@ describe('Drawer props', () => {
 		);
 		assertType(
 			<Drawer type="task" stack="overlay" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts an async onClose that calls cancel() after an await', () => {
+		const confirm = async (): Promise<boolean> => true;
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={async (_reason, { cancel }) => {
+					if (!(await confirm())) {
+						cancel();
+					}
+				}}
+				title="T"
+			>
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={(): Promise<void> => Promise.resolve()}
+				title="T"
+			>
 				Body
 			</Drawer>,
 		);
@@ -719,6 +749,24 @@ describe('Drawer value types', () => {
 		assertType(
 			// @ts-expect-error - the reasons of a Dialog miss `swipe` and `crumb-press`
 			<Drawer type="task" stack="overlay" open onClose={readsDialogReasons} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('rejects an onClose that returns a value', () => {
+		const savesName = async (): Promise<string> => 'saved';
+		const countsCloses = (): number => 1;
+
+		assertType(
+			// @ts-expect-error - a promise from `onClose` resolves to nothing
+			<Drawer type="task" stack="overlay" open onClose={savesName} title="T">
+				Body
+			</Drawer>,
+		);
+		assertType(
+			// @ts-expect-error - `onClose` returns nothing, or a promise
+			<Drawer type="task" stack="overlay" open onClose={countsCloses} title="T">
 				Body
 			</Drawer>,
 		);

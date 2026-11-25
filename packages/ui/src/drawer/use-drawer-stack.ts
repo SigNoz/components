@@ -1,6 +1,10 @@
 import { type CSSProperties, type RefObject, useCallback, useEffect, useState } from 'react';
 import type { BreadcrumbEllipsisOptions } from '../breadcrumb/types.js';
-import { type DrawerStackContextValue, useParentDrawerStack } from './drawer-stack-context.js';
+import {
+	type CloseAnswer,
+	type DrawerStackContextValue,
+	useParentDrawerStack,
+} from './drawer-stack-context.js';
 import type {
 	DrawerClosePositionType,
 	DrawerCloseReasonType,
@@ -31,9 +35,9 @@ type UseDrawerStackOptions = {
 	popupRef: RefObject<HTMLElement | null>;
 	/**
 	 * Asks this drawer alone to close, through `onClose` or the handle. Answers whether it agreed:
-	 * `false` when `onClose` called `cancel()`.
+	 * `false` when `onClose` called `cancel()` or its promise rejected.
 	 */
-	requestClose: (reason: DrawerCloseReasonType) => boolean;
+	requestClose: (reason: DrawerCloseReasonType) => CloseAnswer;
 };
 
 type DrawerStackState = {
@@ -128,7 +132,7 @@ export function useDrawerStack({
 			return;
 		}
 		if (trail.length === 1 || reason === 'escape-key') {
-			closeWithNested(reason);
+			void closeWithNested(reason);
 			return;
 		}
 		leaveTrail(trail, reason);

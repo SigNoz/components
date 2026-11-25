@@ -97,6 +97,32 @@ and leave `open` as it is. A drawer that does not call it has agreed, and its `o
 `false` at once or later, such as after a router navigation that runs as a transition. `cancel()`
 does nothing for `parent-close`: the drawer unmounts with its parent whatever the handler does.
 
+`onClose` may return a promise, for a decision that takes time, such as a confirm or a save. The
+drawers under it wait for the answer, and `cancel()` counts until the promise settles. A promise
+that rejects counts as `cancel()`, and its error is reported. While it waits, more presses on that
+drawer are ignored.
+
+```tsx
+<Drawer
+	type="task"
+	open={open}
+	onClose={async (reason, { cancel }) => {
+		if (reason === 'parent-close' || !dirty) {
+			setOpen(false);
+			return;
+		}
+		if (await confirmDiscard()) {
+			setOpen(false);
+		} else {
+			cancel();
+		}
+	}}
+	title="Edit panel"
+>
+	<PanelForm />
+</Drawer>
+```
+
 The Cancel button in `footerSuffix` is your own button, so it calls your close directly.
 
 ## Unsaved changes

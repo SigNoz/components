@@ -2,7 +2,7 @@ import type { Drawer } from '@base-ui/react/drawer';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { hasTitle } from '../breadcrumb/utils.js';
-import type { AskedDrawers, DrawerTrailEntry } from './drawer-stack-context.js';
+import type { AskedDrawers, CloseAnswer, DrawerTrailEntry } from './drawer-stack-context.js';
 import type {
 	DrawerCloseReasonType,
 	DrawerCrumbType,
@@ -80,6 +80,65 @@ export function toDrawerCloseReason(reason: string): DrawerCloseReasonType | und
 }
 
 /**
+ * Whether an `onClose` returned a promise, which its drawer waits for before it goes on.
+ *
+ * @access private
+ */
+export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+	return (
+		typeof value === 'object' &&
+		value !== null &&
+		'then' in value &&
+		typeof value.then === 'function'
+	);
+}
+
+/**
+ * Reports the error of an `onClose` promise that rejected as an uncaught error. The request that
+ * called it has gone on by then, so nothing is left to throw into, and the app should still see it.
+ *
+ * @access private
+ */
+export function reportAsyncError(error: unknown): void {
+	if (typeof reportError === 'function') {
+		reportError(error);
+
+		return;
+	}
+	setTimeout(() => {
+		throw error;
+	}, 0);
+}
+
+/**
+ * Hands on `value` in the next task. A state update made after an `await` commits in a task React
+ * schedules for it, not in a microtask, so the next drawer would still read as open when the
+ * `onClose` before it removed it, such as by clearing the selection that renders both.
+ *
+ * @access private
+ */
+export function afterNextTask<T>(value: T): Promise<T> {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(value);
+		}, 0);
+	});
+}
+
+/**
+ * Runs `next` with the answer, once there is one. An answer that is not a promise gets `next` at
+ * once, in the same call, so a request whose `onClose` is synchronous never waits for a microtask.
+ *
+ * @access private
+ */
+export function afterAnswer(
+	answer: CloseAnswer,
+	next: (agreed: boolean) => CloseAnswer,
+): CloseAnswer {
+	return typeof answer === 'boolean' ? next(answer) : answer.then(next);
+}
+
+/**
  * The first of `titles` that renders something, or `<No title>`, so a missing name shows in
  * review. Blank is judged the way `Breadcrumb` judges it, so a crumb named here is never dropped
  * from the trail.
@@ -119,7 +178,7 @@ export function buildTrail({
 	/**
 	 * Asks the drawers nested in this one to close, and answers whether every one agreed.
 	 */
-	closeNested: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => boolean;
+	closeNested: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => CloseAnswer;
 	isOpen: DrawerTrailEntry['isOpen'];
 	onTrailSelect: ((index: number, reason: DrawerTrailSelectReasonType) => void) | undefined;
 }): DrawerTrailEntry[] {
@@ -130,10 +189,15 @@ export function buildTrail({
 			close,
 			isOpen,
 			select: (reason, asked) => {
-				// A drawer nested in this one may close this one as it closes.
-				if (closeNested(reason, asked) && isOpen()) {
-					onTrailSelect?.(index, reason);
-				}
+				void afterAnswer(closeNested(reason, asked), (agreed) => {
+					// A drawer nested in this one may close this one as it closes, and the app may
+					// close it while one decides.
+					if (agreed && isOpen()) {
+						onTrailSelect?.(index, reason);
+					}
+
+					return agreed;
+				});
 			},
 		})),
 		{ ...crumb, title: displayTitle(crumb?.title, title), close, isOpen },
@@ -143,8 +207,9 @@ export function buildTrail({
 /**
  * Asks each open drawer of `entries` to close, the one on top first, each once, and stops at the
  * first one that cancels, such as a form that opens an unsaved-changes `AlertDialog` instead.
- * Answers whether every one agreed. A drawer that stays open without cancelling counts as closing,
- * since its app may close it later, in a transition or a timer.
+ * Answers whether every one agreed, with no promise when every `onClose` answered at once. One
+ * that returns a promise is waited for, then the next is asked. A drawer that stays open without
+ * cancelling counts as closing, since its app may close it later, in a transition or a timer.
  *
  * `asked` is the press this is part of. It skips the drawers already in it, such as the drawer to
  * keep when stepping back, or a drawer of a trail that the trail asked before the drawer below it
@@ -159,27 +224,37 @@ export function closeTopFirst(
 	entries: readonly Pick<DrawerTrailEntry, 'close' | 'isOpen'>[],
 	reason: DrawerCloseReasonType,
 	asked: AskedDrawers = new Set(),
-): boolean {
-	for (const entry of [...entries].reverse()) {
-		if (asked.has(entry.isOpen) || !entry.isOpen()) {
-			continue;
-		}
-		asked.add(entry.isOpen);
+): CloseAnswer {
+	const top = [...entries].reverse();
+	const askFrom = (start: number): CloseAnswer => {
+		for (let index = start; index < top.length; index += 1) {
+			const entry = top[index];
+			if (entry === undefined || asked.has(entry.isOpen) || !entry.isOpen()) {
+				continue;
+			}
+			asked.add(entry.isOpen);
 
-		if (!flushSync(() => entry.close(reason, asked))) {
-			return false;
+			const answer = flushSync(() => entry.close(reason, asked));
+			if (typeof answer !== 'boolean') {
+				return answer.then((agreed) => (agreed ? askFrom(index + 1) : false));
+			}
+			if (!answer) {
+				return false;
+			}
 		}
-	}
 
-	return true;
+		return true;
+	};
+
+	return askFrom(0);
 }
 
 /**
  * Steps back to the crumb at `index`: closes every drawer after it with `crumb-press`, the one on
  * top first, then shows the crumb's step when it is an earlier step of a drawer's own `trail`. The
- * drawer of that crumb stays open, and a drawer above it that cancels stops the step back. The
- * step closes the drawers nested in its own drawer first, the same way, as the trail does not list
- * an inspector open over it.
+ * drawer of that crumb stays open, and a drawer above it that cancels stops the step back. It waits
+ * for an `onClose` that returns a promise. The step closes the drawers nested in its own drawer
+ * first, the same way, as the trail does not list an inspector open over it.
  *
  * @access private
  */
@@ -191,14 +266,18 @@ export function stepBackInTrail(trail: readonly DrawerTrailEntry[], index: numbe
 
 	// The steps of the target share its `isOpen`, so the press never asks the drawer it steps into.
 	const asked: AskedDrawers = new Set([target.isOpen]);
-	if (closeTopFirst(trail.slice(index + 1), 'crumb-press', asked)) {
-		target.select?.('crumb-press', asked);
-	}
+	void afterAnswer(closeTopFirst(trail.slice(index + 1), 'crumb-press', asked), (agreed) => {
+		if (agreed) {
+			target.select?.('crumb-press', asked);
+		}
+
+		return agreed;
+	});
 }
 
 /**
  * Closes every drawer of a trail with `reason`, the one on top first, each once, until one
- * cancels.
+ * cancels. It waits for an `onClose` that returns a promise.
  *
  * @access private
  */
@@ -206,5 +285,5 @@ export function leaveTrail(
 	trail: readonly DrawerTrailEntry[],
 	reason: DrawerCloseReasonType,
 ): void {
-	closeTopFirst(trail, reason);
+	void closeTopFirst(trail, reason);
 }

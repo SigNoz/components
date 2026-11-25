@@ -105,14 +105,20 @@ exports[`Drawer type error messages > prints a message that names the constraint
   "Drawer value types > rejects a width that is not a name > \`width\` takes a name, not a number": "TS2322: Type 'number' is not assignable to type 'DrawerWidthType | undefined'.",
   "Drawer value types > rejects a width that is not a name > \`width\` takes a name, not a percentage": "TS2322: Type '"50%"' is not assignable to type 'DrawerWidthType | undefined'.",
   "Drawer value types > rejects a width that is not a name > \`width\` takes a name, not a pixel size": "TS2322: Type '"600px"' is not assignable to type 'DrawerWidthType | undefined'.",
-  "Drawer value types > rejects an onClose that cannot take every reason > \`onClose\` is called with five reasons": "TS2322: Type '(_reason: "escape-key") => void' is not assignable to type '(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void'.
+  "Drawer value types > rejects an onClose that cannot take every reason > \`onClose\` is called with five reasons": "TS2322: Type '(_reason: "escape-key") => void' is not assignable to type '(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void | Promise<void>'.
     Types of parameters '_reason' and 'reason' are incompatible.
       Type 'DrawerCloseReasonType' is not assignable to type '"escape-key"'.
         Type '"crumb-press"' is not assignable to type '"escape-key"'.",
-  "Drawer value types > rejects an onClose that cannot take every reason > the reasons of a Dialog miss \`swipe\` and \`crumb-press\`": "TS2322: Type '(_reason: DialogCloseReasonType) => void' is not assignable to type '(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void'.
+  "Drawer value types > rejects an onClose that cannot take every reason > the reasons of a Dialog miss \`swipe\` and \`crumb-press\`": "TS2322: Type '(_reason: DialogCloseReasonType) => void' is not assignable to type '(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void | Promise<void>'.
     Types of parameters '_reason' and 'reason' are incompatible.
       Type 'DrawerCloseReasonType' is not assignable to type 'DialogCloseReasonType'.
         Type '"crumb-press"' is not assignable to type 'DialogCloseReasonType'.",
+  "Drawer value types > rejects an onClose that returns a value > \`onClose\` returns nothing, or a promise": "TS2322: Type '() => number' is not assignable to type '(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void | Promise<void>'.
+    Type 'number' is not assignable to type 'void | Promise<void>'.",
+  "Drawer value types > rejects an onClose that returns a value > a promise from \`onClose\` resolves to nothing": "TS2322: Type '() => Promise<string>' is not assignable to type '(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void | Promise<void>'.
+    Type 'Promise<string>' is not assignable to type 'void | Promise<void>'.
+      Type 'Promise<string>' is not assignable to type 'Promise<void>'.
+        Type 'string' is not assignable to type 'void'.",
   "Drawer value types > rejects an open that is not a boolean > \`open\` is a boolean": "TS2322: Type 'string' is not assignable to type 'boolean | undefined'.",
 }
 `;

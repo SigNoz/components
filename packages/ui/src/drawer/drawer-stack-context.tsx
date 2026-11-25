@@ -10,6 +10,15 @@ import type {
 } from './types.js';
 
 /**
+ * Whether a drawer agreed to a close: `false` when it, or a drawer nested in it, called `cancel()`.
+ * A promise when an `onClose` returned one, which settles once its decision is made. A request whose
+ * `onClose` is synchronous answers at once, with no promise, so it keeps its timing.
+ *
+ * @access private
+ */
+export type CloseAnswer = boolean | Promise<boolean>;
+
+/**
  * The drawers a press has asked to close so far, each one by its `isOpen`. A drawer has one
  * `isOpen`, which it shares with every step it lists in a trail and with the entry it registers in
  * the drawer below, so the drawers of a trail, which are nested in each other too, are asked once.
@@ -30,10 +39,10 @@ export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
 	title: ReactNode;
 	/**
 	 * Asks the drawers nested in the drawer to close, then the drawer, and answers whether it
-	 * agreed: `false` when it, or a drawer nested in it, called `cancel()`. `asked` is the press this
-	 * is part of, so a drawer it already asked is not asked again.
+	 * agreed, as a promise when an `onClose` returned one. `asked` is the press this is part of, so a
+	 * drawer it already asked is not asked again.
 	 */
-	close: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => boolean;
+	close: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => CloseAnswer;
 	/**
 	 * Whether the drawer is open as of the last commit. An unmounted drawer is closed.
 	 */

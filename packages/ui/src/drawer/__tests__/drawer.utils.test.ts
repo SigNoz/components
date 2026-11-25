@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AskedDrawers, DrawerTrailEntry } from '../drawer-stack-context.js';
 import type { DrawerCloseReasonType } from '../types.js';
 import {
+	afterAnswer,
 	buildTrail,
 	closeTopFirst,
 	displayTitle,
@@ -307,6 +308,83 @@ describe('closeTopFirst', () => {
 
 		expect(asked).toEqual(new Set([pod.isOpen]));
 		expect(pod.close).toHaveBeenCalledExactlyOnceWith('swipe', asked);
+	});
+});
+
+/**
+ * A drawer whose `close` answers with `answer`, a promise for one whose `onClose` returned one.
+ */
+function deciding(name: string, log: string[], answer: Promise<boolean>) {
+	return {
+		close: vi.fn((reason: DrawerCloseReasonType, _asked?: AskedDrawers) => {
+			log.push(`${name}:${reason}`);
+
+			return answer;
+		}),
+		isOpen: () => true,
+	};
+}
+
+describe('closeTopFirst with an answer that is a promise', () => {
+	it('waits for the answer, then asks the drawer under it, and answers with a promise of true', async () => {
+		const log: string[] = [];
+		let agree: (agreed: boolean) => void = () => {};
+		const answer = new Promise<boolean>((resolve) => {
+			agree = resolve;
+		});
+
+		const agreed = closeTopFirst(
+			[drawer('pod', log), deciding('trace', log, answer), drawer('log', log)],
+			'close-press',
+		);
+
+		expect(agreed).toBeInstanceOf(Promise);
+		expect(log).toEqual(['log:close-press', 'trace:close-press']);
+
+		agree(true);
+
+		await expect(agreed).resolves.toBe(true);
+		expect(log).toEqual(['log:close-press', 'trace:close-press', 'pod:close-press']);
+	});
+
+	it('asks no drawer under one whose promise answers false, and answers with a promise of false', async () => {
+		const log: string[] = [];
+
+		const agreed = closeTopFirst(
+			[drawer('pod', log), deciding('trace', log, Promise.resolve(false))],
+			'swipe',
+		);
+
+		await expect(agreed).resolves.toBe(false);
+		expect(log).toEqual(['trace:swipe']);
+	});
+
+	it('answers with a boolean, not a promise, when every drawer answers at once', () => {
+		const log: string[] = [];
+
+		expect(closeTopFirst([drawer('pod', log), drawer('log', log)], 'close-press')).toBe(true);
+		expect(
+			closeTopFirst([drawer('pod', log), drawer('log', log, { refuses: true })], 'close-press'),
+		).toBe(false);
+	});
+});
+
+describe('afterAnswer', () => {
+	it('calls next in the same call for an answer that is not a promise, and answers with its result', () => {
+		const next = vi.fn((agreed: boolean) => !agreed);
+
+		expect(afterAnswer(false, next)).toBe(true);
+		expect(next).toHaveBeenCalledExactlyOnceWith(false);
+	});
+
+	it('calls next once a promise answer settles, and answers with a promise of its result', async () => {
+		const next = vi.fn((agreed: boolean) => agreed);
+
+		const answer = afterAnswer(Promise.resolve(true), next);
+
+		expect(next).not.toHaveBeenCalled();
+		await expect(answer).resolves.toBe(true);
+		expect(next).toHaveBeenCalledExactlyOnceWith(true);
 	});
 });
 

@@ -19,7 +19,7 @@ import { PopupContainer } from '../lib/popup-container.js';
 import { partTestId, type RejectedProps } from '../lib/utils.js';
 import { Skeleton } from '../skeleton/index.js';
 import styles from './drawer.module.scss';
-import { DrawerStackProvider } from './drawer-stack-context.js';
+import { type CloseAnswer, DrawerStackProvider } from './drawer-stack-context.js';
 import { DrawerFooter } from './subcomponents/drawer-footer.js';
 import { DrawerHeader } from './subcomponents/drawer-header.js';
 import { DrawerTrail } from './subcomponents/drawer-trail.js';
@@ -34,7 +34,13 @@ import type {
 import { useDrawerStack } from './use-drawer-stack.js';
 import { useFocusFallback } from './use-focus-fallback.js';
 import { useReportRightEdgeCover } from './use-report-right-edge-cover.js';
-import { letNestedDrawerKeysThrough, letPageKeysThrough, toDrawerCloseReason } from './utils.js';
+import {
+	isPromiseLike,
+	letNestedDrawerKeysThrough,
+	letPageKeysThrough,
+	reportAsyncError,
+	toDrawerCloseReason,
+} from './utils.js';
 
 const NO_STEPS: readonly DrawerTrailStepType[] = [];
 
@@ -86,22 +92,34 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 	const resolvedType = type === 'task' ? 'task' : 'inspector';
 	const isTask = resolvedType === 'task';
 
-	const requestClose = (reason: DrawerCloseReasonType): boolean => {
+	const requestClose = (reason: DrawerCloseReasonType): CloseAnswer => {
 		if (handle) {
 			handle.close();
 
 			return true;
 		}
 
-		// A local of this one request, so a `cancel` kept and called later does nothing.
+		// A local of this one request, so a `cancel` kept and called after it settled does nothing.
 		let cancelled = false;
-		onClose?.(reason, {
+		const returned = onClose?.(reason, {
 			cancel: () => {
 				cancelled = true;
 			},
 		});
+		if (!isPromiseLike(returned)) {
+			return !cancelled;
+		}
 
-		return !cancelled;
+		// `cancel()` counts until the promise settles. A rejection is a refusal, since a check that
+		// failed should not close a form, and is reported, since nothing else would show it.
+		return Promise.resolve(returned).then(
+			() => !cancelled,
+			(error: unknown) => {
+				reportAsyncError(error);
+
+				return false;
+			},
+		);
 	};
 
 	const {
@@ -334,7 +352,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * Closing a drawer asks the drawers open over it to close first, the one on top first, with the
  * same reason, and one that calls `cancel()` keeps it open, such as a form that asks about unsaved
  * edits. One that does not counts as closing, whenever its app closes it, even in a transition or
- * a timer. They are asked before its own `onClose` runs, so they stay closed when that `onClose`
+ * a timer, and one that returns a promise is waited for. They are asked before its own `onClose` runs, so they stay closed when that `onClose`
  * calls `cancel()`. When the app closes it, with `open={false}` or `handle.close()`, the drawers open over it
  * get `parent-close` and slide out with it. A drawer the app removes from the tree while it is open
  * sends it too, with nothing to slide out.

@@ -133,7 +133,8 @@ export type DrawerCloseDetailsType = {
 	/**
 	 * Refuses the close, such as a form with unsaved edits that asks first. The drawer stays open, so
 	 * do not set its `open` to `false`, and the drawers under it, and the rest of a breadcrumb trail,
-	 * stay open too. Call it before `onClose` returns: a call after that does nothing.
+	 * stay open too. Call it before `onClose` returns, or, when `onClose` returns a promise, before
+	 * the promise settles: a call after that does nothing.
 	 *
 	 * @note It does nothing for `parent-close`. The drawer below is closing, so this one unmounts
 	 * with it.
@@ -485,8 +486,14 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 *
 		 * `details.cancel()` refuses the request, for a drawer that must stay, such as a form with
 		 * unsaved edits that asks first. Without it the drawer has agreed, and you may set `open` to
-		 * `false` at once or later: in a `startTransition`, such as `router.push` in Next.js, or in
-		 * a timer.
+		 * `false` at once or later: in a `startTransition`, such as `router.push` in Next.js, in a
+		 * timer, or after an `await`.
+		 *
+		 * `onClose` may return a promise, for a check that takes time, such as a confirm or a save:
+		 * the drawers under it wait for it, and `cancel()` counts until it settles. A promise that
+		 * rejects counts as `cancel()`, and its error is reported as an uncaught error. While it
+		 * waits, more requests to close this drawer are ignored, and a promise that never settles
+		 * keeps ignoring them until the drawer opens again.
 		 *
 		 * @note Required with `open`, rejected with a `handle`: a drawer on a handle closes itself on
 		 * every request, with no `cancel()`, and `useDrawerHandle(onOpenChange)` reports it. A
@@ -501,20 +508,24 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * under it stay open.
 		 *
 		 * @note Drawers nested in it that are open get the same request first, the one on top
-		 * first, and one that calls `cancel()` keeps this one open too.
+		 * first, and one that calls `cancel()` keeps this one open too. One that returns a promise
+		 * is waited for.
 		 *
 		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, or removes
 		 * it from the tree while it is open, each drawer nested in it that is open gets
 		 * `parent-close`, and a drawer on a handle closes. It unmounts with the drawer below
-		 * whatever the handler does, and `cancel()` does nothing, so set `open` to `false` and do
-		 * not ask about unsaved edits: a drawer left open is back when the drawer below opens again.
+		 * whatever the handler does, `cancel()` does nothing, and nothing waits for a promise, so set
+		 * `open` to `false` and do not ask about unsaved edits: a drawer left open is back when the drawer below opens again.
 		 *
 		 * @note Every drawer nested in it gets `parent-close` before the page renders again. When
 		 * they keep their `open` in one state object, update it with a function that changes only
 		 * this drawer's flag, `setView((view) => ({ ...view, logOpen: false }))`: a copy of the
 		 * object the handler rendered with puts back the flag the drawer before it cleared.
 		 */
-		onClose?: (reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void;
+		onClose?: (
+			reason: DrawerCloseReasonType,
+			details: DrawerCloseDetailsType,
+		) => void | Promise<void>;
 		/**
 		 * The name of the record or the job, and the accessible name of the panel. One line: a name
 		 * longer than the header is cut with `…`, and the full text shows in a tooltip.
