@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import type { NestedDrawerEntry } from './drawer-stack-context.js';
 import type { DrawerCloseReasonType } from './types.js';
@@ -37,8 +37,9 @@ type NestedDrawers = {
  * unsaved-changes `AlertDialog`, keeps the drawer below open too.
  *
  * When the app closes the drawer instead, with `open={false}` or `handle.close()`, the drawers
- * still open over it get `parent-close` in the same commit, so they slide out with it rather than
- * vanish when it unmounts. Each of them does the same for the drawers over it.
+ * still open over it get `parent-close` in the same commit, the one on top first, so they slide out
+ * with it rather than vanish when it unmounts. That reaches every drawer over it, even past one
+ * whose app keeps it open.
  *
  * @access private
  */
@@ -50,17 +51,32 @@ export function useNestedDrawers({
 }: UseNestedDrawersOptions): NestedDrawers {
 	// The drawers open over this one, in the order they opened.
 	const nestedRef = useRef(new Set<NestedDrawerEntry>());
-	const nest = useCallback((entry: NestedDrawerEntry) => {
+	const nest = (entry: NestedDrawerEntry): (() => void) => {
 		nestedRef.current.add(entry);
 		return () => {
 			nestedRef.current.delete(entry);
 		};
-	}, []);
+	};
 
 	const closeWithNested = (reason: DrawerCloseReasonType): void => {
 		if (closeTopFirst([...nestedRef.current], reason)) {
 			requestClose(reason);
 		}
+	};
+
+	// The drawers over this one go first, and each passes it on before its own `onClose`: one whose
+	// app keeps it open after `parent-close` still unmounts with this one, and so do the drawers over
+	// it.
+	const closeNestedWithParent = (): void => {
+		for (const entry of [...nestedRef.current].reverse()) {
+			if (entry.isOpen()) {
+				entry.closeWithParent();
+			}
+		}
+	};
+	const closeWithParent = (): void => {
+		closeNestedWithParent();
+		requestClose('parent-close');
 	};
 
 	const wasOpenRef = useRef(isOpen);
@@ -72,19 +88,15 @@ export function useNestedDrawers({
 		}
 
 		// A close the user asked for has closed every drawer over this one already.
-		for (const entry of [...nestedRef.current].reverse()) {
-			if (entry.isOpen()) {
-				entry.closeWithParent();
-			}
-		}
+		closeNestedWithParent();
 	}, [isOpen]);
 
 	// The drawer below calls these when it closes, which may be renders after this one registered.
 	const closeRef = useRef(closeWithNested);
-	const requestCloseRef = useRef(requestClose);
+	const closeWithParentRef = useRef(closeWithParent);
 	useIsomorphicLayoutEffect(() => {
 		closeRef.current = closeWithNested;
-		requestCloseRef.current = requestClose;
+		closeWithParentRef.current = closeWithParent;
 	});
 	useEffect(() => {
 		if (!isOpen || !nestInParent) {
@@ -96,7 +108,7 @@ export function useNestedDrawers({
 				closeRef.current(reason);
 			},
 			closeWithParent: () => {
-				requestCloseRef.current('parent-close');
+				closeWithParentRef.current();
 			},
 			isOpen: readIsOpen,
 		});

@@ -366,6 +366,63 @@ function exiting(name: string): HTMLElement {
 	return element as HTMLElement;
 }
 
+type LevelName = 'trace' | 'log';
+
+/**
+ * A pod with a trace over it and a log over the trace, all controlled. The app keeps the trace open
+ * when the pod closes, so it is there again with the pod.
+ */
+function KeepTracePage({
+	onClosed,
+	onAppClose,
+}: {
+	onClosed: (name: LevelName, reason: DrawerCloseReasonType) => void;
+	onAppClose: (close: () => void) => void;
+}): ReactNode {
+	const [podOpen, setPodOpen] = useState(true);
+	const [traceOpen, setTraceOpen] = useState(true);
+	const [logOpen, setLogOpen] = useState(true);
+
+	useEffect(() => {
+		onAppClose(() => setPodOpen(false));
+	});
+
+	return (
+		<>
+			<button type="button" onClick={() => setPodOpen(true)}>
+				Open pod
+			</button>
+			<Drawer type="task" open={podOpen} onClose={() => setPodOpen(false)} title="Pod" testId="pod">
+				<Drawer
+					type="inspector"
+					open={traceOpen}
+					onClose={(reason) => {
+						onClosed('trace', reason);
+						if (reason !== 'parent-close') {
+							setTraceOpen(false);
+						}
+					}}
+					title="Trace"
+					testId="trace"
+				>
+					<Drawer
+						type="inspector"
+						open={logOpen}
+						onClose={(reason) => {
+							onClosed('log', reason);
+							setLogOpen(false);
+						}}
+						title="Log"
+						testId="log"
+					>
+						The log.
+					</Drawer>
+				</Drawer>
+			</Drawer>
+		</>
+	);
+}
+
 describe('Drawer closed from the app with drawers open over it', () => {
 	it('closes the form over it with parent-close, which skips the question', async () => {
 		let closeFromApp = (): void => {};
@@ -405,12 +462,12 @@ describe('Drawer closed from the app with drawers open over it', () => {
 		for (const name of ['pod', 'trace', 'log']) {
 			exiting(name);
 		}
-		expect(events).toEqual(['pod false', 'trace false', 'log false']);
+		expect(events).toEqual(['pod false', 'log false', 'trace false']);
 
 		await waitFor(() => {
 			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
 		});
-		expect(events).toEqual(['pod false', 'trace false', 'log false']);
+		expect(events).toEqual(['pod false', 'log false', 'trace false']);
 	});
 
 	it('closes the drawers over it first when the user closes it, with no parent-close', async () => {
@@ -424,5 +481,43 @@ describe('Drawer closed from the app with drawers open over it', () => {
 			exiting(name);
 		}
 		expect(events).toEqual(['log false', 'trace false', 'pod false']);
+	});
+
+	it('closes the drawers over one the app keeps open, which unmount with it', async () => {
+		const onClosed = vi.fn<(name: LevelName, reason: DrawerCloseReasonType) => void>();
+		let closeFromApp = (): void => {};
+		render(
+			<KeepTracePage
+				onClosed={onClosed}
+				onAppClose={(close) => {
+					closeFromApp = close;
+				}}
+			/>,
+		);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		act(() => {
+			closeFromApp();
+		});
+
+		expect(onClosed.mock.calls).toEqual([
+			['log', 'parent-close'],
+			['trace', 'parent-close'],
+		]);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+
+		await userEvent.click(screen.getByRole('button', { name: 'Open pod' }));
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="trace"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		expect(document.querySelector('[data-testid="log"]')).toBeNull();
+		expect(onClosed).toHaveBeenCalledTimes(2);
 	});
 });
