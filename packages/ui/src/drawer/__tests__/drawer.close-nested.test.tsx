@@ -64,6 +64,7 @@ function PodPage({ stack, onClosed, onAppClose }: PodPageProps): ReactNode {
 					Edit pod
 				</button>
 				<Drawer
+					stack="overlay"
 					type="inspector"
 					open={editOpen}
 					onClose={(reason) => {
@@ -302,8 +303,16 @@ function StackPage(): ReactNode {
 	};
 
 	return (
-		<Drawer type="task" open={stack.includes('pod')} onClose={closeTop} title="Pod" testId="pod">
+		<Drawer
+			stack="overlay"
+			type="task"
+			open={stack.includes('pod')}
+			onClose={closeTop}
+			title="Pod"
+			testId="pod"
+		>
 			<Drawer
+				stack="overlay"
 				type="inspector"
 				open={stack.includes('log')}
 				onClose={closeTop}
@@ -362,8 +371,8 @@ function HandlePage({
 
 	return shown ? (
 		<Drawer handle={pod} type="task" stack="overlay" title="Pod" testId="pod">
-			<Drawer handle={trace} type="inspector" title="Trace" testId="trace">
-				<Drawer handle={log} type="inspector" title="Log" testId="log">
+			<Drawer stack="overlay" handle={trace} type="inspector" title="Trace" testId="trace">
+				<Drawer stack="overlay" handle={log} type="inspector" title="Log" testId="log">
 					The log.
 				</Drawer>
 			</Drawer>
@@ -452,6 +461,7 @@ function KeepOpenPage({
 			</button>
 			{removesPod && !podOpen ? null : (
 				<Drawer
+					stack="overlay"
 					type="task"
 					open={podOpen}
 					onClose={() => setPodOpen(false)}
@@ -459,6 +469,7 @@ function KeepOpenPage({
 					testId="pod"
 				>
 					<Drawer
+						stack="overlay"
 						type="inspector"
 						open={traceOpen}
 						onClose={(reason) => {
@@ -471,6 +482,7 @@ function KeepOpenPage({
 						testId="trace"
 					>
 						<Drawer
+							stack="overlay"
 							type="inspector"
 							open={logOpen}
 							onClose={(reason) => {

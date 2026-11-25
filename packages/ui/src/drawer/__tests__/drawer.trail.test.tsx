@@ -897,6 +897,7 @@ function ObjectTrail(): ReactNode {
 
 	return (
 		<Drawer
+			stack="overlay"
 			type="inspector"
 			open
 			onClose={() => {}}
@@ -910,6 +911,7 @@ function ObjectTrail(): ReactNode {
 			<Fragment key={current}>
 				<p>{`The ${current}.`}</p>
 				<Drawer
+					stack="overlay"
 					type="inspector"
 					open={view.logOpen}
 					onClose={() => {
