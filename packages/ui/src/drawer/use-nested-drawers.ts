@@ -69,11 +69,25 @@ export function useNestedDrawers({
 	const requestCloseRef = useRef(requestClose);
 	const closeNested = (reason: DrawerCloseReasonType): boolean =>
 		closeTopFirst([...nestedRef.current], reason);
+	// An `onClose` that removes the tree this drawer is in, such as by clearing the selection that
+	// renders it, unmounts the drawer below in the commit React makes of it, which would send this
+	// one `parent-close` for the close it asked for. React makes that commit in a microtask it queues
+	// with the update, so the request counts until the one queued after `onClose` returns, and a
+	// drawer that stayed open still hears of a later `parent-close`.
+	const askedRef = useRef(false);
+	const askToClose = (reason: DrawerCloseReasonType): void => {
+		askedRef.current = true;
+		requestCloseRef.current(reason);
+		queueMicrotask(() => {
+			askedRef.current = false;
+		});
+	};
+
 	// The `onClose` of a drawer over this one may close this one too, such as by clearing the
 	// selection that renders both, and asking again would run its close twice.
 	const closeWithNested = (reason: DrawerCloseReasonType): void => {
 		if (closeNested(reason) && readIsOpen()) {
-			requestCloseRef.current(reason);
+			askToClose(reason);
 		}
 	};
 
@@ -98,7 +112,7 @@ export function useNestedDrawers({
 		}
 	};
 	const closeWithParent = (): void => {
-		if (parentClosedRef.current) {
+		if (parentClosedRef.current || askedRef.current) {
 			return;
 		}
 		parentClosedRef.current = true;

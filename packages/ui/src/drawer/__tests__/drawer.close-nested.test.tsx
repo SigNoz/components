@@ -983,3 +983,88 @@ describe('Drawer hidden by a Suspense fallback with a drawer open over it', () =
 		expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
 	});
 });
+
+/**
+ * A pod with a log over it, rendered only while a row is selected. The log's `onClose` clears the
+ * selection, unless `refuses` is set, the way a form with unsaved edits stays open.
+ */
+function RemovingLogPage({
+	refuses,
+	onLogClose,
+	onAppClose,
+}: {
+	refuses: boolean;
+	onLogClose: (reason: DrawerCloseReasonType) => void;
+	onAppClose: (close: () => void) => void;
+}): ReactNode {
+	const [selected, setSelected] = useState(true);
+
+	useEffect(() => {
+		onAppClose(() => setSelected(false));
+	});
+
+	return selected ? (
+		<Drawer
+			type="task"
+			stack="overlay"
+			open
+			onClose={() => setSelected(false)}
+			title="Pod"
+			testId="pod"
+		>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={(reason) => {
+					onLogClose(reason);
+					if (!refuses) {
+						setSelected(false);
+					}
+				}}
+				title="Log"
+				testId="log"
+			>
+				The log.
+			</Drawer>
+		</Drawer>
+	) : null;
+}
+
+describe('Drawer whose onClose removes the drawer it is nested in', () => {
+	it('gets one onClose for the press', async () => {
+		const onLogClose = vi.fn();
+		render(<RemovingLogPage refuses={false} onLogClose={onLogClose} onAppClose={() => {}} />);
+		await waitForSettled();
+
+		await userEvent.click(screen.getByTestId('log-close'));
+
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+		expect(onLogClose.mock.calls).toEqual([['close-press']]);
+	});
+
+	it('still gets parent-close when it stayed open and the app removes it later', async () => {
+		const onLogClose = vi.fn();
+		let closeFromApp = (): void => {};
+		render(
+			<RemovingLogPage
+				refuses
+				onLogClose={onLogClose}
+				onAppClose={(close) => {
+					closeFromApp = close;
+				}}
+			/>,
+		);
+		await waitForSettled();
+
+		await userEvent.click(screen.getByTestId('log-close'));
+		await act(async () => {});
+		act(() => {
+			closeFromApp();
+		});
+
+		expect(onLogClose.mock.calls).toEqual([['close-press'], ['parent-close']]);
+	});
+});
