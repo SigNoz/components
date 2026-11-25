@@ -490,6 +490,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * `parent-close`, and a drawer on a handle closes. It unmounts with the drawer below
 		 * whatever the handler does, so set `open` to `false` and do not ask about unsaved edits: a
 		 * drawer left open is back when the drawer below opens again.
+		 *
+		 * @note Every drawer nested in it gets `parent-close` before the page renders again. When
+		 * they keep their `open` in one state object, update it with a function that changes only
+		 * this drawer's flag, `setView((view) => ({ ...view, logOpen: false }))`: a copy of the
+		 * object the handler rendered with puts back the flag the drawer before it cleared.
 		 */
 		onClose?: (reason: DrawerCloseReasonType) => void;
 		/**

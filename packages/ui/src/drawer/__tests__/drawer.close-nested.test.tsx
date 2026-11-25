@@ -1068,3 +1068,101 @@ describe('Drawer whose onClose removes the drawer it is nested in', () => {
 		expect(onLogClose.mock.calls).toEqual([['close-press'], ['parent-close']]);
 	});
 });
+
+/**
+ * A pod with a log over it and a trace over the log, their `open` flags in one state object. Each
+ * `onClose` updates the object with `update`, a copy of the one it rendered with or a function.
+ */
+function ViewPage({
+	functional,
+	onAppClose,
+}: {
+	functional: boolean;
+	onAppClose: (close: () => void, open: (name: 'pod' | 'log') => void) => void;
+}): ReactNode {
+	const [view, setView] = useState({ podOpen: true, logOpen: true, traceOpen: true });
+	const clear = (flag: 'logOpen' | 'traceOpen'): void => {
+		if (functional) {
+			setView((current) => ({ ...current, [flag]: false }));
+		} else {
+			setView({ ...view, [flag]: false });
+		}
+	};
+
+	useEffect(() => {
+		onAppClose(
+			() => setView((current) => ({ ...current, podOpen: false })),
+			(name) => setView((current) => ({ ...current, [`${name}Open`]: true })),
+		);
+	});
+
+	return (
+		<Drawer
+			type="task"
+			stack="overlay"
+			open={view.podOpen}
+			onClose={() => setView((current) => ({ ...current, podOpen: false }))}
+			title="Pod"
+			testId="pod"
+		>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open={view.logOpen}
+				onClose={() => clear('logOpen')}
+				title="Log"
+				testId="log"
+			>
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					open={view.traceOpen}
+					onClose={() => clear('traceOpen')}
+					title="Trace"
+					testId="trace"
+				>
+					The trace.
+				</Drawer>
+			</Drawer>
+		</Drawer>
+	);
+}
+
+describe('Drawer closed from the app with drawers over it that share one state object', () => {
+	it.each([
+		['a copy of the object puts the trace back', false, true],
+		['a function closes them all', true, false],
+	])('%s', async (_name, functional, traceBack) => {
+		let closeFromApp = (): void => {};
+		let openFromApp = (_name: 'pod' | 'log'): void => {};
+		render(
+			<ViewPage
+				functional={functional}
+				onAppClose={(close, open) => {
+					closeFromApp = close;
+					openFromApp = open;
+				}}
+			/>,
+		);
+		await waitForSettled();
+
+		act(() => {
+			closeFromApp();
+		});
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+		act(() => {
+			openFromApp('pod');
+		});
+		act(() => {
+			openFromApp('log');
+		});
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		expect(document.querySelector('[data-testid="trace"]') !== null).toBe(traceBack);
+	});
+});
