@@ -10,21 +10,39 @@ import type {
 } from './types.js';
 
 /**
+ * The drawers a press has asked to close so far, each one by its `isOpen`. A drawer has one
+ * `isOpen`, which it shares with every step it lists in a trail and with the entry it registers in
+ * the drawer below, so the drawers of a trail, which are nested in each other too, are asked once.
+ *
+ * @access private
+ */
+export type AskedDrawers = Set<DrawerTrailEntry['isOpen']>;
+
+/**
  * One crumb of a breadcrumb trail: what it shows, how to close the drawer that renders it and read
  * whether it is still open, and, for an earlier step of a drawer's own `trail`, how to show that
- * step again, once the drawers nested in that drawer closed. The steps of one drawer share its
- * `close`, which tells the drawers of a trail apart.
+ * step again, once the drawers nested in that drawer agreed to close. The steps of one drawer share
+ * its `close` and its `isOpen`, which tell the drawers of a trail apart.
  *
  * @access private
  */
 export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
 	title: ReactNode;
-	close: (reason: DrawerCloseReasonType) => void;
+	/**
+	 * Asks the drawers nested in the drawer to close, then the drawer, and answers whether it
+	 * agreed: `false` when it, or a drawer nested in it, called `cancel()`. `asked` is the press this
+	 * is part of, so a drawer it already asked is not asked again.
+	 */
+	close: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => boolean;
 	/**
 	 * Whether the drawer is open as of the last commit. An unmounted drawer is closed.
 	 */
 	isOpen: () => boolean;
-	select?: (reason: DrawerTrailSelectReasonType) => void;
+	/**
+	 * Shows the step, after the drawers nested in its drawer agreed to close. `asked` is the press
+	 * this is part of, which already asked some of them.
+	 */
+	select?: (reason: DrawerTrailSelectReasonType, asked?: AskedDrawers) => void;
 };
 
 /**
@@ -93,7 +111,7 @@ export type DrawerStackContextValue = {
 	cover: (blocksInput: boolean) => () => void;
 	/**
 	 * Called by a nested drawer while it is open. Before the drawer closes, it asks each one to
-	 * close, the one opened last first, and stays open when one of them does.
+	 * close, the one opened last first, and stays open when one of them cancels.
 	 */
 	nest: (entry: NestedDrawerEntry) => () => void;
 };

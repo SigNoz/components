@@ -32,7 +32,8 @@ interface GuardedFormProps {
 
 /**
  * An edit form in a task drawer that asks "Discard changes?" before it closes with unsaved edits:
- * `onClose` and the Cancel button open a nested `AlertDialog` instead of closing.
+ * `onClose` and the Cancel button open a nested `AlertDialog` instead of closing, and `onClose`
+ * calls `cancel()`.
  */
 function GuardedForm({ onDrawerClose }: GuardedFormProps): ReactNode {
 	const [open, setOpen] = useState(false);
@@ -59,8 +60,11 @@ function GuardedForm({ onDrawerClose }: GuardedFormProps): ReactNode {
 				type="task"
 				stack="overlay"
 				open={open}
-				onClose={(reason) => {
+				onClose={(reason, { cancel }) => {
 					onDrawerClose?.(reason);
+					if (name !== '') {
+						cancel();
+					}
 					requestClose();
 				}}
 				title="Edit member"

@@ -97,8 +97,8 @@ function DrawerPlayground({
 					type="task"
 					open={open}
 					description={description}
-					onClose={(reason) => {
-						onClose?.(reason);
+					onClose={(reason, details) => {
+						onClose?.(reason, details);
 						close();
 					}}
 					footerSuffix={
@@ -117,8 +117,8 @@ function DrawerPlayground({
 					{...props}
 					type="inspector"
 					open={open}
-					onClose={(reason) => {
-						onClose?.(reason);
+					onClose={(reason, details) => {
+						onClose?.(reason, details);
 						close();
 					}}
 				/>
@@ -443,8 +443,14 @@ function UnsavedChangesForm(): ReactElement {
 				stack="overlay"
 				type="task"
 				open={open}
-				// Unsaved edits: every way out asks first, the backdrop and `Esc` included.
-				onClose={requestClose}
+				// Unsaved edits: every way out asks first, the backdrop and `Esc` included, and the
+				// drawers under this one stay open while it asks.
+				onClose={(_reason, { cancel }) => {
+					if (changes > 0) {
+						cancel();
+					}
+					requestClose();
+				}}
 				title="Edit panel"
 				width="wide"
 				testId="unsaved"
@@ -501,8 +507,8 @@ function UnsavedChangesForm(): ReactElement {
 }
 
 /**
- * A `task` with unsaved edits guards its own close: `onClose` and Cancel open a nested
- * `AlertDialog` while the form is dirty, and the footer says what is unsaved. With no edits, both
+ * A `task` with unsaved edits guards its own close: `onClose` calls `cancel()`, and it and Cancel
+ * open a nested `AlertDialog` while the form is dirty, and the footer says what is unsaved. With no edits, both
  * close at once.
  */
 export const UnsavedChanges: Story = {

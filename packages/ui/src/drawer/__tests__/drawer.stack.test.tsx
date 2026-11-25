@@ -7,6 +7,7 @@ import { AlertDialog } from '../../alert-dialog/alert-dialog.js';
 import { Dialog } from '../../dialog/dialog.js';
 import { Drawer } from '../drawer.js';
 import type {
+	DrawerCloseDetailsType,
 	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerStackType,
@@ -25,9 +26,9 @@ interface ChainProps {
 	grandchildType?: DrawerTypeType;
 	open?: Level[];
 	/**
-	 * Levels whose `onClose` leaves them open, the way a form with unsaved edits asks first.
+	 * Levels whose `onClose` calls `cancel()`, the way a form with unsaved edits asks first.
 	 */
-	stayOpen?: Level[];
+	cancel?: Level[];
 	onClose?: (level: Level, reason: DrawerCloseReasonType) => void;
 }
 
@@ -45,7 +46,7 @@ function NestedDrawer({
 	stack: DrawerStackType;
 	closePosition?: DrawerClosePositionType;
 	open: boolean;
-	onClose: (reason: DrawerCloseReasonType) => void;
+	onClose: (reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void;
 	children?: ReactNode;
 }): ReactNode {
 	const title = `${level} record`;
@@ -93,15 +94,17 @@ function Chain({
 	childType = 'inspector',
 	grandchildType = 'inspector',
 	open: initiallyOpen = ['root', 'child'],
-	stayOpen = [],
+	cancel = [],
 	onClose,
 }: ChainProps): ReactNode {
 	const [open, setOpen] = useState<ReadonlySet<Level>>(new Set(initiallyOpen));
 	const close =
 		(level: Level) =>
-		(reason: DrawerCloseReasonType): void => {
+		(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType): void => {
 			onClose?.(level, reason);
-			if (!stayOpen.includes(level)) {
+			if (cancel.includes(level)) {
+				details.cancel();
+			} else {
 				setOpen((current) => new Set([...current].filter((item) => item !== level)));
 			}
 		};
@@ -459,9 +462,9 @@ describe('Drawer closing with drawers open over it', () => {
 		});
 	});
 
-	it('stays open when a drawer over it stays open', async () => {
+	it('stays open when a drawer over it cancels', async () => {
 		const onClose = vi.fn();
-		await renderChain({ rootType: 'task', stayOpen: ['child'], onClose });
+		await renderChain({ rootType: 'task', cancel: ['child'], onClose });
 
 		await closeRoot();
 		await waitForSettled();

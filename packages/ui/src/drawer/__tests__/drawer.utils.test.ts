@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { DrawerTrailEntry } from '../drawer-stack-context.js';
+import type { AskedDrawers, DrawerTrailEntry } from '../drawer-stack-context.js';
 import type { DrawerCloseReasonType } from '../types.js';
 import {
 	buildTrail,
+	closeTopFirst,
 	displayTitle,
 	leaveTrail,
 	letPageKeysThrough,
@@ -80,15 +81,19 @@ describe('displayTitle', () => {
 });
 
 /**
- * One drawer of a trail. Its `close` records the reason and closes it, unless it refuses.
+ * One drawer of a trail. Its `close` records the reason and answers whether it agreed. It closes the
+ * drawer, unless it refuses, as a drawer that calls `cancel()` does, or `stays` open without
+ * refusing, as one whose app closes it later does.
  */
-function drawer(name: string, log: string[], { refuses = false } = {}) {
+function drawer(name: string, log: string[], { refuses = false, stays = false } = {}) {
 	let open = true;
 
 	return {
-		close: vi.fn((reason: DrawerCloseReasonType) => {
+		close: vi.fn((reason: DrawerCloseReasonType, _asked?: AskedDrawers) => {
 			log.push(`${name}:${reason}`);
-			open = refuses;
+			open = refuses || stays;
+
+			return !refuses;
 		}),
 		isOpen: () => open,
 	};
@@ -174,7 +179,26 @@ describe('buildTrail', () => {
 		expect(log).toEqual(['nested:crumb-press', 'select']);
 	});
 
-	it('selects no step while a drawer nested in its own stays open', () => {
+	it('hands the press to the drawers nested in its own', () => {
+		const asked: AskedDrawers = new Set();
+		const closeNestedSpy = vi.fn(() => true);
+		const trail = buildTrail({
+			parentTrail: [],
+			steps: [{ title: 'node' }],
+			crumb: undefined,
+			title: 'pod',
+			close,
+			closeNested: closeNestedSpy,
+			isOpen,
+			onTrailSelect: vi.fn(),
+		});
+
+		trail[0]?.select?.('crumb-press', asked);
+
+		expect(closeNestedSpy).toHaveBeenCalledExactlyOnceWith('crumb-press', asked);
+	});
+
+	it('selects no step while a drawer nested in its own cancels', () => {
 		const onTrailSelect = vi.fn();
 		const trail = buildTrail({
 			parentTrail: [],
@@ -211,6 +235,81 @@ describe('buildTrail', () => {
 	});
 });
 
+describe('closeTopFirst', () => {
+	it('asks the drawer on top first, then the ones under it, and answers true', () => {
+		const log: string[] = [];
+
+		const agreed = closeTopFirst(
+			[drawer('pod', log), drawer('trace', log), drawer('log', log)],
+			'close-press',
+		);
+
+		expect(agreed).toBe(true);
+		expect(log).toEqual(['log:close-press', 'trace:close-press', 'pod:close-press']);
+	});
+
+	it('stops at a drawer that cancels, and answers false', () => {
+		const log: string[] = [];
+
+		const agreed = closeTopFirst(
+			[drawer('pod', log), drawer('trace', log, { refuses: true }), drawer('log', log)],
+			'close-press',
+		);
+
+		expect(agreed).toBe(false);
+		expect(log).toEqual(['log:close-press', 'trace:close-press']);
+	});
+
+	it('goes on past a drawer that stays open without cancelling', () => {
+		const log: string[] = [];
+
+		const agreed = closeTopFirst(
+			[drawer('pod', log), drawer('trace', log, { stays: true }), drawer('log', log)],
+			'close-press',
+		);
+
+		expect(agreed).toBe(true);
+		expect(log).toEqual(['log:close-press', 'trace:close-press', 'pod:close-press']);
+	});
+
+	it('skips a drawer that is closed already, and one that shares its close with an earlier entry', () => {
+		const log: string[] = [];
+		const closedAlready = { ...drawer('trace', log), isOpen: () => false };
+		const node = drawer('node', log);
+
+		const agreed = closeTopFirst(
+			[entry('node step', node), entry('node', node), closedAlready],
+			'swipe',
+		);
+
+		expect(agreed).toBe(true);
+		expect(closedAlready.close).not.toHaveBeenCalled();
+		expect(node.close).toHaveBeenCalledOnce();
+	});
+
+	it('leaves out the drawers of the press that were asked already', () => {
+		const log: string[] = [];
+		const node = drawer('node', log);
+		const asked: AskedDrawers = new Set([node.isOpen]);
+
+		const agreed = closeTopFirst([entry('node', node), drawer('pod', log)], 'crumb-press', asked);
+
+		expect(agreed).toBe(true);
+		expect(log).toEqual(['pod:crumb-press']);
+	});
+
+	it('adds each drawer it asks to the press, and hands the press to its close', () => {
+		const log: string[] = [];
+		const pod = drawer('pod', log);
+		const asked: AskedDrawers = new Set();
+
+		closeTopFirst([pod], 'swipe', asked);
+
+		expect(asked).toEqual(new Set([pod.isOpen]));
+		expect(pod.close).toHaveBeenCalledExactlyOnceWith('swipe', asked);
+	});
+});
+
 describe('leaveTrail', () => {
 	it('closes every drawer with the reason, the one on top first, each once', () => {
 		const log: string[] = [];
@@ -229,7 +328,7 @@ describe('leaveTrail', () => {
 		expect(node.close).toHaveBeenCalledOnce();
 	});
 
-	it('stops at a drawer that stays open', () => {
+	it('stops at a drawer that cancels', () => {
 		const log: string[] = [];
 		const trail = [
 			entry('cluster', drawer('cluster', log)),
@@ -240,6 +339,19 @@ describe('leaveTrail', () => {
 		leaveTrail(trail, 'swipe');
 
 		expect(log).toEqual(['pod:swipe', 'node:swipe']);
+	});
+
+	it('goes on past a drawer that stays open without cancelling', () => {
+		const log: string[] = [];
+		const trail = [
+			entry('cluster', drawer('cluster', log)),
+			entry('node', drawer('node', log, { stays: true })),
+			entry('pod', drawer('pod', log)),
+		];
+
+		leaveTrail(trail, 'swipe');
+
+		expect(log).toEqual(['pod:swipe', 'node:swipe', 'cluster:swipe']);
 	});
 
 	it('skips a drawer that is closed already', () => {
@@ -275,7 +387,7 @@ describe('stepBackInTrail', () => {
 		expect(node.close).not.toHaveBeenCalled();
 	});
 
-	it('closes nothing more and selects nothing once a drawer stays open', () => {
+	it('closes nothing more and selects nothing once a drawer cancels', () => {
 		const log: string[] = [];
 		const select = vi.fn();
 		const node = drawer('node', log);
@@ -290,6 +402,41 @@ describe('stepBackInTrail', () => {
 
 		expect(log).toEqual(['log:crumb-press', 'pod:crumb-press']);
 		expect(select).not.toHaveBeenCalled();
+	});
+
+	it('goes on to select the crumb past a drawer that stays open without cancelling', () => {
+		const log: string[] = [];
+		const select = vi.fn(() => {
+			log.push('select');
+		});
+		const node = drawer('node', log);
+		const trail = [
+			entry('node step', node, select),
+			entry('node', node),
+			entry('pod', drawer('pod', log, { stays: true })),
+		];
+
+		stepBackInTrail(trail, 0);
+
+		expect(log).toEqual(['pod:crumb-press', 'select']);
+	});
+
+	it('hands the drawer it steps into to the select, so it is not asked again', () => {
+		const log: string[] = [];
+		const select = vi.fn<NonNullable<DrawerTrailEntry['select']>>();
+		const node = drawer('node', log);
+		const trail = [
+			entry('node step', node, select),
+			entry('node', node),
+			entry('pod', drawer('pod', log)),
+		];
+
+		stepBackInTrail(trail, 0);
+
+		const asked = select.mock.calls[0]?.[1];
+		expect(select).toHaveBeenCalledExactlyOnceWith('crumb-press', asked);
+		expect(asked?.has(node.isOpen)).toBe(true);
+		expect(node.close).not.toHaveBeenCalled();
 	});
 
 	it('does nothing for an index past the trail', () => {

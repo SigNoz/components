@@ -25,8 +25,9 @@ interface PodPageProps {
 
 /**
  * A pod drawer with an edit drawer opened from it, the way an entity drawer opens a form. The form
- * asks "Discard changes?" before it closes with unsaved edits. Over the pod it is an inspector, so
- * the pod's close button stays in reach; in a trail it takes the pod's place.
+ * asks "Discard changes?" before it closes with unsaved edits, and calls `cancel()` so the pod stays
+ * open too. Over the pod it is an inspector, so the pod's close button stays in reach; in a trail it
+ * takes the pod's place.
  */
 function PodPage({ stack, onClosed, onAppClose }: PodPageProps): ReactNode {
 	const [podOpen, setPodOpen] = useState(false);
@@ -67,12 +68,13 @@ function PodPage({ stack, onClosed, onAppClose }: PodPageProps): ReactNode {
 					stack="overlay"
 					type="inspector"
 					open={editOpen}
-					onClose={(reason) => {
+					onClose={(reason, { cancel }) => {
 						onClosed('edit', reason);
 						// The pod closed from the app: the form goes with it, so there is nothing to ask.
 						if (name === '' || reason === 'parent-close') {
 							closeEdit();
 						} else {
+							cancel();
 							setConfirming(true);
 						}
 					}}
@@ -986,7 +988,7 @@ describe('Drawer hidden by a Suspense fallback with a drawer open over it', () =
 
 /**
  * A pod with a log over it, rendered only while a row is selected. The log's `onClose` clears the
- * selection, unless `refuses` is set, the way a form with unsaved edits stays open.
+ * selection, unless `refuses` is set, which calls `cancel()` the way a form with unsaved edits does.
  */
 function RemovingLogPage({
 	refuses,
@@ -1016,9 +1018,11 @@ function RemovingLogPage({
 				type="inspector"
 				stack="overlay"
 				open
-				onClose={(reason) => {
+				onClose={(reason, { cancel }) => {
 					onLogClose(reason);
-					if (!refuses) {
+					if (refuses) {
+						cancel();
+					} else {
 						setSelected(false);
 					}
 				}}
@@ -1045,7 +1049,7 @@ describe('Drawer whose onClose removes the drawer it is nested in', () => {
 		expect(onLogClose.mock.calls).toEqual([['close-press']]);
 	});
 
-	it('still gets parent-close when it stayed open and the app removes it later', async () => {
+	it('still gets parent-close when it cancelled and the app removes it later', async () => {
 		const onLogClose = vi.fn();
 		let closeFromApp = (): void => {};
 		render(

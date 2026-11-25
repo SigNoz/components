@@ -30,9 +30,10 @@ type UseDrawerStackOptions = {
 	panel: HTMLElement | null;
 	popupRef: RefObject<HTMLElement | null>;
 	/**
-	 * Asks this drawer alone to close, through `onClose` or the handle.
+	 * Asks this drawer alone to close, through `onClose` or the handle. Answers whether it agreed:
+	 * `false` when `onClose` called `cancel()`.
 	 */
-	requestClose: (reason: DrawerCloseReasonType) => void;
+	requestClose: (reason: DrawerCloseReasonType) => boolean;
 };
 
 type DrawerStackState = {
@@ -73,7 +74,7 @@ type DrawerStackState = {
  * a task or a step of its trail it takes no input; under an inspector overlay it stays usable.
  * Before it closes, or shows an earlier step of its own `trail`, it asks the drawers open over it
  * to close, the one on top first, so each one gets its own `onClose`, and it stays open when one of
- * them does.
+ * them calls `cancel()`.
  *
  * @access private
  */

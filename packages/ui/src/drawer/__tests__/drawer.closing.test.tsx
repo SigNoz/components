@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
@@ -14,6 +14,7 @@ import {
 	slots,
 	waitForClosed,
 	waitForOnTop,
+	waitForSettled,
 } from './drawer.test-utils.js';
 
 const TYPES: DrawerTypeType[] = ['task', 'inspector'];
@@ -62,6 +63,30 @@ describe('Drawer closing', () => {
 		await userEvent.keyboard('{Escape}');
 
 		expect(onClose).toHaveBeenCalledExactlyOnceWith('escape-key');
+	});
+
+	it('gives onClose the cancel function of the request after the reason', async () => {
+		const onClose = vi.fn();
+		render(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={onClose}
+				title="Edit member"
+				testId="drawer"
+			>
+				<input aria-label="Name" />
+			</Drawer>,
+		);
+		await waitFor(() => {
+			expect(drawerPanel().contains(document.activeElement)).toBe(true);
+		});
+		await waitForSettled();
+
+		await userEvent.keyboard('{Escape}');
+
+		expect(onClose).toHaveBeenCalledExactlyOnceWith('escape-key', { cancel: expect.any(Function) });
 	});
 
 	it('calls onClose with escape-key on Esc from the close button and from a footer button', async () => {

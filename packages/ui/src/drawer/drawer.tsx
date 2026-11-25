@@ -86,12 +86,22 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
 	const resolvedType = type === 'task' ? 'task' : 'inspector';
 	const isTask = resolvedType === 'task';
 
-	const requestClose = (reason: DrawerCloseReasonType): void => {
+	const requestClose = (reason: DrawerCloseReasonType): boolean => {
 		if (handle) {
 			handle.close();
-		} else {
-			onClose?.(reason);
+
+			return true;
 		}
+
+		// A local of this one request, so a `cancel` kept and called later does nothing.
+		let cancelled = false;
+		onClose?.(reason, {
+			cancel: () => {
+				cancelled = true;
+			},
+		});
+
+		return !cancelled;
 	};
 
 	const {
@@ -279,8 +289,9 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * ### Controlled, or from a handle
  *
  * With `open`, the drawer never opens or closes itself. `onClose` reports the request with its
- * reason, and the drawer stays open until `open` becomes `false`. A `task` with unsaved edits opens
- * a nested `AlertDialog` from its `onClose` and its Cancel instead of closing.
+ * reason, and the drawer stays open until `open` becomes `false`. A `task` with unsaved edits calls
+ * `details.cancel()` in its `onClose` and opens a nested `AlertDialog` instead of closing, so the
+ * drawers under it stay open too.
  *
  * With a `handle` from `useDrawerHandle()`, `handle.open(payload)` shows the drawer from anywhere,
  * such as a row of a table, and `children` may be a function of that payload. Calling it again
@@ -321,9 +332,10 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * drawer's `stack` says, and takes its width from it.
  *
  * Closing a drawer asks the drawers open over it to close first, the one on top first, with the
- * same reason, and one that stays open keeps it open, such as a form that asks about unsaved
- * edits. They close before its own `onClose` runs, so they stay closed when that `onClose` keeps it
- * open. When the app closes it, with `open={false}` or `handle.close()`, the drawers open over it
+ * same reason, and one that calls `cancel()` keeps it open, such as a form that asks about unsaved
+ * edits. One that does not counts as closing, whenever its app closes it, even in a transition or
+ * a timer. They are asked before its own `onClose` runs, so they stay closed when that `onClose`
+ * calls `cancel()`. When the app closes it, with `open={false}` or `handle.close()`, the drawers open over it
  * get `parent-close` and slide out with it. A drawer the app removes from the tree while it is open
  * sends it too, with nothing to slide out.
  *
@@ -332,7 +344,7 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * crumb that lists the earlier steps, and the last three. A press on a crumb closes every drawer
  * after it with `crumb-press`. `Esc` closes only the current drawer, a step back, while the close
  * button, a swipe and a press on the backdrop close the whole trail, the drawer on top first. A
- * drawer that stays open after its `onClose` stops the leave: the drawers under it stay open. The
+ * drawer that calls `cancel()` stops the leave: the drawers under it stay open. The
  * first drawer of the trail sets the backdrop, the focus trap and the `closePosition`, so a `type`
  * further down sets only whether the drawer has a description and a footer. `crumb` sets a drawer's crumb, its `title` by
  * default, the card shown while the crumb is hovered or focused (`preview`), and its link (`href`,
@@ -346,8 +358,8 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * the trail itself: `trail` lists the earlier steps, root first, the drawer's own `crumb` is last,
  * and `children` renders only the current step. A plain click on a step and `Esc` call
  * `onTrailSelect(index, reason)`, and you drop the steps after it. A drawer open over it, such as an
- * inspector declared in the step, is asked to close first with the same reason, and one that stays
- * open keeps the step. A step back mounts the step again, so it keeps no scroll or state of its
+ * inspector declared in the step, is asked to close first with the same reason, and one that calls
+ * `cancel()` keeps the step. A step back mounts the step again, so it keeps no scroll or state of its
  * own.
  *
  * With `stack="overlay"`, the nested drawer opens over the outer one at 80% of its width, so the

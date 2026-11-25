@@ -12,7 +12,9 @@ import { DialogHandle } from '../../dialog/dialog-handle.js';
 import type { DialogCloseReasonType, NoHandle } from '../../dialog/types.js';
 import { PopupHandle } from '../../lib/popup-handle.js';
 import { Drawer } from '../drawer.js';
+import type { DrawerCloseDetailsType as ExportedDrawerCloseDetailsType } from '../index.js';
 import type {
+	DrawerCloseDetailsType,
 	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerHandleType,
@@ -224,6 +226,65 @@ describe('Drawer props', () => {
 				Body
 			</Drawer>,
 		);
+	});
+
+	test('accepts an onClose that reads the details, and one that takes the reason only', () => {
+		expectTypeOf<DrawerCloseDetailsType>().toEqualTypeOf<{ cancel: () => void }>();
+		expectTypeOf<NonNullable<DrawerProps['onClose']>>().toEqualTypeOf<
+			(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void
+		>();
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={(_reason, details) => {
+					expectTypeOf(details).toEqualTypeOf<DrawerCloseDetailsType>();
+					expectTypeOf(details.cancel).toEqualTypeOf<() => void>();
+					details.cancel();
+				}}
+				title="T"
+			>
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={(reason, { cancel }) => {
+					expectTypeOf(reason).toEqualTypeOf<DrawerCloseReasonType>();
+					expectTypeOf(cancel).toEqualTypeOf<() => void>();
+					if (reason === 'escape-key') {
+						cancel();
+					}
+				}}
+				title="T"
+			>
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={(_reason: DrawerCloseReasonType) => noop()}
+				title="T"
+			>
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer type="task" stack="overlay" open onClose={noop} title="T">
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('exports the type of the details from the entry point of the drawer', () => {
+		expectTypeOf<ExportedDrawerCloseDetailsType>().toEqualTypeOf<DrawerCloseDetailsType>();
 	});
 
 	test('accepts every stack name', () => {
@@ -759,13 +820,13 @@ describe('Drawer rejected props', () => {
 			</Drawer>,
 		);
 		assertType(
-			// @ts-expect-error - ignore the `outside-press` reason, no `disableOutsideClick`
+			// @ts-expect-error - cancel the `outside-press` reason, no `disableOutsideClick`
 			<Drawer type="task" stack="overlay" open onClose={noop} title="T" disableOutsideClick>
 				Body
 			</Drawer>,
 		);
 		assertType(
-			// @ts-expect-error - ignore the `outside-press` reason, no `maskClosable`
+			// @ts-expect-error - cancel the `outside-press` reason, no `maskClosable`
 			<Drawer type="task" stack="overlay" open onClose={noop} title="T" maskClosable={false}>
 				Body
 			</Drawer>,
@@ -777,7 +838,7 @@ describe('Drawer rejected props', () => {
 			</Drawer>,
 		);
 		assertType(
-			// @ts-expect-error - ignore the `escape-key` reason, no `keyboard`
+			// @ts-expect-error - cancel the `escape-key` reason, no `keyboard`
 			<Drawer type="task" stack="overlay" open onClose={noop} title="T" keyboard={false}>
 				Body
 			</Drawer>,
@@ -922,10 +983,11 @@ describe('Drawer rules', () => {
 	const CLOSE_BUTTON =
 		'a `Drawer` always renders its close button: move it to the start of the header with `closePosition="start"`';
 	const OUTSIDE_PRESS =
-		'a press on the backdrop of a `task` calls `onClose("outside-press")`: ignore that reason to keep the drawer open';
+		'a press on the backdrop of a `task` calls `onClose("outside-press")`: call `details.cancel()` for that reason to keep the drawer open';
 	const FROM_THE_RIGHT =
 		'a drawer always opens from the right edge, with one animation: drop `direction`, `placement`, `push`, `animation`, `offset` and `heightMode`';
-	const ESC = '`Esc` calls `onClose("escape-key")`: ignore that reason to keep the drawer open';
+	const ESC =
+		'`Esc` calls `onClose("escape-key")`: call `details.cancel()` for that reason to keep the drawer open';
 	const EXTRA = 'antd `extra` is called `headerSuffix`: the actions at the end of the header';
 	const UNMOUNTS =
 		'a closed drawer always unmounts its content: drop `destroyOnClose` and `forceMount`';
@@ -936,7 +998,7 @@ describe('Drawer rules', () => {
 	const CONTROLLED =
 		'a drawer has no trigger and no uncontrolled mode: pass `open`, or a `handle` from `useDrawerHandle()`';
 	const ON_CLOSE =
-		'a drawer only ever asks to close: use `onClose(reason)`, and ignore a reason to keep it open';
+		'a drawer only ever asks to close: use `onClose(reason, details)`, and call `details.cancel()` for a reason to keep it open';
 	const ON_OPEN_CHANGE_WITH_A_HANDLE =
 		'with a `handle`, the handle reports the close: pass `onOpenChange` to `useDrawerHandle(onOpenChange)`, not to the drawer';
 	const TRAIL =

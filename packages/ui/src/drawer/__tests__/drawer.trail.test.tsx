@@ -46,9 +46,11 @@ function Step({
 			type="inspector"
 			stack="breadcrumb"
 			open={depth >= index}
-			onClose={(reason) => {
+			onClose={(reason, { cancel }) => {
 				onClose(name, reason);
-				if (name !== refuses) {
+				if (name === refuses) {
+					cancel();
+				} else {
 					setDepth(index - 1);
 				}
 			}}
@@ -84,7 +86,7 @@ function Trail({
 	crumbFor?: CrumbFor;
 	trailEllipsis?: BreadcrumbEllipsisOptions;
 	/**
-	 * The step whose `onClose` keeps it open, the way an unsaved-changes guard does.
+	 * The step whose `onClose` calls `cancel()`, the way an unsaved-changes guard does.
 	 */
 	refuses?: string;
 }): ReactNode {
@@ -331,7 +333,7 @@ function UnmountingTrail({
 	);
 }
 
-describe('Drawer trail with a drawer that stays open on close', () => {
+describe('Drawer trail with a drawer that cancels on close', () => {
 	it('closes only the drawers above it from the close button', async () => {
 		const onClose = vi.fn();
 		await renderTrail({ last: 2, refuses: 'node', onClose });
@@ -645,9 +647,11 @@ function ControlledTrail({
 			type="inspector"
 			stack="breadcrumb"
 			open={logOpen}
-			onClose={(reason) => {
+			onClose={(reason, { cancel }) => {
 				onClose('log', reason);
-				if (!logRefuses) {
+				if (logRefuses) {
+					cancel();
+				} else {
 					setLogOpen(false);
 				}
 			}}
@@ -800,7 +804,7 @@ describe('Drawer with a controlled trail', () => {
 		expect(await screen.findByText('The node.')).toBeVisible();
 	});
 
-	it('shows no earlier step while the nested drawer stays open', async () => {
+	it('shows no earlier step while the nested drawer cancels', async () => {
 		const onTrailSelect = vi.fn();
 		const onClose = vi.fn();
 		const trail = await renderControlled({
@@ -851,7 +855,7 @@ describe('Drawer with a controlled trail and an inspector declared in its step',
 		expect(document.querySelector('[data-testid="log"]')).toBeNull();
 	});
 
-	it('shows no earlier step on a crumb press while the inspector stays open', async () => {
+	it('shows no earlier step on a crumb press while the inspector cancels', async () => {
 		const onTrailSelect = vi.fn();
 		const onClose = vi.fn();
 		const trail = await renderControlled({ ...open, logRefuses: true, onTrailSelect, onClose });

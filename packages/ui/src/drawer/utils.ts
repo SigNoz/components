@@ -2,7 +2,7 @@ import type { Drawer } from '@base-ui/react/drawer';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { hasTitle } from '../breadcrumb/utils.js';
-import type { DrawerTrailEntry } from './drawer-stack-context.js';
+import type { AskedDrawers, DrawerTrailEntry } from './drawer-stack-context.js';
 import type {
 	DrawerCloseReasonType,
 	DrawerCrumbType,
@@ -97,7 +97,7 @@ export function displayTitle(...titles: readonly ReactNode[]): ReactNode {
  *
  * Showing one of its steps unmounts the content it was declared in, and the drawers declared there
  * with it, before they hear of it. So a step asks `closeNested` first, and is shown only when every
- * drawer nested in this one closed and this one is still open.
+ * drawer nested in this one agreed to close and this one is still open.
  *
  * @access private
  */
@@ -117,9 +117,9 @@ export function buildTrail({
 	title: string;
 	close: DrawerTrailEntry['close'];
 	/**
-	 * Asks the drawers nested in this one to close, and returns whether every one did.
+	 * Asks the drawers nested in this one to close, and answers whether every one agreed.
 	 */
-	closeNested: (reason: DrawerCloseReasonType) => boolean;
+	closeNested: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => boolean;
 	isOpen: DrawerTrailEntry['isOpen'];
 	onTrailSelect: ((index: number, reason: DrawerTrailSelectReasonType) => void) | undefined;
 }): DrawerTrailEntry[] {
@@ -129,9 +129,9 @@ export function buildTrail({
 			...step,
 			close,
 			isOpen,
-			select: (reason) => {
+			select: (reason, asked) => {
 				// A drawer nested in this one may close this one as it closes.
-				if (closeNested(reason) && isOpen()) {
+				if (closeNested(reason, asked) && isOpen()) {
 					onTrailSelect?.(index, reason);
 				}
 			},
@@ -141,32 +141,32 @@ export function buildTrail({
 }
 
 /**
- * Asks each open drawer of `entries` but the one of `keep` to close, the one on top first, each
- * once, and stops at the first one that stays open, such as a form that opens an unsaved-changes
- * `AlertDialog` instead. Returns whether every one closed. A drawer already closed is skipped: the
- * drawers nested in a drawer of a trail include the later ones of the trail, which closed first.
+ * Asks each open drawer of `entries` to close, the one on top first, each once, and stops at the
+ * first one that cancels, such as a form that opens an unsaved-changes `AlertDialog` instead.
+ * Answers whether every one agreed. A drawer that stays open without cancelling counts as closing,
+ * since its app may close it later, in a transition or a timer.
  *
- * Each request is flushed before the next, so `isOpen` reads what its `onClose` did.
+ * `asked` is the press this is part of. It skips the drawers already in it, such as the drawer to
+ * keep when stepping back, or a drawer of a trail that the trail asked before the drawer below it
+ * asked its own nested drawers, which include it. A drawer already closed is skipped as well.
+ *
+ * Each request is flushed before the next, so the next `onClose` runs after the app rendered what
+ * the last one did, and `isOpen` reads it.
  *
  * @access private
  */
 export function closeTopFirst(
 	entries: readonly Pick<DrawerTrailEntry, 'close' | 'isOpen'>[],
 	reason: DrawerCloseReasonType,
-	keep?: DrawerTrailEntry['close'],
+	asked: AskedDrawers = new Set(),
 ): boolean {
-	const asked = new Set<DrawerTrailEntry['close']>(keep ? [keep] : []);
-
 	for (const entry of [...entries].reverse()) {
-		if (asked.has(entry.close) || !entry.isOpen()) {
+		if (asked.has(entry.isOpen) || !entry.isOpen()) {
 			continue;
 		}
-		asked.add(entry.close);
+		asked.add(entry.isOpen);
 
-		flushSync(() => {
-			entry.close(reason);
-		});
-		if (entry.isOpen()) {
+		if (!flushSync(() => entry.close(reason, asked))) {
 			return false;
 		}
 	}
@@ -177,7 +177,7 @@ export function closeTopFirst(
 /**
  * Steps back to the crumb at `index`: closes every drawer after it with `crumb-press`, the one on
  * top first, then shows the crumb's step when it is an earlier step of a drawer's own `trail`. The
- * drawer of that crumb stays open, and a drawer above it that stays open stops the step back. The
+ * drawer of that crumb stays open, and a drawer above it that cancels stops the step back. The
  * step closes the drawers nested in its own drawer first, the same way, as the trail does not list
  * an inspector open over it.
  *
@@ -189,14 +189,16 @@ export function stepBackInTrail(trail: readonly DrawerTrailEntry[], index: numbe
 		return;
 	}
 
-	if (closeTopFirst(trail.slice(index + 1), 'crumb-press', target.close)) {
-		target.select?.('crumb-press');
+	// The steps of the target share its `isOpen`, so the press never asks the drawer it steps into.
+	const asked: AskedDrawers = new Set([target.isOpen]);
+	if (closeTopFirst(trail.slice(index + 1), 'crumb-press', asked)) {
+		target.select?.('crumb-press', asked);
 	}
 }
 
 /**
- * Closes every drawer of a trail with `reason`, the one on top first, each once, until one stays
- * open.
+ * Closes every drawer of a trail with `reason`, the one on top first, each once, until one
+ * cancels.
  *
  * @access private
  */
