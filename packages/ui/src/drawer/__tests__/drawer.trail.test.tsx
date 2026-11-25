@@ -1,5 +1,5 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
-import { forwardRef, type MouseEvent, type ReactNode, useEffect, useState } from 'react';
+import { forwardRef, Fragment, type MouseEvent, type ReactNode, useEffect, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent as browserUser } from 'vitest/browser';
 import type { BreadcrumbEllipsisOptions } from '../../breadcrumb/types.js';
@@ -7,6 +7,7 @@ import { Drawer } from '../drawer.js';
 import type {
 	DrawerCloseReasonType,
 	DrawerCrumbType,
+	DrawerStackType,
 	DrawerTrailSelectReasonType,
 } from '../types.js';
 import { waitForSettled } from './drawer.test-utils.js';
@@ -590,24 +591,47 @@ describe('Drawer trail covered content', () => {
 
 const LEVELS = ['cluster', 'node', 'namespace', 'pod'];
 
-function Mounts({ name, onMount }: { name: string; onMount: (name: string) => void }): ReactNode {
+function Mounts({
+	name,
+	onMount,
+	children,
+}: {
+	name: string;
+	onMount: (name: string) => void;
+	children?: ReactNode;
+}): ReactNode {
 	useEffect(() => {
 		onMount(name);
 	}, [name, onMount]);
 
-	return <p>{`The ${name}.`}</p>;
+	return (
+		<>
+			<p>{`The ${name}.`}</p>
+			{children}
+		</>
+	);
 }
 
 function ControlledTrail({
 	start = 3,
+	stack = 'breadcrumb',
 	withLog = false,
+	logInStep = false,
 	logRefuses = false,
 	onTrailSelect = () => {},
 	onClose = () => {},
 	onMount = () => {},
 }: {
 	start?: number;
+	/**
+	 * How the log opens: in the trail of the drawer, or as an inspector over it.
+	 */
+	stack?: DrawerStackType;
 	withLog?: boolean;
+	/**
+	 * Declares the log in the content of the current step, so it unmounts with the step.
+	 */
+	logInStep?: boolean;
 	logRefuses?: boolean;
 	onTrailSelect?: (index: number, reason: DrawerTrailSelectReasonType) => void;
 	onClose?: (name: string, reason: DrawerCloseReasonType) => void;
@@ -616,11 +640,28 @@ function ControlledTrail({
 	const [depth, setDepth] = useState(start);
 	const [logOpen, setLogOpen] = useState(withLog);
 	const current = LEVELS[depth] ?? 'cluster';
+	const log = (
+		<Drawer
+			type="inspector"
+			stack="breadcrumb"
+			open={logOpen}
+			onClose={(reason) => {
+				onClose('log', reason);
+				if (!logRefuses) {
+					setLogOpen(false);
+				}
+			}}
+			title="log"
+			testId="log"
+		>
+			The log.
+		</Drawer>
+	);
 
 	return (
 		<Drawer
 			type="inspector"
-			stack="breadcrumb"
+			stack={stack}
 			open
 			onClose={(reason) => {
 				onClose(current, reason);
@@ -633,22 +674,10 @@ function ControlledTrail({
 			}}
 			testId="entity"
 		>
-			<Mounts key={current} name={current} onMount={onMount} />
-			<Drawer
-				type="inspector"
-				stack="breadcrumb"
-				open={logOpen}
-				onClose={(reason) => {
-					onClose('log', reason);
-					if (!logRefuses) {
-						setLogOpen(false);
-					}
-				}}
-				title="log"
-				testId="log"
-			>
-				The log.
-			</Drawer>
+			<Mounts key={current} name={current} onMount={onMount}>
+				{logInStep ? log : null}
+			</Mounts>
+			{logInStep ? null : log}
 		</Drawer>
 	);
 }
@@ -663,7 +692,10 @@ async function renderControlled(
 	});
 	await waitForSettled();
 
-	return screen.getByTestId(`${top}-trail-breadcrumb`);
+	// A log over the drawer ends no trail of its own, so the trail is the drawer's.
+	const owner = props.withLog && props.stack !== 'overlay' ? 'log' : 'entity';
+
+	return screen.getByTestId(`${owner}-trail-breadcrumb`);
 }
 
 describe('Drawer with a controlled trail', () => {
@@ -800,5 +832,113 @@ describe('Drawer with a controlled trail', () => {
 		expect(onClose.mock.calls).toEqual([['log', 'crumb-press']]);
 		expect(onTrailSelect).not.toHaveBeenCalled();
 		expect(screen.getByText('The pod.').checkVisibility()).toBe(true);
+	});
+});
+
+describe('Drawer with a controlled trail and an inspector declared in its step', () => {
+	const open = { stack: 'overlay', withLog: true, logInStep: true } as const;
+
+	it('closes the inspector before it shows an earlier step, on a crumb press', async () => {
+		const onTrailSelect = vi.fn();
+		const onClose = vi.fn();
+		const trail = await renderControlled({ ...open, onTrailSelect, onClose });
+
+		await browserUser.click(within(trail).getByRole('link', { name: 'node' }));
+
+		expect(onClose.mock.calls).toEqual([['log', 'crumb-press']]);
+		expect(onTrailSelect.mock.calls).toEqual([[1, 'crumb-press']]);
+		expect(await screen.findByText('The node.')).toBeVisible();
+		expect(document.querySelector('[data-testid="log"]')).toBeNull();
+	});
+
+	it('shows no earlier step on a crumb press while the inspector stays open', async () => {
+		const onTrailSelect = vi.fn();
+		const onClose = vi.fn();
+		const trail = await renderControlled({ ...open, logRefuses: true, onTrailSelect, onClose });
+
+		await browserUser.click(within(trail).getByRole('link', { name: 'node' }));
+
+		expect(onClose.mock.calls).toEqual([['log', 'crumb-press']]);
+		expect(onTrailSelect).not.toHaveBeenCalled();
+		expect(screen.getByTestId('log')).toHaveAttribute('data-open');
+		expect(screen.getByText('The pod.')).toBeInTheDocument();
+	});
+
+	// Base UI gives `Esc` to the top layer, so the inspector gets it before the drawer under it does.
+	it('closes the inspector on Esc first, and steps back on the next one', async () => {
+		const onTrailSelect = vi.fn();
+		const onClose = vi.fn();
+		await renderControlled({ ...open, onTrailSelect, onClose });
+
+		screen.getByTestId('entity').focus();
+		await browserUser.keyboard('{Escape}');
+
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="log"]')).toBeNull();
+		});
+		expect(onClose.mock.calls).toEqual([['log', 'escape-key']]);
+		expect(onTrailSelect).not.toHaveBeenCalled();
+
+		await browserUser.keyboard('{Escape}');
+
+		expect(onTrailSelect.mock.calls).toEqual([[2, 'escape-key']]);
+		expect(await screen.findByText('The namespace.')).toBeVisible();
+	});
+});
+
+/**
+ * A drawer with a trail and a log declared in its step, and the state of the page in one object.
+ * Each callback spreads the object it rendered with, so one that runs from an older render puts
+ * back what a later render changed.
+ */
+function ObjectTrail(): ReactNode {
+	const [view, setView] = useState({ depth: 3, logOpen: true });
+	const current = LEVELS[view.depth] ?? 'cluster';
+
+	return (
+		<Drawer
+			type="inspector"
+			open
+			onClose={() => {}}
+			title={current}
+			trail={LEVELS.slice(0, view.depth).map((name) => ({ title: name, href: `#step-${name}` }))}
+			onTrailSelect={(index) => {
+				setView({ ...view, depth: index });
+			}}
+			testId="entity"
+		>
+			<Fragment key={current}>
+				<p>{`The ${current}.`}</p>
+				<Drawer
+					type="inspector"
+					open={view.logOpen}
+					onClose={() => {
+						setView({ ...view, logOpen: false });
+					}}
+					title="log"
+					testId="log"
+				>
+					The log.
+				</Drawer>
+			</Fragment>
+		</Drawer>
+	);
+}
+
+describe('Drawer with a controlled trail and a page state of one object', () => {
+	it('shows the step with what the inspector left, and the inspector stays closed', async () => {
+		render(<ObjectTrail />);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		await browserUser.click(
+			within(screen.getByTestId('entity-trail-breadcrumb')).getByRole('link', { name: 'node' }),
+		);
+
+		expect(await screen.findByText('The node.')).toBeVisible();
+		await waitForSettled();
+		expect(document.querySelector('[data-testid="log"]')).toBeNull();
 	});
 });

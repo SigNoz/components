@@ -426,8 +426,9 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * (`crumb-press`), or `Esc` for the last one (`escape-key`). Drop the steps after `index` and
 		 * render that step.
 		 *
-		 * @note Required with `trail`, rejected without it. A nested drawer open over this one
-		 * closes first, with `crumb-press`.
+		 * @note Required with `trail`, rejected without it. A drawer open over this one, such as an
+		 * inspector declared in the step, is asked to close first with the same reason, and one that
+		 * stays open keeps the step.
 		 */
 		onTrailSelect?: (index: number, reason: DrawerTrailSelectReasonType) => void;
 		/**

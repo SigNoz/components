@@ -344,8 +344,10 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * For content too heavy to keep mounted once per step, such as a page of charts, one drawer shows
  * the trail itself: `trail` lists the earlier steps, root first, the drawer's own `crumb` is last,
  * and `children` renders only the current step. A plain click on a step and `Esc` call
- * `onTrailSelect(index, reason)`, and you drop the steps after it. A step back mounts the step
- * again, so it keeps no scroll or state of its own.
+ * `onTrailSelect(index, reason)`, and you drop the steps after it. A drawer open over it, such as an
+ * inspector declared in the step, is asked to close first with the same reason, and one that stays
+ * open keeps the step. A step back mounts the step again, so it keeps no scroll or state of its
+ * own.
  *
  * With `stack="overlay"`, the nested drawer opens over the outer one at 80% of its width, so the
  * outer one stays in sight. Under a nested `task` the outer one takes no input until the nested one

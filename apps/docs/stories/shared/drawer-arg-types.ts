@@ -66,7 +66,7 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 	onTrailSelect: {
 		control: false,
 		description:
-			'Called when the user asks to show an earlier step of `trail`: a plain click on its crumb (`crumb-press`), or `Esc`, which asks for the last one (`escape-key`). Drop the steps after `index` and render that step. A click on a crumb with `Ctrl`, `Cmd`, `Shift` or `Alt` follows its `href` and does not call it. The close button, a swipe and a press on the backdrop call `onClose` instead. A nested drawer open over this one closes first, with `crumb-press`. Required with `trail`, and rejected without it.',
+			'Called when the user asks to show an earlier step of `trail`: a plain click on its crumb (`crumb-press`), or `Esc`, which asks for the last one (`escape-key`). Drop the steps after `index` and render that step. A click on a crumb with `Ctrl`, `Cmd`, `Shift` or `Alt` follows its `href` and does not call it. The close button, a swipe and a press on the backdrop call `onClose` instead. A drawer open over this one, such as an inspector declared in the step, is asked to close first with the same reason, and one that stays open keeps the step. Required with `trail`, and rejected without it.',
 		table: {
 			category: 'Events',
 			type: { summary: "(index: number, reason: 'crumb-press' | 'escape-key') => void" },

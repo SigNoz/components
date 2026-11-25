@@ -12,7 +12,8 @@ import type {
 /**
  * One crumb of a breadcrumb trail: what it shows, how to close the drawer that renders it and read
  * whether it is still open, and, for an earlier step of a drawer's own `trail`, how to show that
- * step again. The steps of one drawer share its `close`, which tells the drawers of a trail apart.
+ * step again, once the drawers nested in that drawer closed. The steps of one drawer share its
+ * `close`, which tells the drawers of a trail apart.
  *
  * @access private
  */

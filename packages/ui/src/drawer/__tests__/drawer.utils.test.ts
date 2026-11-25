@@ -104,6 +104,7 @@ function entry(
 
 describe('buildTrail', () => {
 	const close = vi.fn();
+	const closeNested = vi.fn(() => true);
 	const isOpen = () => true;
 
 	it('appends the steps, then the crumb, to the trail of the parent', () => {
@@ -114,6 +115,7 @@ describe('buildTrail', () => {
 			crumb: { title: 'pod', preview: 'About the pod' },
 			title: 'Pod details',
 			close,
+			closeNested,
 			isOpen,
 			onTrailSelect: undefined,
 		});
@@ -137,6 +139,7 @@ describe('buildTrail', () => {
 			crumb: undefined,
 			title: 'pod',
 			close,
+			closeNested,
 			isOpen,
 			onTrailSelect,
 		});
@@ -144,6 +147,49 @@ describe('buildTrail', () => {
 		trail[2]?.select?.('crumb-press');
 
 		expect(onTrailSelect).toHaveBeenCalledExactlyOnceWith(1, 'crumb-press');
+	});
+
+	it('closes the drawers nested in its own before it selects a step', () => {
+		const log: string[] = [];
+		const onTrailSelect = vi.fn(() => {
+			log.push('select');
+		});
+		const trail = buildTrail({
+			parentTrail: [],
+			steps: [{ title: 'node' }],
+			crumb: undefined,
+			title: 'pod',
+			close,
+			closeNested: (reason) => {
+				log.push(`nested:${reason}`);
+
+				return true;
+			},
+			isOpen,
+			onTrailSelect,
+		});
+
+		trail[0]?.select?.('crumb-press');
+
+		expect(log).toEqual(['nested:crumb-press', 'select']);
+	});
+
+	it('selects no step while a drawer nested in its own stays open', () => {
+		const onTrailSelect = vi.fn();
+		const trail = buildTrail({
+			parentTrail: [],
+			steps: [{ title: 'node' }],
+			crumb: undefined,
+			title: 'pod',
+			close,
+			closeNested: () => false,
+			isOpen,
+			onTrailSelect,
+		});
+
+		trail[0]?.select?.('escape-key');
+
+		expect(onTrailSelect).not.toHaveBeenCalled();
 	});
 
 	it('names the crumb after the title of the drawer, then `<No title>`', () => {
@@ -154,6 +200,7 @@ describe('buildTrail', () => {
 				crumb: crumbTitle === undefined ? undefined : { title: crumbTitle },
 				title,
 				close,
+				closeNested,
 				isOpen,
 				onTrailSelect: undefined,
 			})[0]?.title;

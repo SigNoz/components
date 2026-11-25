@@ -95,6 +95,10 @@ export function displayTitle(...titles: readonly ReactNode[]): ReactNode {
  * earlier `steps`, then its own crumb, named by its `title` when the crumb has none. Its steps and
  * its crumb share its `close` and `isOpen`.
  *
+ * Showing one of its steps unmounts the content it was declared in, and the drawers declared there
+ * with it, before they hear of it. So a step asks `closeNested` first, and is shown only when every
+ * drawer nested in this one closed.
+ *
  * @access private
  */
 export function buildTrail({
@@ -103,6 +107,7 @@ export function buildTrail({
 	crumb,
 	title,
 	close,
+	closeNested,
 	isOpen,
 	onTrailSelect,
 }: {
@@ -111,6 +116,10 @@ export function buildTrail({
 	crumb: DrawerCrumbType | undefined;
 	title: string;
 	close: DrawerTrailEntry['close'];
+	/**
+	 * Asks the drawers nested in this one to close, and returns whether every one did.
+	 */
+	closeNested: (reason: DrawerCloseReasonType) => boolean;
 	isOpen: DrawerTrailEntry['isOpen'];
 	onTrailSelect: ((index: number, reason: DrawerTrailSelectReasonType) => void) | undefined;
 }): DrawerTrailEntry[] {
@@ -121,7 +130,9 @@ export function buildTrail({
 			close,
 			isOpen,
 			select: (reason) => {
-				onTrailSelect?.(index, reason);
+				if (closeNested(reason)) {
+					onTrailSelect?.(index, reason);
+				}
 			},
 		})),
 		{ ...crumb, title: displayTitle(crumb?.title, title), close, isOpen },
@@ -165,7 +176,9 @@ export function closeTopFirst(
 /**
  * Steps back to the crumb at `index`: closes every drawer after it with `crumb-press`, the one on
  * top first, then shows the crumb's step when it is an earlier step of a drawer's own `trail`. The
- * drawer of that crumb stays open, and a drawer above it that stays open stops the step back.
+ * drawer of that crumb stays open, and a drawer above it that stays open stops the step back. The
+ * step closes the drawers nested in its own drawer first, the same way, as the trail does not list
+ * an inspector open over it.
  *
  * @access private
  */

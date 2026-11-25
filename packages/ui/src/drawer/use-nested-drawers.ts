@@ -24,6 +24,11 @@ type NestedDrawers = {
 	 */
 	nest: (entry: NestedDrawerEntry) => () => void;
 	/**
+	 * Asks the drawers open over this one to close, the one on top first, and stops at the first one
+	 * that stays open. Returns whether every one closed.
+	 */
+	closeNested: (reason: DrawerCloseReasonType) => boolean;
+	/**
 	 * Asks the drawers open over this one to close, the one on top first, then this one, and stops
 	 * at the first one that stays open.
 	 */
@@ -61,8 +66,10 @@ export function useNestedDrawers({
 	// Each drawer over this one closes in a `flushSync` that renders the app again, so the
 	// `onClose` of this render may read state that is gone by then.
 	const requestCloseRef = useRef(requestClose);
+	const closeNested = (reason: DrawerCloseReasonType): boolean =>
+		closeTopFirst([...nestedRef.current], reason);
 	const closeWithNested = (reason: DrawerCloseReasonType): void => {
-		if (closeTopFirst([...nestedRef.current], reason)) {
+		if (closeNested(reason)) {
 			requestCloseRef.current(reason);
 		}
 	};
@@ -140,5 +147,5 @@ export function useNestedDrawers({
 		});
 	}, [isOpen, nestInParent, readIsOpen]);
 
-	return { nest, closeWithNested };
+	return { nest, closeNested, closeWithNested };
 }
