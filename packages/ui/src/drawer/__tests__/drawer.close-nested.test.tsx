@@ -769,3 +769,65 @@ describe('Drawer closed from the app with drawers open over it', () => {
 		]);
 	});
 });
+
+/**
+ * A pod with a log over it, both rendered from one selection, the way a page shows a row's drawers.
+ * The log's `onClose` clears the selection, which closes the pod too. With `removesPod`, the pod
+ * renders only while something is selected.
+ */
+function SelectionPage({
+	removesPod,
+	onPodClose,
+}: {
+	removesPod: boolean;
+	onPodClose: (reason: DrawerCloseReasonType) => void;
+}): ReactNode {
+	const [selected, setSelected] = useState<'pod' | 'log' | null>('log');
+
+	if (removesPod && selected === null) {
+		return null;
+	}
+
+	return (
+		<Drawer
+			type="task"
+			stack="overlay"
+			open={selected !== null}
+			onClose={(reason) => {
+				onPodClose(reason);
+				setSelected(null);
+			}}
+			title="Pod"
+			testId="pod"
+		>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open={selected === 'log'}
+				onClose={() => setSelected(null)}
+				title="Log"
+				testId="log"
+			>
+				The log.
+			</Drawer>
+		</Drawer>
+	);
+}
+
+describe('Drawer closed by the onClose of a drawer over it', () => {
+	it.each([
+		['stays mounted', false],
+		['is removed', true],
+	])('does not call its own onClose when it %s', async (_name, removesPod) => {
+		const onPodClose = vi.fn();
+		render(<SelectionPage removesPod={removesPod} onPodClose={onPodClose} />);
+		await waitForSettled();
+
+		await userEvent.click(screen.getByTestId('pod-close'));
+
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+		expect(onPodClose).not.toHaveBeenCalled();
+	});
+});

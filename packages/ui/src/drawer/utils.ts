@@ -97,7 +97,7 @@ export function displayTitle(...titles: readonly ReactNode[]): ReactNode {
  *
  * Showing one of its steps unmounts the content it was declared in, and the drawers declared there
  * with it, before they hear of it. So a step asks `closeNested` first, and is shown only when every
- * drawer nested in this one closed.
+ * drawer nested in this one closed and this one is still open.
  *
  * @access private
  */
@@ -130,7 +130,8 @@ export function buildTrail({
 			close,
 			isOpen,
 			select: (reason) => {
-				if (closeNested(reason)) {
+				// A drawer nested in this one may close this one as it closes.
+				if (closeNested(reason) && isOpen()) {
 					onTrailSelect?.(index, reason);
 				}
 			},

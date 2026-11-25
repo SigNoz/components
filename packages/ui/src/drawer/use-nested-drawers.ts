@@ -69,8 +69,10 @@ export function useNestedDrawers({
 	const requestCloseRef = useRef(requestClose);
 	const closeNested = (reason: DrawerCloseReasonType): boolean =>
 		closeTopFirst([...nestedRef.current], reason);
+	// The `onClose` of a drawer over this one may close this one too, such as by clearing the
+	// selection that renders both, and asking again would run its close twice.
 	const closeWithNested = (reason: DrawerCloseReasonType): void => {
-		if (closeNested(reason)) {
+		if (closeNested(reason) && readIsOpen()) {
 			requestCloseRef.current(reason);
 		}
 	};

@@ -942,3 +942,59 @@ describe('Drawer with a controlled trail and a page state of one object', () => 
 		expect(document.querySelector('[data-testid="log"]')).toBeNull();
 	});
 });
+
+/**
+ * A drawer with a trail and a log over it, both open while a row is selected. The log's `onClose`
+ * clears the selection, which closes the drawer too.
+ */
+function SelectionTrail({
+	onTrailSelect,
+}: {
+	onTrailSelect: (index: number, reason: DrawerTrailSelectReasonType) => void;
+}): ReactNode {
+	const [selected, setSelected] = useState(true);
+
+	return (
+		<Drawer
+			type="inspector"
+			stack="overlay"
+			open={selected}
+			onClose={() => setSelected(false)}
+			title="node"
+			trail={[{ title: 'cluster', href: '#step-cluster' }]}
+			onTrailSelect={onTrailSelect}
+			testId="entity"
+		>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open={selected}
+				onClose={() => setSelected(false)}
+				title="log"
+				testId="log"
+			>
+				The log.
+			</Drawer>
+		</Drawer>
+	);
+}
+
+describe('Drawer with a trail closed by the onClose of a drawer over it', () => {
+	it('does not show the earlier step', async () => {
+		const onTrailSelect = vi.fn();
+		render(<SelectionTrail onTrailSelect={onTrailSelect} />);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		await browserUser.click(
+			within(screen.getByTestId('entity-trail-breadcrumb')).getByRole('link', { name: 'cluster' }),
+		);
+
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="entity"]')).toBeNull();
+		});
+		expect(onTrailSelect).not.toHaveBeenCalled();
+	});
+});
