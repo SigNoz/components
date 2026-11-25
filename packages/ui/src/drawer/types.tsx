@@ -485,10 +485,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * `startTransition`, a timer or after an `await`, or the press closes only that drawer. A
 		 * router navigation that runs as a transition, such as `router.push` in Next.js, is one.
 		 *
-		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, each drawer
-		 * nested in it that is open gets `parent-close`, and a drawer on a handle closes. It
-		 * unmounts with the drawer below whatever the handler does, so set `open` to `false` and do
-		 * not ask about unsaved edits: a drawer left open is back when the drawer below opens again.
+		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, or removes
+		 * it from the tree while it is open, each drawer nested in it that is open gets
+		 * `parent-close`, and a drawer on a handle closes. It unmounts with the drawer below
+		 * whatever the handler does, so set `open` to `false` and do not ask about unsaved edits: a
+		 * drawer left open is back when the drawer below opens again.
 		 */
 		onClose?: (reason: DrawerCloseReasonType) => void;
 		/**

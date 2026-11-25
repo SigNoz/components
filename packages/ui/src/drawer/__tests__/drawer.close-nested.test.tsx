@@ -1,6 +1,6 @@
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, StrictMode, useEffect, useState } from 'react';
 import { type Mock, describe, expect, it, vi } from 'vitest';
 import { AlertDialog } from '../../alert-dialog/index.js';
 import { waitForSettled as waitForDialogSettled } from '../../dialog/__tests__/dialog.test-utils.js';
@@ -343,9 +343,14 @@ type Handles = Record<HandleName, DrawerHandleType>;
 function HandlePage({
 	onOpenChange,
 	onHandles,
+	shown = true,
 }: {
 	onOpenChange: (name: HandleName, open: boolean) => void;
 	onHandles: (handles: Handles) => void;
+	/**
+	 * Whether the pod is rendered, so the app can remove it from the tree while it is open.
+	 */
+	shown?: boolean;
 }): ReactNode {
 	const pod = useDrawerHandle((open) => onOpenChange('pod', open));
 	const trace = useDrawerHandle((open) => onOpenChange('trace', open));
@@ -355,7 +360,7 @@ function HandlePage({
 		onHandles({ pod, trace, log });
 	});
 
-	return (
+	return shown ? (
 		<Drawer handle={pod} type="task" stack="overlay" title="Pod" testId="pod">
 			<Drawer handle={trace} type="inspector" title="Trace" testId="trace">
 				<Drawer handle={log} type="inspector" title="Log" testId="log">
@@ -363,24 +368,30 @@ function HandlePage({
 				</Drawer>
 			</Drawer>
 		</Drawer>
-	);
+	) : null;
 }
 
 /**
- * Opens the pod, the trace and the log, and returns the handles and the `onOpenChange` calls made
- * after that.
+ * Opens the pod, the trace and the log, and returns the handles, the `onOpenChange` calls made
+ * after that, and a function that removes the pod from the tree.
  */
-async function openHandleChain(): Promise<{ handles: Handles; events: string[] }> {
+async function openHandleChain(): Promise<{
+	handles: Handles;
+	events: string[];
+	removePod: () => void;
+}> {
 	const events: string[] = [];
 	const rendered: { handles?: Handles } = {};
-	render(
+	const page = (shown: boolean): ReactNode => (
 		<HandlePage
+			shown={shown}
 			onOpenChange={(name, open) => events.push(`${name} ${open}`)}
 			onHandles={(next) => {
 				rendered.handles = next;
 			}}
-		/>,
+		/>
 	);
+	const { rerender } = render(page(true));
 	const { handles } = rendered;
 	if (!handles) {
 		throw new Error('HandlePage gave no handles');
@@ -396,7 +407,7 @@ async function openHandleChain(): Promise<{ handles: Handles; events: string[] }
 	await waitForSettled();
 	events.length = 0;
 
-	return { handles, events };
+	return { handles, events, removePod: () => rerender(page(false)) };
 }
 
 function exiting(name: string): HTMLElement {
@@ -411,14 +422,18 @@ type LevelName = 'trace' | 'log';
 
 /**
  * A pod with a trace over it and a log over the trace, all controlled. The app keeps the drawers in
- * `keeps` open on `parent-close`, so they are there again with the pod.
+ * `keeps` open on `parent-close`, so they are there again with the pod. With `removesPod`, closing
+ * the pod from the app takes it out of the tree, the way a page renders a drawer only while a row is
+ * selected.
  */
 function KeepOpenPage({
 	keeps,
+	removesPod = false,
 	onClosed,
 	onAppClose,
 }: {
 	keeps: LevelName[];
+	removesPod?: boolean;
 	onClosed: (name: LevelName, reason: DrawerCloseReasonType) => void;
 	onAppClose: (close: () => void) => void;
 }): ReactNode {
@@ -435,35 +450,43 @@ function KeepOpenPage({
 			<button type="button" onClick={() => setPodOpen(true)}>
 				Open pod
 			</button>
-			<Drawer type="task" open={podOpen} onClose={() => setPodOpen(false)} title="Pod" testId="pod">
+			{removesPod && !podOpen ? null : (
 				<Drawer
-					type="inspector"
-					open={traceOpen}
-					onClose={(reason) => {
-						onClosed('trace', reason);
-						if (reason !== 'parent-close' || !keeps.includes('trace')) {
-							setTraceOpen(false);
-						}
-					}}
-					title="Trace"
-					testId="trace"
+					type="task"
+					open={podOpen}
+					onClose={() => setPodOpen(false)}
+					title="Pod"
+					testId="pod"
 				>
 					<Drawer
 						type="inspector"
-						open={logOpen}
+						open={traceOpen}
 						onClose={(reason) => {
-							onClosed('log', reason);
-							if (reason !== 'parent-close' || !keeps.includes('log')) {
-								setLogOpen(false);
+							onClosed('trace', reason);
+							if (reason !== 'parent-close' || !keeps.includes('trace')) {
+								setTraceOpen(false);
 							}
 						}}
-						title="Log"
-						testId="log"
+						title="Trace"
+						testId="trace"
 					>
-						The log.
+						<Drawer
+							type="inspector"
+							open={logOpen}
+							onClose={(reason) => {
+								onClosed('log', reason);
+								if (reason !== 'parent-close' || !keeps.includes('log')) {
+									setLogOpen(false);
+								}
+							}}
+							title="Log"
+							testId="log"
+						>
+							The log.
+						</Drawer>
 					</Drawer>
 				</Drawer>
-			</Drawer>
+			)}
 		</>
 	);
 }
@@ -554,21 +577,26 @@ describe('Drawer closed from the app with drawers open over it', () => {
 		expect(events).toEqual(['log false', 'trace false', 'pod false']);
 	});
 
-	async function openKeepOpenPage(keeps: LevelName[]): Promise<{
+	async function openKeepOpenPage(
+		keeps: LevelName[],
+		{ removesPod = false, strict = false } = {},
+	): Promise<{
 		onClosed: Mock<(name: LevelName, reason: DrawerCloseReasonType) => void>;
 		closeFromApp: () => void;
 	}> {
 		const onClosed = vi.fn<(name: LevelName, reason: DrawerCloseReasonType) => void>();
 		const app = { close: (): void => {} };
-		render(
+		const page = (
 			<KeepOpenPage
 				keeps={keeps}
+				removesPod={removesPod}
 				onClosed={onClosed}
 				onAppClose={(close) => {
 					app.close = close;
 				}}
-			/>,
+			/>
 		);
+		render(strict ? <StrictMode>{page}</StrictMode> : page);
 		await waitFor(() => {
 			expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
 		});
@@ -638,6 +666,104 @@ describe('Drawer closed from the app with drawers open over it', () => {
 		expect(onClosed.mock.calls).toEqual([
 			['log', 'parent-close'],
 			['trace', 'parent-close'],
+			['log', 'parent-close'],
+			['trace', 'parent-close'],
+		]);
+	});
+
+	it('tells the drawers over a drawer the app removes while it is open, the one on top first', async () => {
+		const errors = vi.spyOn(console, 'error');
+		try {
+			const { onClosed, closeFromApp } = await openKeepOpenPage([], { removesPod: true });
+
+			act(() => {
+				closeFromApp();
+			});
+
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+			expect(onClosed.mock.calls).toEqual([
+				['log', 'parent-close'],
+				['trace', 'parent-close'],
+			]);
+			// The app's `onClose` sets state while React deletes the drawers, which must not warn.
+			const reported = errors.mock.calls
+				.map(([message]) => String(message))
+				.filter((message) => !message.includes('not wrapped in act('));
+			expect(reported).toEqual([]);
+		} finally {
+			errors.mockRestore();
+		}
+	});
+
+	it('opens the next drawer without the ones that were over the one the app removed', async () => {
+		const { closeFromApp } = await openKeepOpenPage([], { removesPod: true });
+		act(() => {
+			closeFromApp();
+		});
+
+		await userEvent.click(screen.getByRole('button', { name: 'Open pod' }));
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).not.toBeNull();
+		});
+		await waitForSettled();
+
+		expect(document.querySelector('[data-testid="trace"]')).toBeNull();
+		expect(document.querySelector('[data-testid="log"]')).toBeNull();
+	});
+
+	it.each([
+		{ keeps: ['trace'] as LevelName[] },
+		{ keeps: ['log'] as LevelName[] },
+		{ keeps: ['trace', 'log'] as LevelName[] },
+	])(
+		'tells a drawer the app keeps open once when the app removes the drawer below it, keeping $keeps',
+		async ({ keeps }) => {
+			const { onClosed, closeFromApp } = await openKeepOpenPage(keeps, { removesPod: true });
+
+			act(() => {
+				closeFromApp();
+			});
+			await act(async () => {});
+
+			expect(onClosed.mock.calls).toEqual([
+				['log', 'parent-close'],
+				['trace', 'parent-close'],
+			]);
+		},
+	);
+
+	it('closes every drawer on a handle over a drawer the app removes, once each, the one on top first', async () => {
+		const { events, removePod } = await openHandleChain();
+
+		act(() => {
+			removePod();
+		});
+		await act(async () => {});
+
+		expect(events).toEqual(['log false', 'trace false', 'pod false']);
+	});
+
+	it('tells the drawers over a drawer nothing when Strict Mode mounts it', async () => {
+		const { onClosed } = await openKeepOpenPage(['trace', 'log'], { strict: true });
+		await act(async () => {});
+
+		expect(onClosed).not.toHaveBeenCalled();
+		expect(document.querySelector('[data-testid="trace"]')).not.toBeNull();
+		expect(document.querySelector('[data-testid="log"]')).not.toBeNull();
+	});
+
+	it('tells the drawers over a drawer the app removes in Strict Mode', async () => {
+		const { onClosed, closeFromApp } = await openKeepOpenPage([], {
+			removesPod: true,
+			strict: true,
+		});
+
+		act(() => {
+			closeFromApp();
+		});
+		await act(async () => {});
+
+		expect(onClosed.mock.calls).toEqual([
 			['log', 'parent-close'],
 			['trace', 'parent-close'],
 		]);

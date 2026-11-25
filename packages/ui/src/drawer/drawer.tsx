@@ -324,7 +324,8 @@ const DrawerImpl = forwardRef<HTMLDivElement, DrawerProps & RejectedProps>(funct
  * same reason, and one that stays open keeps it open, such as a form that asks about unsaved
  * edits. They close before its own `onClose` runs, so they stay closed when that `onClose` keeps it
  * open. When the app closes it, with `open={false}` or `handle.close()`, the drawers open over it
- * get `parent-close` and slide out with it.
+ * get `parent-close` and slide out with it. A drawer the app removes from the tree while it is open
+ * sends it too, with nothing to slide out.
  *
  * With `stack="breadcrumb"`, the nested drawer drills down: it opens in place at the same width,
  * with no movement, and a trail of crumbs under its header leads back, the first crumb, a `...`

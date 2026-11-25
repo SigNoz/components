@@ -44,7 +44,8 @@ type NestedDrawers = {
  * When the app closes the drawer instead, with `open={false}` or `handle.close()`, the drawers
  * still open over it get `parent-close` in the same commit, the one on top first, so they slide out
  * with it rather than vanish when it unmounts. That reaches every drawer over it, even past one
- * whose app keeps it open.
+ * whose app keeps it open. A drawer the app removes from the tree while it is open sends it as it
+ * goes, with nothing to slide out.
  *
  * @access private
  */
@@ -117,6 +118,19 @@ export function useNestedDrawers({
 		// A close the user asked for has closed every drawer over this one already.
 		closeNestedWithParent();
 	}, [isOpen]);
+
+	// The app removed this drawer while it was open, which the effect above never sees. React cleans
+	// up a deleted tree from the top, so the drawers over this one still read as open here. Strict
+	// Mode's simulated unmount cleans up from the bottom, so a drawer that mounted with this one reads
+	// as closed and is left alone.
+	useIsomorphicLayoutEffect(
+		() => () => {
+			if (wasOpenRef.current) {
+				closeNestedWithParent();
+			}
+		},
+		[],
+	);
 
 	// The drawer below calls these when it closes, which may be renders after this one registered.
 	const closeRef = useRef(closeWithNested);
