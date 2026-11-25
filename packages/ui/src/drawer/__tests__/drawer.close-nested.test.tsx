@@ -843,3 +843,87 @@ describe('Drawer closed by the onClose of a drawer over it', () => {
 		expect(onPodClose).not.toHaveBeenCalled();
 	});
 });
+
+/**
+ * A pod that stays mounted, with a log over it that the page renders only while the pod is open.
+ */
+function PodWithLogWhileOpen({
+	onLogClose,
+	onAppClose,
+}: {
+	onLogClose: (reason: DrawerCloseReasonType) => void;
+	onAppClose: (close: () => void, open: () => void) => void;
+}): ReactNode {
+	const [podOpen, setPodOpen] = useState(true);
+	const [logOpen, setLogOpen] = useState(true);
+
+	useEffect(() => {
+		onAppClose(
+			() => setPodOpen(false),
+			() => setPodOpen(true),
+		);
+	});
+
+	return (
+		<Drawer
+			type="task"
+			stack="overlay"
+			open={podOpen}
+			onClose={() => setPodOpen(false)}
+			title="Pod"
+			testId="pod"
+		>
+			{podOpen ? (
+				<Drawer
+					type="inspector"
+					stack="overlay"
+					open={logOpen}
+					onClose={(reason) => {
+						onLogClose(reason);
+						setLogOpen(false);
+					}}
+					title="Log"
+					testId="log"
+				>
+					The log.
+				</Drawer>
+			) : null}
+		</Drawer>
+	);
+}
+
+describe('Drawer closed from the app with a drawer it renders only while open', () => {
+	it('sends parent-close to that drawer, so it is not back with the pod', async () => {
+		const onLogClose = vi.fn();
+		let closeFromApp = (): void => {};
+		let openFromApp = (): void => {};
+		render(
+			<PodWithLogWhileOpen
+				onLogClose={onLogClose}
+				onAppClose={(close, open) => {
+					closeFromApp = close;
+					openFromApp = open;
+				}}
+			/>,
+		);
+		await waitForSettled();
+
+		act(() => {
+			closeFromApp();
+		});
+
+		expect(onLogClose.mock.calls).toEqual([['parent-close']]);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+
+		act(() => {
+			openFromApp();
+		});
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).not.toBeNull();
+		});
+		await waitForSettled();
+		expect(document.querySelector('[data-testid="log"]')).toBeNull();
+	});
+});

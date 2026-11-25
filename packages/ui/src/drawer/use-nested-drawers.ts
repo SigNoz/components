@@ -82,7 +82,7 @@ export function useNestedDrawers({
 	// it.
 	const closeNestedWithParent = (): void => {
 		for (const entry of [...nestedRef.current].reverse()) {
-			if (entry.isOpen()) {
+			if (entry.isOpen() || entry.removedOpen()) {
 				entry.closeWithParent();
 			}
 		}
@@ -125,14 +125,17 @@ export function useNestedDrawers({
 	// up a deleted tree from the top, so the drawers over this one still read as open here. Strict
 	// Mode's simulated unmount cleans up from the bottom, so a drawer that mounted with this one reads
 	// as closed and is left alone.
-	useIsomorphicLayoutEffect(
-		() => () => {
+	const removedOpenRef = useRef(false);
+	useIsomorphicLayoutEffect(() => {
+		removedOpenRef.current = false;
+
+		return () => {
+			removedOpenRef.current = wasOpenRef.current;
 			if (wasOpenRef.current) {
 				closeNestedWithParent();
 			}
-		},
-		[],
-	);
+		};
+	}, []);
 
 	// The drawer below calls these when it closes, which may be renders after this one registered.
 	const closeRef = useRef(closeWithNested);
@@ -160,6 +163,7 @@ export function useNestedDrawers({
 				reopenUnderRef.current();
 			},
 			isOpen: readIsOpen,
+			removedOpen: () => removedOpenRef.current,
 		});
 	}, [isOpen, nestInParent, readIsOpen]);
 

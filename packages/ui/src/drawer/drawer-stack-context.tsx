@@ -44,6 +44,11 @@ export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> & {
 	 * over it.
 	 */
 	parentOpened: () => void;
+	/**
+	 * Whether the app took it out of the tree while it was open. Rendered only while the drawer
+	 * below is open, it goes in the commit that closes the drawer below, before that drawer sees it.
+	 */
+	removedOpen: () => boolean;
 };
 
 /**
