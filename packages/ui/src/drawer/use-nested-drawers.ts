@@ -8,6 +8,7 @@ import {
 	afterNextTask,
 	answerPress,
 	closeTopFirst,
+	refusePress,
 	reportAsyncError,
 	wasRefused,
 } from './utils.js';
@@ -109,6 +110,7 @@ export function useNestedDrawers({
 			answer = requestCloseRef.current(reason);
 		} catch (error) {
 			ask.invoking = false;
+			refusePress(asked);
 			throw error;
 		}
 		ask.invoking = false;
@@ -127,6 +129,9 @@ export function useNestedDrawers({
 
 	// A close of this drawer that waits on a promise, its own or one of a drawer over it. The token
 	// tells it from a close made after this drawer opened again, which clears it.
+	// A promise that never settles keeps it set on purpose, as the `onClose` JSDoc says: that is
+	// the app's bug. Ending the wait when the deciding drawer closes or opens again was tried and
+	// dropped, as it would stop waiting for a save the app still runs.
 	const pendingRef = useRef<object | null>(null);
 
 	// A trail step and a full close both wait on this drawer, even if the inspector that is
@@ -137,6 +142,12 @@ export function useNestedDrawers({
 		includeSelf: boolean,
 	): CloseAnswer => {
 		if (pendingRef.current !== null) {
+			return answerPress(asked, false);
+		}
+		// A Suspense fallback hides a drawer over this one, which then reads as closed: it would be
+		// skipped, then get `parent-close` once this one closed, and lose its unsaved edits without
+		// a question. Its confirm would be hidden too, so nothing closes until it shows again.
+		if ([...nestedRef.current].some((entry) => entry.removedOpen())) {
 			return answerPress(asked, false);
 		}
 
@@ -220,7 +231,9 @@ export function useNestedDrawers({
 		}
 		parentClosedRef.current = true;
 		closeNestedWithParent();
-		// A synchronous navigation can remove the parent inside the original onClose.
+		// A synchronous navigation can remove the parent inside the original onClose. One whose
+		// promise still waits gets `parent-close` on purpose, as the `onClose` JSDoc says, even when
+		// that promise's own navigation removed the parent: the handler must be safe to run again.
 		const agreed = agreedRef.current;
 		if ((agreed === null || wasRefused(agreed)) && !askRef.current?.invoking) {
 			// It cannot refuse, and nothing waits for it. This runs in React's commit, where a throw

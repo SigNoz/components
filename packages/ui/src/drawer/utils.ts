@@ -1,5 +1,5 @@
 import type { Drawer } from '@base-ui/react/drawer';
-import type { ReactNode } from 'react';
+import { isValidElement, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { hasTitle } from '../breadcrumb/utils.js';
 import type {
@@ -147,22 +147,41 @@ export function afterAnswer(
 const refusedPresses = new WeakSet<AskedDrawers>();
 
 /**
- * Hands on the answer to the press `asked`, and remembers the press as refused when it is `false`.
+ * Hands on the answer to the press `asked`, and remembers the press as refused when it is `false`
+ * or the promise rejects, which it passes on.
  *
  * @access private
  */
 export function answerPress(asked: AskedDrawers, answer: CloseAnswer): CloseAnswer {
-	return afterAnswer(answer, (agreed) => {
+	const refuse = (agreed: boolean): boolean => {
 		if (!agreed) {
-			refusedPresses.add(asked);
+			refusePress(asked);
 		}
 
 		return agreed;
+	};
+	if (typeof answer === 'boolean') {
+		return refuse(answer);
+	}
+
+	return answer.then(refuse, (error: unknown) => {
+		refusePress(asked);
+		throw error;
 	});
 }
 
 /**
- * Whether a drawer refused the press `asked`, or the press stopped at a drawer whose close waits.
+ * Remembers the press `asked` as refused, such as by an `onClose` that threw before it answered.
+ *
+ * @access private
+ */
+export function refusePress(asked: AskedDrawers): void {
+	refusedPresses.add(asked);
+}
+
+/**
+ * Whether a drawer refused the press `asked`, its `onClose` threw, or the press stopped at a drawer
+ * whose close waits.
  * A drawer that agreed to a refused press may stay open, so it gets `parent-close` again.
  *
  * @access private
@@ -237,6 +256,58 @@ export function buildTrail({
 		})),
 		{ ...crumb, title: displayTitle(crumb?.title, title), close, isOpen },
 	];
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+	if (typeof value !== 'object' || value === null) {
+		return false;
+	}
+	const prototype: unknown = Object.getPrototypeOf(value);
+
+	return prototype === Object.prototype || prototype === null;
+}
+
+function sameProps(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+	const keys = Object.keys(a);
+
+	return (
+		keys.length === Object.keys(b).length &&
+		keys.every((key) => key in b && sameValue(a[key], b[key]))
+	);
+}
+
+// Function props count as the same, since a handler is a new function on every render.
+function sameValue(a: unknown, b: unknown): boolean {
+	if (Object.is(a, b) || (typeof a === 'function' && typeof b === 'function')) {
+		return true;
+	}
+	if (Array.isArray(a) && Array.isArray(b)) {
+		return a.length === b.length && a.every((item, index) => sameValue(item, b[index]));
+	}
+	if (isValidElement<Record<string, unknown>>(a) && isValidElement<Record<string, unknown>>(b)) {
+		return a.type === b.type && a.key === b.key && sameProps(a.props, b.props);
+	}
+
+	return isPlainObject(a) && isPlainObject(b) && sameProps(a, b);
+}
+
+/**
+ * Whether `current` is still the step `step` a press waits to show. A step with an `href` is told
+ * by it. One without is told by its `title` and `render`, compared as what they render rather
+ * than by identity, since a title written as JSX or an inline `render` is a new object on every
+ * render, and the app may render again while a drawer nested in it decides.
+ *
+ * @access private
+ */
+export function isSameStep(current: DrawerTrailStepType, step: DrawerTrailStepType): boolean {
+	if (current.href !== step.href) {
+		return false;
+	}
+
+	return (
+		step.href !== undefined ||
+		(sameValue(current.title, step.title) && sameValue(current.render, step.render))
+	);
 }
 
 type CloseEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> &

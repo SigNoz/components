@@ -445,6 +445,10 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note Required with `trail`, rejected without it. A drawer open over this one, such as an
 		 * inspector declared in the step, is asked to close first with the same reason, and one that
 		 * calls `cancel()` keeps the step.
+		 *
+		 * @note When that drawer's `onClose` returns a promise, it is called once the promise
+		 * settles, and only while the step at `index` is the one pressed: the same `href`, or with
+		 * no `href`, a `title` and a `render` that render the same.
 		 */
 		onTrailSelect?: (index: number, reason: DrawerTrailSelectReasonType) => void;
 		/**
@@ -493,8 +497,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * the drawers under it wait for it, and `cancel()` counts until it settles. A promise that
 		 * rejects counts as `cancel()`, and its error is reported as an uncaught error. While it
 		 * waits, more requests from the user to close this drawer are ignored, and a promise that
-		 * never settles keeps ignoring them until the drawer opens again. `parent-close` still
-		 * reaches it, since it unmounts with the drawer below anyway. Any value with a `then`
+		 * never settles keeps ignoring them until the drawer opens again. The drawers under it
+		 * ignore theirs too, until they open again, even when the app closes this one meanwhile:
+		 * always settle the promise. `parent-close` still reaches it, since it unmounts with the
+		 * drawer below anyway, even when its own `onClose` removed that drawer, such as by going
+		 * back before it awaits a save: make the handler safe to run twice. Any value with a `then`
 		 * method counts as a promise, and any other value returned is ignored, such as the action
 		 * `dispatch` returns.
 		 *
@@ -513,7 +520,8 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 *
 		 * @note Drawers nested in it that are open get the same request first, the one on top
 		 * first, and one that calls `cancel()` keeps this one open too. One that returns a promise
-		 * is waited for.
+		 * is waited for. While a Suspense fallback hides one, along with any question it would ask,
+		 * a request to close this one, or to show an earlier step of its trail, is ignored.
 		 *
 		 * @note A drawer nested in it whose `onClose` closes this one too in a transition, such as
 		 * `router.push` in Next.js, in a timer, or after an `await` in a promise it does not return,
@@ -525,6 +533,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * `parent-close`, and a drawer on a handle closes. It unmounts with the drawer below
 		 * whatever the handler does, `cancel()` does nothing, and nothing waits for a promise, so set
 		 * `open` to `false` and do not ask about unsaved edits: a drawer left open is back when the drawer below opens again.
+		 *
+		 * @note A drawer nested in it that the app removes in the same render that closes it, such
+		 * as both drawers rendered from one selection that the app clears, still gets
+		 * `parent-close`, from the `onClose` it last rendered with, as it was open until then. Make
+		 * that handler safe to run after the app moved on: set state, do not navigate.
 		 *
 		 * @note Every drawer nested in it gets `parent-close` before the page renders again. When
 		 * they keep their `open` in one state object, update it with a function that changes only

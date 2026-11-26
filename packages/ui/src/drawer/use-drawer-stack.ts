@@ -19,7 +19,7 @@ import { useElementWidth } from '../lib/use-element-width.js';
 import { useInert } from './use-inert.js';
 import { useLatestCallback } from './use-latest-callback.js';
 import { useNestedDrawers } from './use-nested-drawers.js';
-import { buildTrail, leaveTrail } from './utils.js';
+import { buildTrail, isSameStep, leaveTrail } from './utils.js';
 
 type UseDrawerStackOptions = {
 	stack: DrawerStackType | undefined;
@@ -112,17 +112,12 @@ export function useDrawerStack({
 		readIsOpen,
 		requestClose,
 	});
-	// The nested close can re-render the trail before this runs. Apps often rebuild the step
-	// objects on each render, so check the link destination, or the label and custom link.
+	// The nested close can re-render the trail before this runs, and the step at `index` may be
+	// gone or another one by then.
 	const selectStep = useLatestCallback(
 		(index: number, reason: DrawerTrailSelectReasonType, step: DrawerTrailStepType) => {
 			const current = steps[index];
-			if (
-				current &&
-				current.href === step.href &&
-				(step.href !== undefined ||
-					(current.title === step.title && current.render === step.render))
-			) {
+			if (current && isSameStep(current, step)) {
 				onTrailSelect?.(index, reason);
 			}
 		},
