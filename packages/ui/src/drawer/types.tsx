@@ -115,14 +115,32 @@ export type DrawerTrailSelectReasonType = 'crumb-press' | 'escape-key';
 
 /**
  * Why a `Drawer` asks to close: `Esc`, a press on the backdrop of a `task`, the close button, a
- * swipe towards the edge on a touch screen, or a press on an earlier crumb of a breadcrumb trail.
+ * swipe towards the edge on a touch screen, a press on an earlier crumb of a breadcrumb trail, or
+ * the drawer it is nested in closing from the app.
  */
 export type DrawerCloseReasonType =
 	| 'escape-key'
 	| 'outside-press'
 	| 'close-press'
 	| 'swipe'
-	| 'crumb-press';
+	| 'crumb-press'
+	| 'parent-close';
+
+/**
+ * The second argument of a drawer's `onClose`, in the style of the `eventDetails` of Base UI.
+ */
+export type DrawerCloseDetailsType = {
+	/**
+	 * Refuses the close, such as a form with unsaved edits that asks first. The drawer stays open, so
+	 * do not set its `open` to `false`, and the drawers under it, and the rest of a breadcrumb trail,
+	 * stay open too. Call it before `onClose` returns, or, when `onClose` returns a promise, before
+	 * the promise settles: a call after that does nothing.
+	 *
+	 * @note It does nothing for `parent-close`. The drawer below is closing, so this one unmounts
+	 * with it.
+	 */
+	cancel: () => void;
+};
 
 /**
  * Opens a `Drawer` from application state, and closes it from inside its content. Create one with
@@ -155,7 +173,7 @@ interface TheDrawerIsAlwaysControlled {
 }
 
 interface OnOpenChangeIsOnClose {
-	'a drawer only ever asks to close: use `onClose(reason)`, and ignore a reason to keep it open': never;
+	'a drawer only ever asks to close: use `onClose(reason, details)`, and call `details.cancel()` for a reason to keep it open': never;
 }
 
 interface AHandleReportsTheClose {
@@ -203,7 +221,7 @@ interface TheCloseButtonIsFixed {
 }
 
 interface OutsidePressIsAReason {
-	'a press on the backdrop of a `task` calls `onClose("outside-press")`: ignore that reason to keep the drawer open': never;
+	'a press on the backdrop of a `task` calls `onClose("outside-press")`: call `details.cancel()` for that reason to keep the drawer open': never;
 }
 
 interface TheDrawerOpensFromTheRight {
@@ -211,7 +229,7 @@ interface TheDrawerOpensFromTheRight {
 }
 
 interface EscIsAReason {
-	'`Esc` calls `onClose("escape-key")`: ignore that reason to keep the drawer open': never;
+	'`Esc` calls `onClose("escape-key")`: call `details.cancel()` for that reason to keep the drawer open': never;
 }
 
 interface ExtraIsHeaderSuffix {
@@ -368,7 +386,7 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * of crumbs under its header leads back. A press on a crumb closes every drawer after it with
 		 * `crumb-press`. In the trail, `Esc` closes only the current drawer, a step back, while the
 		 * close button, a swipe and a press on the backdrop close every drawer of the trail, the one
-		 * on top first. A drawer that stays open after its `onClose` stops the leave: the drawers
+		 * on top first. A drawer that calls `cancel()` in its `onClose` stops the leave: the drawers
 		 * under it stay open. The first drawer of the trail sets the backdrop and the focus trap of
 		 * all of them.
 		 *
@@ -424,8 +442,13 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * (`crumb-press`), or `Esc` for the last one (`escape-key`). Drop the steps after `index` and
 		 * render that step.
 		 *
-		 * @note Required with `trail`, rejected without it. A nested drawer open over this one
-		 * closes first, with `crumb-press`.
+		 * @note Required with `trail`, rejected without it. A drawer open over this one, such as an
+		 * inspector declared in the step, is asked to close first with the same reason, and one that
+		 * calls `cancel()` keeps the step.
+		 *
+		 * @note When that drawer's `onClose` returns a promise, it is called once the promise
+		 * settles, and only while the step at `index` is the one pressed: the same `href`, or with
+		 * no `href`, a `title` and a `render` that render the same.
 		 */
 		onTrailSelect?: (index: number, reason: DrawerTrailSelectReasonType) => void;
 		/**
@@ -461,21 +484,68 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		/**
 		 * Called when the user asks to close the drawer: `Esc` (`escape-key`), a press on the
 		 * backdrop of a `task` (`outside-press`), the close button (`close-press`), a swipe
-		 * towards the right edge on a touch screen (`swipe`), or a press on an earlier crumb of a
-		 * breadcrumb trail (`crumb-press`). The drawer stays open until `open` becomes `false`.
+		 * towards the right edge on a touch screen (`swipe`), a press on an earlier crumb of a
+		 * breadcrumb trail (`crumb-press`), or the drawer it is nested in closing from the app
+		 * (`parent-close`). The drawer stays open until `open` becomes `false`.
+		 *
+		 * `details.cancel()` refuses the request, for a drawer that must stay, such as a form with
+		 * unsaved edits that asks first. Without it the drawer has agreed, and you may set `open` to
+		 * `false` at once or later: in a `startTransition`, such as `router.push` in Next.js, in a
+		 * timer, or after an `await`.
+		 *
+		 * `onClose` may return a promise, for a check that takes time, such as a confirm or a save:
+		 * the drawers under it wait for it, and `cancel()` counts until it settles. A promise that
+		 * rejects counts as `cancel()`, and its error is reported as an uncaught error. While it
+		 * waits, more requests from the user to close this drawer are ignored, and a promise that
+		 * never settles keeps ignoring them until the drawer opens again. The drawers under it
+		 * ignore theirs too, until they open again, even when the app closes this one meanwhile:
+		 * always settle the promise. `parent-close` still reaches it, since it unmounts with the
+		 * drawer below anyway, even when its own `onClose` removed that drawer, such as by going
+		 * back before it awaits a save: make the handler safe to run twice. Any value with a `then`
+		 * method counts as a promise, and any other value returned is ignored, such as the action
+		 * `dispatch` returns.
 		 *
 		 * @note Required with `open`, rejected with a `handle`: a drawer on a handle closes itself on
-		 * every request, and `useDrawerHandle(onOpenChange)` reports it. A drawer that must refuse a
-		 * close, such as a form with unsaved edits, uses `open`.
+		 * every request, with no `cancel()`, and `useDrawerHandle(onOpenChange)` reports it. A
+		 * drawer that must refuse a close, such as a form with unsaved edits, uses `open`.
 		 *
-		 * @note To keep the drawer open for one reason, ignore that reason in the handler, and say
-		 * why in the code. An `inspector` never reports `outside-press`: the page behind it stays
-		 * usable.
+		 * @note To keep the drawer open for one reason, call `cancel()` for that reason, leave `open`
+		 * as it is, and say why in the code. A drawer that neither cancels nor closes counts as
+		 * closing, and unmounts with the drawer below without hearing of it. An `inspector` never
+		 * reports `outside-press` for a press beside itself, as the page behind it stays usable.
+		 * Nested in a `task`, it gets the reason the task closes for, `outside-press` included.
 		 *
-		 * @note In a breadcrumb trail, a drawer that stays open after its `onClose` stops the leave:
-		 * the drawers under it stay open.
+		 * @note In a breadcrumb trail, a drawer that calls `cancel()` stops the leave: the drawers
+		 * under it stay open.
+		 *
+		 * @note Drawers nested in it that are open get the same request first, the one on top
+		 * first, and one that calls `cancel()` keeps this one open too. One that returns a promise
+		 * is waited for. While a Suspense fallback hides one, along with any question it would ask,
+		 * a request to close this one, or to show an earlier step of its trail, is ignored, one
+		 * that was waiting on a promise when the fallback showed included.
+		 *
+		 * @note A drawer nested in it whose `onClose` closes this one too in a transition, such as
+		 * `router.push` in Next.js, in a timer, or after an `await` in a promise it does not return,
+		 * leaves this one reading open, so this one gets its own `onClose` for the same press: make
+		 * both handlers safe to run together, by setting state rather than calling `history.back()`.
+		 *
+		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, or removes
+		 * it from the tree while it is open, each drawer nested in it that is open gets
+		 * `parent-close`, and a drawer on a handle closes. It unmounts with the drawer below
+		 * whatever the handler does, `cancel()` does nothing, and nothing waits for a promise, so set
+		 * `open` to `false` and do not ask about unsaved edits: a drawer left open is back when the drawer below opens again.
+		 *
+		 * @note A drawer nested in it that the app removes in the same render that closes it, such
+		 * as both drawers rendered from one selection that the app clears, still gets
+		 * `parent-close`, from the `onClose` it last rendered with, as it was open until then. Make
+		 * that handler safe to run after the app moved on: set state, do not navigate.
+		 *
+		 * @note Every drawer nested in it gets `parent-close` before the page renders again. When
+		 * they keep their `open` in one state object, update it with a function that changes only
+		 * this drawer's flag, `setView((view) => ({ ...view, logOpen: false }))`: a copy of the
+		 * object the handler rendered with puts back the flag the drawer before it cleared.
 		 */
-		onClose?: (reason: DrawerCloseReasonType) => void;
+		onClose?: (reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => unknown;
 		/**
 		 * The name of the record or the job, and the accessible name of the panel. One line: a name
 		 * longer than the header is cut with `…`, and the full text shows in a tooltip.

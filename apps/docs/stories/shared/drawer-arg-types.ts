@@ -66,7 +66,7 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 	onTrailSelect: {
 		control: false,
 		description:
-			'Called when the user asks to show an earlier step of `trail`: a plain click on its crumb (`crumb-press`), or `Esc`, which asks for the last one (`escape-key`). Drop the steps after `index` and render that step. A click on a crumb with `Ctrl`, `Cmd`, `Shift` or `Alt` follows its `href` and does not call it. The close button, a swipe and a press on the backdrop call `onClose` instead. A nested drawer open over this one closes first, with `crumb-press`. Required with `trail`, and rejected without it.',
+			'Called when the user asks to show an earlier step of `trail`: a plain click on its crumb (`crumb-press`), or `Esc`, which asks for the last one (`escape-key`). Drop the steps after `index` and render that step. A click on a crumb with `Ctrl`, `Cmd`, `Shift` or `Alt` follows its `href` and does not call it. The close button, a swipe and a press on the backdrop call `onClose` instead. A drawer open over this one, such as an inspector declared in the step, is asked to close first with the same reason, and one that calls `cancel()` keeps the step. Required with `trail`, and rejected without it.',
 		table: {
 			category: 'Events',
 			type: { summary: "(index: number, reason: 'crumb-press' | 'escape-key') => void" },
@@ -122,12 +122,12 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 	onClose: {
 		control: false,
 		description:
-			'Called when the user asks to close the drawer, with the reason: `escape-key`, `outside-press` (the backdrop of a `task`), `close-press`, `swipe` (towards the right edge on a touch screen) or `crumb-press` (an earlier crumb of a breadcrumb trail). The drawer stays open until `open` becomes `false`. An `inspector` never reports `outside-press`. Required with `open`, and never passed with a `handle`.',
+			'Called when the user asks to close the drawer, with the reason: `escape-key`, `outside-press` (the backdrop of a `task`), `close-press`, `swipe` (towards the right edge on a touch screen), `crumb-press` (an earlier crumb of a breadcrumb trail) or `parent-close` (the drawer it is nested in closed from the app; this one unmounts with it whatever the handler does, so set `open` to `false`, or it is back when that drawer opens again. It comes even when the app removes this one in the same render, or while its own `onClose` promise waits, so the handler should set state rather than navigate). The drawer stays open until `open` becomes `false`. The second argument has `cancel()`, which refuses the request, such as a form with unsaved edits that asks first: the drawers under it, and the rest of a breadcrumb trail, stay open too. Without it the drawer has agreed, and `open` may become `false` at once or later, in a transition, a timer or after an `await`. `onClose` may return a promise, such as for a confirm or a save: the drawers under it wait for it, so always settle it, `cancel()` counts until it settles, and a rejection counts as `cancel()`. `cancel()` does nothing for `parent-close`, and nothing waits for its promise. An `inspector` never reports `outside-press`. Required with `open`, and never passed with a `handle`.',
 		table: {
 			category: 'Events',
 			type: {
 				summary:
-					"(reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press') => void",
+					"(reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press' | 'parent-close', details: { cancel: () => void }) => unknown",
 			},
 		},
 	},

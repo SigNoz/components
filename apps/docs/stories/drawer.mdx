@@ -90,21 +90,66 @@ drops them at runtime too. A picker with one choice has no footer: picking appli
 | `close-press`   | The close button                                             |
 | `swipe`         | A swipe towards the right edge on a touch screen             |
 | `crumb-press`   | A press on an earlier crumb of a breadcrumb trail            |
+| `parent-close`  | Its parent drawer closed from the app. Set `open` to `false` |
 
-The Cancel button in `footerSuffix` is your own button, so it calls your close directly.
+To keep the drawer open, call `cancel()` from the second argument, `onClose(reason, { cancel })`,
+and leave `open` as it is. A drawer that does not call it has agreed, and its `open` may become
+`false` at once or later, such as after a router navigation that runs as a transition. `cancel()`
+does nothing for `parent-close`: the drawer unmounts with its parent whatever the handler does.
 
-## Unsaved changes
-
-A `task` with unsaved edits asks before it closes. Keep it on `open`, and open a nested
-`AlertDialog` from `onClose` and from your Cancel while the form is dirty. The footer start says
-what is unsaved.
+`onClose` may return a promise, for a decision that takes time, such as a confirm or a save. The
+drawers under it wait for the answer, and `cancel()` counts until the promise settles. A promise
+that rejects counts as `cancel()`, and its error is reported. While it waits, more presses on that
+drawer are ignored.
 
 ```tsx
 <Drawer
 	type="task"
 	stack="overlay"
 	open={open}
-	onClose={requestClose}
+	onClose={async (reason, { cancel }) => {
+		if (reason === 'parent-close' || !dirty) {
+			setOpen(false);
+			return;
+		}
+		if (await confirmDiscard()) {
+			setOpen(false);
+		} else {
+			cancel();
+		}
+	}}
+	title="Edit panel"
+>
+	<PanelForm />
+</Drawer>
+```
+
+The Cancel button in `footerSuffix` is your own button, so it calls your close directly.
+
+## Unsaved changes
+
+When the user asks to close a dirty form, call `cancel()` in `onClose` and show a nested
+`AlertDialog`. The footer Cancel button opens the same prompt. If the parent already closed,
+clear the prompt and close the form directly.
+`cancel()` keeps the drawers under it open too, so a press on the close button of a drawer below
+stops at the form. The footer start says what is unsaved.
+
+```tsx
+<Drawer
+	type="task"
+	stack="overlay"
+	open={open}
+	onClose={(reason, { cancel }) => {
+		if (reason === 'parent-close') {
+			setDiscarding(false);
+			close();
+			return;
+		}
+		if (changes > 0) {
+			cancel();
+		}
+		requestClose();
+	}}
 	title="Edit panel"
 	footerPrefix={changes > 0 ? `• ${changes} unsaved changes` : null}
 	footerSuffix={
@@ -236,7 +281,7 @@ such as node, then pod, then trace, then log.
   one first.
 - `Esc` steps back one drawer. The close button, a swipe and a press on the backdrop close the whole
   trail, the top drawer first.
-- A drawer that stays open after its `onClose`, such as one that asks before it drops unsaved
+- A drawer that calls `cancel()` in its `onClose`, such as one that asks before it drops unsaved
   changes, stops the trail from closing there: the drawers under it stay open.
 - The first drawer of the trail sets the backdrop and the focus trap. A `type` further down only
   sets whether the drawer has a description and a footer.

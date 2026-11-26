@@ -1,6 +1,10 @@
 import { type CSSProperties, type RefObject, useCallback, useEffect, useState } from 'react';
 import type { BreadcrumbEllipsisOptions } from '../breadcrumb/types.js';
-import { type DrawerStackContextValue, useParentDrawerStack } from './drawer-stack-context.js';
+import {
+	type CloseAnswer,
+	type DrawerStackContextValue,
+	useParentDrawerStack,
+} from './drawer-stack-context.js';
 import type {
 	DrawerClosePositionType,
 	DrawerCloseReasonType,
@@ -13,7 +17,9 @@ import type {
 import { useCommittedOpen } from './use-committed-open.js';
 import { useElementWidth } from '../lib/use-element-width.js';
 import { useInert } from './use-inert.js';
-import { buildTrail, leaveTrail } from './utils.js';
+import { useLatestCallback } from './use-latest-callback.js';
+import { useNestedDrawers } from './use-nested-drawers.js';
+import { buildTrail, isSameStep, leaveTrail } from './utils.js';
 
 type UseDrawerStackOptions = {
 	stack: DrawerStackType | undefined;
@@ -28,9 +34,10 @@ type UseDrawerStackOptions = {
 	panel: HTMLElement | null;
 	popupRef: RefObject<HTMLElement | null>;
 	/**
-	 * Asks this drawer alone to close, through `onClose` or the handle.
+	 * Asks this drawer alone to close, through `onClose` or the handle. Answers whether it agreed:
+	 * `false` when `onClose` called `cancel()` or its promise rejected.
 	 */
-	requestClose: (reason: DrawerCloseReasonType) => void;
+	requestClose: (reason: DrawerCloseReasonType) => CloseAnswer;
 };
 
 type DrawerStackState = {
@@ -60,7 +67,7 @@ type DrawerStackState = {
 	value: DrawerStackContextValue;
 	/**
 	 * In a trail, `Esc` is a step back and every other reason leaves the whole trail, the drawer on
-	 * top first.
+	 * top first. Every drawer open over one that closes is asked to close before it.
 	 */
 	requestCloseFromPanel: (reason: DrawerCloseReasonType) => void;
 };
@@ -69,6 +76,9 @@ type DrawerStackState = {
  * How a drawer stacks with the drawers it is declared in and the ones declared inside it: the
  * breadcrumb trail it ends, its width from its parent, and whether a nested drawer covers it. Under
  * a task or a step of its trail it takes no input; under an inspector overlay it stays usable.
+ * Before it closes, or shows an earlier step of its own `trail`, it asks the drawers open over it
+ * to close, the one on top first, so each one gets its own `onClose`, and it stays open when one of
+ * them calls `cancel()`.
  *
  * @access private
  */
@@ -96,23 +106,41 @@ export function useDrawerStack({
 		trailParent?.trailClosePosition ?? (closePosition === 'start' ? 'start' : 'end');
 
 	const readIsOpen = useCommittedOpen(isOpen);
+	const { nest, closeNested, closeWithNested } = useNestedDrawers({
+		nestInParent: parent?.nest,
+		isOpen,
+		readIsOpen,
+		requestClose,
+	});
+	// The nested close can re-render the trail before this runs, and the step at `index` may be
+	// gone or another one by then.
+	const selectStep = useLatestCallback(
+		(index: number, reason: DrawerTrailSelectReasonType, step: DrawerTrailStepType) => {
+			const current = steps[index];
+			if (current && isSameStep(current, step)) {
+				onTrailSelect?.(index, reason);
+			}
+		},
+	);
 	const trail = buildTrail({
 		parentTrail: trailParent?.trail ?? [],
 		steps,
 		crumb,
 		title,
-		close: requestClose,
+		close: closeWithNested,
+		closeNested,
 		isOpen: readIsOpen,
-		onTrailSelect,
+		onTrailSelect: selectStep,
 	});
 
 	const requestCloseFromPanel = (reason: DrawerCloseReasonType): void => {
 		if (reason === 'escape-key' && steps.length > 0) {
-			onTrailSelect?.(steps.length - 1, reason);
+			// The step asks the drawers nested in this one first, as a click on its crumb does.
+			trail.at(-2)?.select?.(reason);
 			return;
 		}
 		if (trail.length === 1 || reason === 'escape-key') {
-			requestClose(reason);
+			void closeWithNested(reason);
 			return;
 		}
 		leaveTrail(trail, reason);
@@ -164,6 +192,7 @@ export function useDrawerStack({
 			trailEllipsis: trailParent ? trailParent.trailEllipsis : trailEllipsis,
 			trailClosePosition: resolvedClosePosition,
 			cover,
+			nest,
 		},
 		requestCloseFromPanel,
 	};

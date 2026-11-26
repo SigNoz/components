@@ -1,8 +1,13 @@
 import type { Drawer } from '@base-ui/react/drawer';
-import type { ReactNode } from 'react';
+import { isValidElement, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { hasTitle } from '../breadcrumb/utils.js';
-import type { DrawerTrailEntry } from './drawer-stack-context.js';
+import type {
+	AskedDrawers,
+	CloseAnswer,
+	DrawerTrailEntry,
+	NestedDrawerEntry,
+} from './drawer-stack-context.js';
 import type {
 	DrawerCloseReasonType,
 	DrawerCrumbType,
@@ -80,6 +85,112 @@ export function toDrawerCloseReason(reason: string): DrawerCloseReasonType | und
 }
 
 /**
+ * Whether an `onClose` returned a promise, which its drawer waits for before it goes on.
+ *
+ * @access private
+ */
+export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
+	return (
+		(typeof value === 'object' || typeof value === 'function') &&
+		value !== null &&
+		'then' in value &&
+		typeof value.then === 'function'
+	);
+}
+
+/**
+ * Reports an error of an `onClose` as an uncaught error, when nothing is left to throw into: a
+ * promise that rejected after its request went on, or a throw on `parent-close`, which runs in
+ * React's commit. The app should still see it.
+ *
+ * @access private
+ */
+export function reportAsyncError(error: unknown): void {
+	if (typeof reportError === 'function') {
+		reportError(error);
+
+		return;
+	}
+	setTimeout(() => {
+		throw error;
+	}, 0);
+}
+
+/**
+ * Hands on `value` in the next task. A state update made after an `await` commits in a task React
+ * schedules for it, not in a microtask, so the next drawer would still read as open when the
+ * `onClose` before it removed it, such as by clearing the selection that renders both.
+ *
+ * @access private
+ */
+export function afterNextTask<T>(value: T): Promise<T> {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(value);
+		}, 0);
+	});
+}
+
+/**
+ * Runs `next` with the answer, once there is one. An answer that is not a promise gets `next` at
+ * once, in the same call, so a request whose `onClose` is synchronous never waits for a microtask.
+ *
+ * @access private
+ */
+export function afterAnswer(
+	answer: CloseAnswer,
+	next: (agreed: boolean) => CloseAnswer,
+): CloseAnswer {
+	return typeof answer === 'boolean' ? next(answer) : answer.then(next);
+}
+
+const refusedPresses = new WeakSet<AskedDrawers>();
+
+/**
+ * Hands on the answer to the press `asked`, and remembers the press as refused when it is `false`
+ * or the promise rejects, which it passes on.
+ *
+ * @access private
+ */
+export function answerPress(asked: AskedDrawers, answer: CloseAnswer): CloseAnswer {
+	const refuse = (agreed: boolean): boolean => {
+		if (!agreed) {
+			refusePress(asked);
+		}
+
+		return agreed;
+	};
+	if (typeof answer === 'boolean') {
+		return refuse(answer);
+	}
+
+	return answer.then(refuse, (error: unknown) => {
+		refusePress(asked);
+		throw error;
+	});
+}
+
+/**
+ * Remembers the press `asked` as refused, such as by an `onClose` that threw before it answered.
+ *
+ * @access private
+ */
+export function refusePress(asked: AskedDrawers): void {
+	refusedPresses.add(asked);
+}
+
+/**
+ * Whether a drawer refused the press `asked`, its `onClose` threw, or the press stopped at a drawer
+ * whose close waits.
+ * A drawer that agreed to a refused press may stay open, so it gets `parent-close` again.
+ *
+ * @access private
+ */
+export function wasRefused(asked: AskedDrawers): boolean {
+	return refusedPresses.has(asked);
+}
+
+/**
  * The first of `titles` that renders something, or `<No title>`, so a missing name shows in
  * review. Blank is judged the way `Breadcrumb` judges it, so a crumb named here is never dropped
  * from the trail.
@@ -95,6 +206,10 @@ export function displayTitle(...titles: readonly ReactNode[]): ReactNode {
  * earlier `steps`, then its own crumb, named by its `title` when the crumb has none. Its steps and
  * its crumb share its `close` and `isOpen`.
  *
+ * Showing one of its steps unmounts the content it was declared in, and the drawers declared there
+ * with it, before they hear of it. So a step asks `closeNested` first, and is shown only when every
+ * drawer nested in this one agreed to close and this one is still open.
+ *
  * @access private
  */
 export function buildTrail({
@@ -103,6 +218,7 @@ export function buildTrail({
 	crumb,
 	title,
 	close,
+	closeNested,
 	isOpen,
 	onTrailSelect,
 }: {
@@ -111,8 +227,14 @@ export function buildTrail({
 	crumb: DrawerCrumbType | undefined;
 	title: string;
 	close: DrawerTrailEntry['close'];
+	/**
+	 * Asks the drawers nested in this one to close, and answers whether every one agreed.
+	 */
+	closeNested: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => CloseAnswer;
 	isOpen: DrawerTrailEntry['isOpen'];
-	onTrailSelect: ((index: number, reason: DrawerTrailSelectReasonType) => void) | undefined;
+	onTrailSelect:
+		| ((index: number, reason: DrawerTrailSelectReasonType, step: DrawerTrailStepType) => void)
+		| undefined;
 }): DrawerTrailEntry[] {
 	return [
 		...parentTrail,
@@ -120,49 +242,160 @@ export function buildTrail({
 			...step,
 			close,
 			isOpen,
-			select: (reason) => {
-				onTrailSelect?.(index, reason);
+			select: (reason, asked) => {
+				void afterAnswer(closeNested(reason, asked), (agreed) => {
+					// A drawer nested in this one may close this one as it closes, and the app may
+					// close it while one decides.
+					if (agreed && isOpen()) {
+						onTrailSelect?.(index, reason, step);
+					}
+
+					return agreed;
+				});
 			},
 		})),
 		{ ...crumb, title: displayTitle(crumb?.title, title), close, isOpen },
 	];
 }
 
-/**
- * Asks each drawer of `entries` but the one of `keep` to close, the one on top first, each once,
- * and stops at the first one that stays open, such as a form that opens an unsaved-changes
- * `AlertDialog` instead. Returns whether every one closed.
- *
- * Each request is flushed before the next, so `isOpen` reads what its `onClose` did.
- */
-function closeTopFirst(
-	entries: readonly DrawerTrailEntry[],
-	reason: DrawerCloseReasonType,
-	keep?: DrawerTrailEntry['close'],
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+	if (typeof value !== 'object' || value === null) {
+		return false;
+	}
+	const prototype: unknown = Object.getPrototypeOf(value);
+
+	return prototype === Object.prototype || prototype === null;
+}
+
+// The pairs a comparison has reached, each taken as equal while it is still being compared. A
+// record from an API store can link back to itself, such as a parent and its children.
+type SeenPairs = Map<object, Set<object>>;
+
+function sameProps(
+	a: Record<string, unknown>,
+	b: Record<string, unknown>,
+	seen: SeenPairs,
 ): boolean {
-	const asked = new Set<DrawerTrailEntry['close']>(keep ? [keep] : []);
+	const keys = Object.keys(a);
 
-	for (const entry of [...entries].reverse()) {
-		if (asked.has(entry.close)) {
-			continue;
-		}
-		asked.add(entry.close);
+	return (
+		keys.length === Object.keys(b).length &&
+		keys.every((key) => key in b && sameValue(a[key], b[key], seen))
+	);
+}
 
-		flushSync(() => {
-			entry.close(reason);
-		});
-		if (entry.isOpen()) {
-			return false;
-		}
+// Function props count as the same, since a handler is a new function on every render.
+function sameValue(a: unknown, b: unknown, seen: SeenPairs = new Map()): boolean {
+	if (Object.is(a, b) || (typeof a === 'function' && typeof b === 'function')) {
+		return true;
+	}
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+		return false;
+	}
+	const pairs = seen.get(a) ?? new Set<object>();
+	if (pairs.has(b)) {
+		return true;
+	}
+	seen.set(a, pairs.add(b));
+
+	if (Array.isArray(a) && Array.isArray(b)) {
+		return a.length === b.length && a.every((item, index) => sameValue(item, b[index], seen));
+	}
+	if (isValidElement<Record<string, unknown>>(a) && isValidElement<Record<string, unknown>>(b)) {
+		return a.type === b.type && a.key === b.key && sameProps(a.props, b.props, seen);
 	}
 
-	return true;
+	return isPlainObject(a) && isPlainObject(b) && sameProps(a, b, seen);
+}
+
+/**
+ * Whether `current` is still the step `step` a press waits to show. A step with an `href` is told
+ * by it. One without is told by its `title` and `render`, compared as what they render rather
+ * than by identity, since a title written as JSX or an inline `render` is a new object on every
+ * render, and the app may render again while a drawer nested in it decides.
+ *
+ * @access private
+ */
+export function isSameStep(current: DrawerTrailStepType, step: DrawerTrailStepType): boolean {
+	if (current.href !== step.href) {
+		return false;
+	}
+
+	return (
+		step.href !== undefined ||
+		(sameValue(current.title, step.title) && sameValue(current.render, step.render))
+	);
+}
+
+type CloseEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> &
+	Partial<Pick<NestedDrawerEntry, 'getNested'>>;
+
+/**
+ * Asks each open drawer of `entries` to close, the one on top first, each once, and stops at the
+ * first one that cancels, such as a form that opens an unsaved-changes `AlertDialog` instead.
+ * Answers whether every one agreed, with no promise when every `onClose` answered at once. One
+ * that returns a promise is waited for, then the next is asked. A drawer that stays open without
+ * cancelling counts as closing, since its app may close it later, in a transition or a timer.
+ *
+ * `asked` is the press this is part of. It skips the drawers already in it, such as the drawer to
+ * keep when stepping back, or a drawer of a trail that the trail asked before the drawer below it
+ * asked its own nested drawers, which include it. A drawer already closed is skipped as well.
+ *
+ * Each request is flushed before the next, so the next `onClose` runs after the app rendered what
+ * the last one did, and `isOpen` reads it.
+ *
+ * @access private
+ */
+export function closeTopFirst(
+	entries: readonly CloseEntry[] | (() => Iterable<CloseEntry>),
+	reason: DrawerCloseReasonType,
+	asked: AskedDrawers = new Set(),
+): CloseAnswer {
+	// Trails have a fixed order. A nested stack can gain an inspector while another decides,
+	// so read its current registrations before asking for each next decision.
+	const trail = typeof entries === 'function' ? [] : [...entries];
+	const nextOpen = (): CloseEntry | undefined => {
+		const remaining = typeof entries === 'function' ? [...entries()] : trail;
+		let entry = remaining.pop();
+		while (entry) {
+			if (entry.isOpen()) {
+				if (!asked.has(entry.isOpen)) {
+					return entry;
+				}
+				// An inspector can agree, stay mounted, and gain another drawer while the press waits.
+				if (entry.getNested) {
+					remaining.push(...entry.getNested());
+				}
+			}
+			entry = remaining.pop();
+		}
+
+		return undefined;
+	};
+	const askNext = (): CloseAnswer => {
+		for (;;) {
+			const entry = nextOpen();
+			if (!entry) {
+				return true;
+			}
+			asked.add(entry.isOpen);
+
+			const answer = flushSync(() => entry.close(reason, asked));
+			if (answer !== true) {
+				return afterAnswer(answer, (agreed) => agreed && askNext());
+			}
+		}
+	};
+
+	return askNext();
 }
 
 /**
  * Steps back to the crumb at `index`: closes every drawer after it with `crumb-press`, the one on
  * top first, then shows the crumb's step when it is an earlier step of a drawer's own `trail`. The
- * drawer of that crumb stays open, and a drawer above it that stays open stops the step back.
+ * drawer of that crumb stays open, and a drawer above it that cancels stops the step back. It waits
+ * for an `onClose` that returns a promise. The step closes the drawers nested in its own drawer
+ * first, the same way, as the trail does not list an inspector open over it.
  *
  * @access private
  */
@@ -172,14 +405,20 @@ export function stepBackInTrail(trail: readonly DrawerTrailEntry[], index: numbe
 		return;
 	}
 
-	if (closeTopFirst(trail.slice(index + 1), 'crumb-press', target.close)) {
-		target.select?.('crumb-press');
-	}
+	// The steps of the target share its `isOpen`, so the press never asks the drawer it steps into.
+	const asked: AskedDrawers = new Set([target.isOpen]);
+	void afterAnswer(closeTopFirst(trail.slice(index + 1), 'crumb-press', asked), (agreed) => {
+		if (agreed && target.isOpen()) {
+			target.select?.('crumb-press', asked);
+		}
+
+		return agreed;
+	});
 }
 
 /**
- * Closes every drawer of a trail with `reason`, the one on top first, each once, until one stays
- * open.
+ * Closes every drawer of a trail with `reason`, the one on top first, each once, until one
+ * cancels. It waits for an `onClose` that returns a promise.
  *
  * @access private
  */
@@ -187,5 +426,5 @@ export function leaveTrail(
 	trail: readonly DrawerTrailEntry[],
 	reason: DrawerCloseReasonType,
 ): void {
-	closeTopFirst(trail, reason);
+	void closeTopFirst(trail, reason);
 }

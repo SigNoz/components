@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type ReactNode, useState } from 'react';
 import { afterEach, describe, expect, it, type Mock, vi } from 'vitest';
@@ -7,6 +7,7 @@ import { AlertDialog } from '../../alert-dialog/alert-dialog.js';
 import { Dialog } from '../../dialog/dialog.js';
 import { Drawer } from '../drawer.js';
 import type {
+	DrawerCloseDetailsType,
 	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerStackType,
@@ -24,6 +25,10 @@ interface ChainProps {
 	childType?: DrawerTypeType;
 	grandchildType?: DrawerTypeType;
 	open?: Level[];
+	/**
+	 * Levels whose `onClose` calls `cancel()`, the way a form with unsaved edits asks first.
+	 */
+	cancel?: Level[];
 	onClose?: (level: Level, reason: DrawerCloseReasonType) => void;
 }
 
@@ -41,7 +46,7 @@ function NestedDrawer({
 	stack: DrawerStackType;
 	closePosition?: DrawerClosePositionType;
 	open: boolean;
-	onClose: (reason: DrawerCloseReasonType) => void;
+	onClose: (reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void;
 	children?: ReactNode;
 }): ReactNode {
 	const title = `${level} record`;
@@ -89,52 +94,62 @@ function Chain({
 	childType = 'inspector',
 	grandchildType = 'inspector',
 	open: initiallyOpen = ['root', 'child'],
+	cancel = [],
 	onClose,
 }: ChainProps): ReactNode {
 	const [open, setOpen] = useState<ReadonlySet<Level>>(new Set(initiallyOpen));
 	const close =
 		(level: Level) =>
-		(reason: DrawerCloseReasonType): void => {
+		(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType): void => {
 			onClose?.(level, reason);
-			setOpen((current) => new Set([...current].filter((item) => item !== level)));
+			if (cancel.includes(level)) {
+				details.cancel();
+			} else {
+				setOpen((current) => new Set([...current].filter((item) => item !== level)));
+			}
 		};
 	const show = (level: Level) => (): void => {
 		setOpen((current) => new Set([...current, level]));
 	};
 
 	return (
-		<NestedDrawer
-			level="root"
-			type={rootType}
-			stack={rootStack}
-			closePosition={rootClosePosition}
-			open={open.has('root')}
-			onClose={close('root')}
-		>
-			<button type="button" onClick={show('child')}>
-				Open child
+		<>
+			<button type="button" onClick={show('root')}>
+				Open root
 			</button>
 			<NestedDrawer
-				level="child"
-				type={childType}
-				stack={childStack}
-				open={open.has('child')}
-				onClose={close('child')}
+				level="root"
+				type={rootType}
+				stack={rootStack}
+				closePosition={rootClosePosition}
+				open={open.has('root')}
+				onClose={close('root')}
 			>
-				<button type="button" onClick={show('grandchild')}>
-					Open grandchild
+				<button type="button" onClick={show('child')}>
+					Open child
 				</button>
 				<NestedDrawer
-					level="grandchild"
-					type={grandchildType}
-					stack="overlay"
-					open={open.has('grandchild')}
-					onClose={close('grandchild')}
+					level="child"
+					type={childType}
+					stack={childStack}
+					open={open.has('child')}
+					onClose={close('child')}
 				>
-					The grandchild.
+					<button type="button" onClick={show('grandchild')}>
+						Open grandchild
+					</button>
+					<NestedDrawer
+						level="grandchild"
+						type={grandchildType}
+						stack="overlay"
+						open={open.has('grandchild')}
+						onClose={close('grandchild')}
+					>
+						The grandchild.
+					</NestedDrawer>
 				</NestedDrawer>
 			</NestedDrawer>
-		</NestedDrawer>
+		</>
 	);
 }
 
@@ -373,6 +388,180 @@ describe('Drawer nested with stack="breadcrumb"', () => {
 			'data-close-position',
 			'end',
 		);
+	});
+});
+
+describe('Drawer closing with drawers open over it', () => {
+	async function closeRoot(): Promise<void> {
+		await userEvent.click(screen.getByTestId('root-close'));
+	}
+
+	it('asks the inspector over it to close first, so it does not open again with it', async () => {
+		const onClose = vi.fn();
+		await renderChain({ rootType: 'task', rootClosePosition: 'start', onClose });
+
+		await closeRoot();
+		await waitFor(() => {
+			expect(queryPanel('root')).toBeNull();
+		});
+
+		expect(onClose.mock.calls).toEqual([
+			['child', 'close-press'],
+			['root', 'close-press'],
+		]);
+
+		await userEvent.click(screen.getByRole('button', { name: 'Open root' }));
+		await waitFor(() => {
+			expect(panelOf('root')).toBeVisible();
+		});
+		await waitForSettled();
+
+		expect(queryPanel('child')).toBeNull();
+	});
+
+	it('closes every drawer over it, the one on top first', async () => {
+		const onClose = vi.fn();
+		await renderChain({ rootType: 'task', open: ['root', 'child', 'grandchild'], onClose });
+
+		await closeRoot();
+		await waitFor(() => {
+			expect(queryPanel('root')).toBeNull();
+		});
+
+		expect(onClose.mock.calls).toEqual([
+			['grandchild', 'close-press'],
+			['child', 'close-press'],
+			['root', 'close-press'],
+		]);
+
+		await userEvent.click(screen.getByRole('button', { name: 'Open root' }));
+		await waitFor(() => {
+			expect(panelOf('root')).toBeVisible();
+		});
+		await waitForSettled();
+
+		expect(queryPanel('child')).toBeNull();
+		expect(queryPanel('grandchild')).toBeNull();
+	});
+
+	it('animates every drawer out together, rather than dropping the ones over it', async () => {
+		await renderChain({ rootType: 'task', open: ['root', 'child', 'grandchild'] });
+		const panels = (['root', 'child', 'grandchild'] as const).map(panelOf);
+
+		// A plain click, checked before the exit transitions end.
+		act(() => {
+			screen.getByTestId('root-close').click();
+		});
+
+		for (const panel of panels) {
+			expect(panel.isConnected).toBe(true);
+			expect(panel).toHaveAttribute('data-ending-style');
+		}
+		await waitFor(() => {
+			expect(queryPanel('root')).toBeNull();
+		});
+	});
+
+	it.each([true, false])('waits for an async close decision (cancel = %s)', async (refuses) => {
+		let finish = (): void => {};
+		const gate = new Promise<void>((resolve) => {
+			finish = resolve;
+		});
+		const onParentClose = vi.fn();
+		const onChildClose = vi.fn(
+			async (_reason: DrawerCloseReasonType, { cancel }: DrawerCloseDetailsType) => {
+				await gate;
+				if (refuses) {
+					cancel();
+				}
+			},
+		);
+		render(
+			<NestedDrawer level="root" type="task" stack="overlay" open onClose={onParentClose}>
+				<NestedDrawer level="child" type="inspector" stack="overlay" open onClose={onChildClose} />
+			</NestedDrawer>,
+		);
+		await waitForSettled();
+		await closeRoot();
+		await closeRoot();
+		expect(onChildClose).toHaveBeenCalledOnce();
+		expect(onParentClose).not.toHaveBeenCalled();
+
+		await act(async () => {
+			finish();
+			// The answer reaches the drawer below one task after the promise settles.
+			await new Promise((resolve) => {
+				setTimeout(resolve, 20);
+			});
+		});
+
+		expect(onParentClose).toHaveBeenCalledTimes(refuses ? 0 : 1);
+		expect(onChildClose).toHaveBeenCalledOnce();
+	});
+
+	it('stays open when a drawer over it cancels', async () => {
+		const onClose = vi.fn();
+		await renderChain({ rootType: 'task', cancel: ['child'], onClose });
+
+		await closeRoot();
+		await waitForSettled();
+
+		expect(onClose.mock.calls).toEqual([['child', 'close-press']]);
+		expect(panelOf('root')).toBeVisible();
+		expect(panelOf('child')).toBeVisible();
+	});
+
+	it('closes the inspector over a trail before the trail on a crumb press', async () => {
+		const user = userEvent.setup();
+		const onClose = vi.fn();
+		await renderChain({
+			rootStack: 'breadcrumb',
+			rootType: 'task',
+			open: ['root', 'child', 'grandchild'],
+			onClose,
+		});
+
+		const trail = screen.getByTestId('child-trail-breadcrumb');
+		await user.click(within(trail).getByRole('button', { name: 'root' }));
+		await waitFor(() => {
+			expect(queryPanel('child')).toBeNull();
+		});
+
+		expect(onClose.mock.calls).toEqual([
+			['grandchild', 'crumb-press'],
+			['child', 'crumb-press'],
+		]);
+		expect(panelOf('root')).toBeVisible();
+
+		await user.click(screen.getByRole('button', { name: 'Open child' }));
+		await waitFor(() => {
+			expect(panelOf('child')).toBeVisible();
+		});
+		await waitForSettled();
+
+		expect(queryPanel('grandchild')).toBeNull();
+	});
+
+	it('closes the inspector over a trail before the trail on the close button', async () => {
+		const user = userEvent.setup();
+		const onClose = vi.fn();
+		await renderChain({
+			rootStack: 'breadcrumb',
+			rootType: 'task',
+			open: ['root', 'child', 'grandchild'],
+			onClose,
+		});
+
+		await user.click(screen.getByTestId('child-close'));
+		await waitFor(() => {
+			expect(queryPanel('root')).toBeNull();
+		});
+
+		expect(onClose.mock.calls).toEqual([
+			['grandchild', 'close-press'],
+			['child', 'close-press'],
+			['root', 'close-press'],
+		]);
 	});
 });
 

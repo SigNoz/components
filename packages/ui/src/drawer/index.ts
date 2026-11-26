@@ -212,6 +212,7 @@
 export { Drawer } from './drawer.js';
 export { useDrawerHandle } from './use-drawer-handle.js';
 export type {
+	DrawerCloseDetailsType,
 	DrawerClosePositionType,
 	DrawerCloseReasonType,
 	DrawerCrumbType,

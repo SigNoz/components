@@ -10,20 +10,76 @@ import type {
 } from './types.js';
 
 /**
+ * Whether a drawer agreed to a close: `false` when it, or a drawer nested in it, called `cancel()`.
+ * A promise when an `onClose` returned one, which settles once its decision is made. A request whose
+ * `onClose` is synchronous answers at once, with no promise, so it keeps its timing.
+ *
+ * @access private
+ */
+export type CloseAnswer = boolean | Promise<boolean>;
+
+/**
+ * The drawers a press has asked to close so far, each one by its `isOpen`. A drawer has one
+ * `isOpen`, which it shares with every step it lists in a trail and with the entry it registers in
+ * the drawer below, so the drawers of a trail, which are nested in each other too, are asked once.
+ *
+ * @access private
+ */
+export type AskedDrawers = Set<DrawerTrailEntry['isOpen']>;
+
+/**
  * One crumb of a breadcrumb trail: what it shows, how to close the drawer that renders it and read
  * whether it is still open, and, for an earlier step of a drawer's own `trail`, how to show that
- * step again. The steps of one drawer share its `close`, which tells the drawers of a trail apart.
+ * step again, once the drawers nested in that drawer agreed to close. The steps of one drawer share
+ * its `close` and its `isOpen`, which tell the drawers of a trail apart.
  *
  * @access private
  */
 export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
 	title: ReactNode;
-	close: (reason: DrawerCloseReasonType) => void;
+	/**
+	 * Asks the drawers nested in the drawer to close, then the drawer, and answers whether it
+	 * agreed, as a promise when an `onClose` returned one. `asked` is the press this is part of, so a
+	 * drawer it already asked is not asked again.
+	 */
+	close: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => CloseAnswer;
 	/**
 	 * Whether the drawer is open as of the last commit. An unmounted drawer is closed.
 	 */
 	isOpen: () => boolean;
-	select?: (reason: DrawerTrailSelectReasonType) => void;
+	/**
+	 * Shows the step, after the drawers nested in its drawer agreed to close. `asked` is the press
+	 * this is part of, which already asked some of them.
+	 */
+	select?: (reason: DrawerTrailSelectReasonType, asked?: AskedDrawers) => void;
+};
+
+/**
+ * A drawer open over another one, which the drawer below asks to close before it closes itself,
+ * and tells to close when the app closed the drawer below.
+ *
+ * @access private
+ */
+export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> & {
+	/**
+	 * Current registrations, so a press can find drawers opened inside this one after it agreed.
+	 */
+	getNested: () => Iterable<NestedDrawerEntry>;
+	/**
+	 * Asks it to close with `parent-close`. It unmounts with the drawer below whatever its app
+	 * does, and one the app keeps open is back when the drawer below opens again.
+	 */
+	closeWithParent: () => void;
+	/**
+	 * Tells it a drawer below it opened again, so a later `parent-close` reaches it and the drawers
+	 * over it.
+	 */
+	parentOpened: () => void;
+	/**
+	 * Whether the app took it out of the tree while it was open. Rendered only while the drawer
+	 * below is open, it goes in the commit that closes the drawer below, before that drawer sees it.
+	 */
+	removedOpen: () => boolean;
 };
 
 /**
@@ -66,6 +122,11 @@ export type DrawerStackContextValue = {
 	 * it usable.
 	 */
 	cover: (blocksInput: boolean) => () => void;
+	/**
+	 * Called by a nested drawer while it is open. Before the drawer closes, it asks each one to
+	 * close, the one opened last first, and stays open when one of them cancels.
+	 */
+	nest: (entry: NestedDrawerEntry) => () => void;
 };
 
 const DrawerStackContext = createContext<DrawerStackContextValue | null>(null);

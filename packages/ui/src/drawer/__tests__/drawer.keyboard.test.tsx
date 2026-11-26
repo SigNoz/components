@@ -171,7 +171,7 @@ describe('Drawer arrow keys', () => {
 		await press('Escape');
 
 		await waitFor(() => {
-			expect(onClose).toHaveBeenCalledWith('escape-key');
+			expect(onClose).toHaveBeenCalledWith('escape-key', { cancel: expect.any(Function) });
 		});
 	});
 });
