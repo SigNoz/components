@@ -267,28 +267,45 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 	return prototype === Object.prototype || prototype === null;
 }
 
-function sameProps(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+// The pairs a comparison has reached, each taken as equal while it is still being compared. A
+// record from an API store can link back to itself, such as a parent and its children.
+type SeenPairs = Map<object, Set<object>>;
+
+function sameProps(
+	a: Record<string, unknown>,
+	b: Record<string, unknown>,
+	seen: SeenPairs,
+): boolean {
 	const keys = Object.keys(a);
 
 	return (
 		keys.length === Object.keys(b).length &&
-		keys.every((key) => key in b && sameValue(a[key], b[key]))
+		keys.every((key) => key in b && sameValue(a[key], b[key], seen))
 	);
 }
 
 // Function props count as the same, since a handler is a new function on every render.
-function sameValue(a: unknown, b: unknown): boolean {
+function sameValue(a: unknown, b: unknown, seen: SeenPairs = new Map()): boolean {
 	if (Object.is(a, b) || (typeof a === 'function' && typeof b === 'function')) {
 		return true;
 	}
+	if (typeof a !== 'object' || a === null || typeof b !== 'object' || b === null) {
+		return false;
+	}
+	const pairs = seen.get(a) ?? new Set<object>();
+	if (pairs.has(b)) {
+		return true;
+	}
+	seen.set(a, pairs.add(b));
+
 	if (Array.isArray(a) && Array.isArray(b)) {
-		return a.length === b.length && a.every((item, index) => sameValue(item, b[index]));
+		return a.length === b.length && a.every((item, index) => sameValue(item, b[index], seen));
 	}
 	if (isValidElement<Record<string, unknown>>(a) && isValidElement<Record<string, unknown>>(b)) {
-		return a.type === b.type && a.key === b.key && sameProps(a.props, b.props);
+		return a.type === b.type && a.key === b.key && sameProps(a.props, b.props, seen);
 	}
 
-	return isPlainObject(a) && isPlainObject(b) && sameProps(a, b);
+	return isPlainObject(a) && isPlainObject(b) && sameProps(a, b, seen);
 }
 
 /**

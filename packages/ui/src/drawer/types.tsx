@@ -521,7 +521,8 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note Drawers nested in it that are open get the same request first, the one on top
 		 * first, and one that calls `cancel()` keeps this one open too. One that returns a promise
 		 * is waited for. While a Suspense fallback hides one, along with any question it would ask,
-		 * a request to close this one, or to show an earlier step of its trail, is ignored.
+		 * a request to close this one, or to show an earlier step of its trail, is ignored, one
+		 * that was waiting on a promise when the fallback showed included.
 		 *
 		 * @note A drawer nested in it whose `onClose` closes this one too in a transition, such as
 		 * `router.push` in Next.js, in a timer, or after an `await` in a promise it does not return,

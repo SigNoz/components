@@ -134,6 +134,11 @@ export function useNestedDrawers({
 	// dropped, as it would stop waiting for a save the app still runs.
 	const pendingRef = useRef<object | null>(null);
 
+	// A Suspense fallback hides a drawer over this one, which then reads as closed: it would be
+	// skipped, then get `parent-close` once this one closed, and lose its unsaved edits without a
+	// question. Its confirm would be hidden too, so nothing closes until it shows again.
+	const hidesNested = (): boolean => [...nestedRef.current].some((entry) => entry.removedOpen());
+
 	// A trail step and a full close both wait on this drawer, even if the inspector that is
 	// deciding has already removed itself from the nested stack.
 	const runClose = (
@@ -141,13 +146,7 @@ export function useNestedDrawers({
 		asked: AskedDrawers,
 		includeSelf: boolean,
 	): CloseAnswer => {
-		if (pendingRef.current !== null) {
-			return answerPress(asked, false);
-		}
-		// A Suspense fallback hides a drawer over this one, which then reads as closed: it would be
-		// skipped, then get `parent-close` once this one closed, and lose its unsaved edits without
-		// a question. Its confirm would be hidden too, so nothing closes until it shows again.
-		if ([...nestedRef.current].some((entry) => entry.removedOpen())) {
+		if (pendingRef.current !== null || hidesNested()) {
 			return answerPress(asked, false);
 		}
 
@@ -163,6 +162,10 @@ export function useNestedDrawers({
 				return false;
 			}
 			if (typeof nested !== 'boolean' && pendingRef.current !== token) {
+				return false;
+			}
+			// A fallback may have hidden one while a drawer over it decided.
+			if (hidesNested()) {
 				return false;
 			}
 			// The `onClose` of a drawer over this one may close this one too, such as by clearing the

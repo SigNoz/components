@@ -127,3 +127,83 @@ describe('Drawer with a drawer over it that a Suspense fallback hides', () => {
 		expect(onFormClose).not.toHaveBeenCalled();
 	});
 });
+
+/**
+ * The same pod, with a log drawer opened after the form. Its `onClose` returns `decision`, such as
+ * an async confirm, so a press waits on it before it asks the form.
+ */
+function WaitingLogsPage({
+	suspends,
+	decision,
+	onPodClose,
+	onFormClose,
+}: {
+	suspends: boolean;
+	decision: Promise<void>;
+	onPodClose: (reason: DrawerCloseReasonType) => void;
+	onFormClose: (reason: DrawerCloseReasonType) => void;
+}): ReactNode {
+	const [podOpen, setPodOpen] = useState(true);
+	const [logsOpen, setLogsOpen] = useState(true);
+
+	return (
+		<Drawer
+			type="inspector"
+			stack="overlay"
+			open={podOpen}
+			title="Pod"
+			testId="pod"
+			onClose={(reason) => {
+				onPodClose(reason);
+				setPodOpen(false);
+			}}
+		>
+			<Suspense fallback={<p>Loading</p>}>
+				<Details suspends={suspends} onFormClose={onFormClose} />
+			</Suspense>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open={logsOpen}
+				title="Logs"
+				testId="logs"
+				onClose={() => decision.then(() => setLogsOpen(false))}
+			>
+				Log details
+			</Drawer>
+		</Drawer>
+	);
+}
+
+describe('Drawer whose press waits on a drawer over it while a Suspense fallback hides another', () => {
+	it('stays open, and does not close the hidden drawer with parent-close', async () => {
+		const { promise, resolve } = Promise.withResolvers<void>();
+		const onPodClose = vi.fn();
+		const onFormClose = vi.fn();
+		const page = (suspends: boolean) => (
+			<WaitingLogsPage
+				suspends={suspends}
+				decision={promise}
+				onPodClose={onPodClose}
+				onFormClose={onFormClose}
+			/>
+		);
+		const { rerender } = render(page(false));
+		await waitForSettled();
+
+		await userEvent.click(screen.getByTestId('pod-close'));
+		act(() => {
+			rerender(page(true));
+		});
+		await act(async () => {
+			resolve();
+			await new Promise((done) => {
+				setTimeout(done, 20);
+			});
+		});
+		await waitForSettled();
+
+		expect(onPodClose).not.toHaveBeenCalled();
+		expect(onFormClose).not.toHaveBeenCalled();
+	});
+});
