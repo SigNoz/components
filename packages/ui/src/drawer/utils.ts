@@ -86,7 +86,7 @@ export function toDrawerCloseReason(reason: string): DrawerCloseReasonType | und
  */
 export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
 	return (
-		typeof value === 'object' &&
+		(typeof value === 'object' || typeof value === 'function') &&
 		value !== null &&
 		'then' in value &&
 		typeof value.then === 'function'
@@ -204,6 +204,8 @@ export function buildTrail({
 	];
 }
 
+type CloseEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'>;
+
 /**
  * Asks each open drawer of `entries` to close, the one on top first, each once, and stops at the
  * first one that cancels, such as a form that opens an unsaved-changes `AlertDialog` instead.
@@ -221,29 +223,38 @@ export function buildTrail({
  * @access private
  */
 export function closeTopFirst(
-	entries: readonly Pick<DrawerTrailEntry, 'close' | 'isOpen'>[],
+	entries: readonly CloseEntry[] | (() => Iterable<CloseEntry>),
 	reason: DrawerCloseReasonType,
 	asked: AskedDrawers = new Set(),
 ): CloseAnswer {
-	const top = [...entries].reverse();
-	const askFrom = (start: number): CloseAnswer => {
-		for (let index = start; index < top.length; index += 1) {
-			const entry = top[index];
-			if (entry === undefined || asked.has(entry.isOpen) || !entry.isOpen()) {
-				continue;
+	// Trails have a fixed order. A nested stack can gain an inspector while another decides,
+	// so read its current registrations before asking for each next decision.
+	const trail = typeof entries === 'function' ? [] : [...entries];
+	const nextOpen = (): CloseEntry | undefined => {
+		const remaining = typeof entries === 'function' ? [...entries()] : trail;
+		let entry = remaining.pop();
+		while (entry && (asked.has(entry.isOpen) || !entry.isOpen())) {
+			entry = remaining.pop();
+		}
+
+		return entry;
+	};
+	const askNext = (): CloseAnswer => {
+		for (;;) {
+			const entry = nextOpen();
+			if (!entry) {
+				return true;
 			}
 			asked.add(entry.isOpen);
 
 			const answer = flushSync(() => entry.close(reason, asked));
 			if (answer !== true) {
-				return afterAnswer(answer, (agreed) => agreed && askFrom(index + 1));
+				return afterAnswer(answer, (agreed) => agreed && askNext());
 			}
 		}
-
-		return true;
 	};
 
-	return askFrom(0);
+	return askNext();
 }
 
 /**
@@ -264,7 +275,7 @@ export function stepBackInTrail(trail: readonly DrawerTrailEntry[], index: numbe
 	// The steps of the target share its `isOpen`, so the press never asks the drawer it steps into.
 	const asked: AskedDrawers = new Set([target.isOpen]);
 	void afterAnswer(closeTopFirst(trail.slice(index + 1), 'crumb-press', asked), (agreed) => {
-		if (agreed) {
+		if (agreed && target.isOpen()) {
 			target.select?.('crumb-press', asked);
 		}
 

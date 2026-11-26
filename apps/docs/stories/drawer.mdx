@@ -105,6 +105,7 @@ drawer are ignored.
 ```tsx
 <Drawer
 	type="task"
+	stack="overlay"
 	open={open}
 	onClose={async (reason, { cancel }) => {
 		if (reason === 'parent-close' || !dirty) {
@@ -127,8 +128,9 @@ The Cancel button in `footerSuffix` is your own button, so it calls your close d
 
 ## Unsaved changes
 
-A `task` with unsaved edits asks before it closes. Keep it on `open`, and while the form is dirty
-call `cancel()` in `onClose` and open a nested `AlertDialog`, from `onClose` and from your Cancel.
+When the user asks to close a dirty form, call `cancel()` in `onClose` and show a nested
+`AlertDialog`. The footer Cancel button opens the same prompt. If the parent already closed,
+clear the prompt and close the form directly.
 `cancel()` keeps the drawers under it open too, so a press on the close button of a drawer below
 stops at the form. The footer start says what is unsaved.
 
@@ -137,7 +139,12 @@ stops at the form. The footer start says what is unsaved.
 	type="task"
 	stack="overlay"
 	open={open}
-	onClose={(_reason, { cancel }) => {
+	onClose={(reason, { cancel }) => {
+		if (reason === 'parent-close') {
+			setDiscarding(false);
+			close();
+			return;
+		}
 		if (changes > 0) {
 			cancel();
 		}

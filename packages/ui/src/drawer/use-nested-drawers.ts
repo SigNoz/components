@@ -58,6 +58,8 @@ export function useNestedDrawers({
 	readIsOpen,
 	requestClose,
 }: UseNestedDrawersOptions): NestedDrawers {
+	// An ancestor can reopen while this drawer stays mounted with its own open prop true.
+	const openingRef = useRef(0);
 	// The drawers open over this one, in the order they opened.
 	const nestedRef = useRef(new Set<NestedDrawerEntry>());
 	const nest = (entry: NestedDrawerEntry): (() => void) => {
@@ -78,9 +80,9 @@ export function useNestedDrawers({
 	const agreedRef = useRef(false);
 	// The request of this opening that is waiting for its answer. A drawer that closes and opens
 	// again while its old `onClose` promise waits is a new opening, and that answer is not its own.
-	const askRef = useRef<object | null>(null);
+	const askRef = useRef<{ invoking: boolean } | null>(null);
 	const askToClose = (reason: DrawerCloseReasonType): CloseAnswer => {
-		const ask = {};
+		const ask = { invoking: true };
 		askRef.current = ask;
 		agreedRef.current = false;
 
@@ -92,7 +94,14 @@ export function useNestedDrawers({
 
 			return agreed;
 		};
-		const answer = requestCloseRef.current(reason);
+		let answer: CloseAnswer;
+		try {
+			answer = requestCloseRef.current(reason);
+		} catch (error) {
+			ask.invoking = false;
+			throw error;
+		}
+		ask.invoking = false;
 		if (typeof answer === 'boolean') {
 			return settle(answer);
 		}
@@ -100,7 +109,10 @@ export function useNestedDrawers({
 		// The answer counts as soon as the promise settles, for a drawer below that the `onClose`
 		// removed. The next drawer is asked a task later: a state update made after an `await`
 		// commits in a task React schedules for it, so that drawer would still read as open.
-		return answer.then(settle).then(afterNextTask);
+		return answer
+			.then(settle)
+			.then(afterNextTask)
+			.then((agreed) => agreed && askRef.current === ask);
 	};
 
 	// A close of this drawer that waits on a promise, its own or one of a drawer over it. The token
@@ -111,8 +123,18 @@ export function useNestedDrawers({
 	const closeNested = (
 		reason: DrawerCloseReasonType,
 		asked: AskedDrawers = new Set(),
-	): CloseAnswer =>
-		pendingRef.current === null && closeTopFirst([...nestedRef.current], reason, asked);
+	): CloseAnswer => {
+		if (pendingRef.current !== null) {
+			return false;
+		}
+
+		const opening = openingRef.current;
+		return closeTopFirst(
+			() => (openingRef.current === opening && readIsOpen() ? nestedRef.current : []),
+			reason,
+			asked,
+		);
+	};
 
 	const closeWithNested = (
 		reason: DrawerCloseReasonType,
@@ -168,6 +190,7 @@ export function useNestedDrawers({
 	// opens again.
 	const parentClosedRef = useRef(false);
 	const reopenUnder = (): void => {
+		openingRef.current += 1;
 		parentClosedRef.current = false;
 		agreedRef.current = false;
 		askRef.current = null;
@@ -182,7 +205,8 @@ export function useNestedDrawers({
 		}
 		parentClosedRef.current = true;
 		closeNestedWithParent();
-		if (!agreedRef.current) {
+		// A synchronous navigation can remove the parent inside the original onClose.
+		if (!agreedRef.current && !askRef.current?.invoking) {
 			// It cannot refuse, and nothing waits for it.
 			void requestClose('parent-close');
 		}

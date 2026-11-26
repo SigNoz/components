@@ -1,6 +1,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type ReactNode, startTransition, useEffect, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { Drawer } from '../drawer.js';
 import type { DrawerCloseDetailsType, DrawerCloseReasonType, DrawerStackType } from '../types.js';
@@ -213,6 +214,19 @@ describe('Drawer closing with a drawer over it that closes after its onClose ret
 });
 
 describe('Drawer that agreed to a close and has not closed yet', () => {
+	it('gets one onClose when its handler synchronously removes the drawer below', async () => {
+		const { onClosed } = await openPage({
+			logHandler: (_reason, _details, actions) => {
+				flushSync(actions.removePod);
+			},
+		});
+
+		await userEvent.click(screen.getByTestId('log-close'));
+		await waitForGone('pod', 'log');
+
+		expect(onClosed.mock.calls).toEqual([['log', 'close-press']]);
+	});
+
 	it('gets one onClose for its own press when that press removes the drawer below in a transition', async () => {
 		const { onClosed } = await openPage({
 			// The transition starts in a task of its own. One started in the press would commit before

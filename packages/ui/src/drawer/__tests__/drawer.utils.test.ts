@@ -1,12 +1,15 @@
+import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { AskedDrawers, DrawerTrailEntry } from '../drawer-stack-context.js';
 import type { DrawerCloseReasonType } from '../types.js';
+import { useCommittedOpen } from '../use-committed-open.js';
 import {
 	afterAnswer,
 	afterNextTask,
 	buildTrail,
 	closeTopFirst,
 	displayTitle,
+	isPromiseLike,
 	leaveTrail,
 	letPageKeysThrough,
 	stepBackInTrail,
@@ -370,6 +373,19 @@ describe('closeTopFirst with an answer that is a promise', () => {
 	});
 });
 
+describe('isPromiseLike', () => {
+	it('recognizes a callable thenable but treats an ordinary function as synchronous', () => {
+		const done = Promise.resolve();
+		const callable = Object.assign(() => {}, {
+			// oxlint-disable-next-line unicorn/no-thenable -- this function implements PromiseLike
+			then: done.then.bind(done),
+		});
+
+		expect(isPromiseLike(callable)).toBe(true);
+		expect(isPromiseLike(() => {})).toBe(false);
+	});
+});
+
 describe('afterAnswer', () => {
 	it('calls next in the same call for an answer that is not a promise, and answers with its result', () => {
 		const next = vi.fn((agreed: boolean) => !agreed);
@@ -532,6 +548,28 @@ describe('stepBackInTrail', () => {
 		expect(select).toHaveBeenCalledExactlyOnceWith('crumb-press', asked);
 		expect(asked?.has(node.isOpen)).toBe(true);
 		expect(node.close).not.toHaveBeenCalled();
+	});
+
+	it('discards a press when the target closes and reopens before the child answers', async () => {
+		const { result, rerender } = renderHook((open: boolean) => useCommittedOpen(open), {
+			initialProps: true,
+		});
+		const select = vi.fn();
+		const target = { title: 'Earlier step', close: vi.fn(), isOpen: result.current, select };
+		let agree = () => {};
+		const answer = new Promise<boolean>((resolve) => {
+			agree = () => resolve(true);
+		});
+		const child = deciding('child', [], answer);
+
+		stepBackInTrail([target, entry('Child', child)], 0);
+		expect(child.close).toHaveBeenCalledOnce();
+		rerender(false);
+		rerender(true);
+		await act(async () => agree());
+
+		expect(result.current()).toBe(true);
+		expect(select).not.toHaveBeenCalled();
 	});
 
 	it('does nothing for an index past the trail', () => {
