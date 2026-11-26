@@ -1,10 +1,17 @@
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { type MutableRefObject, type ReactNode, useImperativeHandle, useMemo } from 'react';
+import {
+	type MutableRefObject,
+	type ReactNode,
+	useEffect,
+	useImperativeHandle,
+	useMemo,
+} from 'react';
 import { cn } from '../../lib/utils.js';
 import { COMBOBOX_ESTIMATED_ROW_SIZE } from '../constants.js';
 import styles from '../combobox.module.scss';
-import type { ComboboxVirtualRow } from '../utils.js';
+import type { RenderedItemsReport } from '../use-rendered-items-report.js';
+import { type ComboboxVirtualRow, itemRowValues } from '../utils.js';
 import { ComboboxRow } from './combobox-row.js';
 
 /**
@@ -24,6 +31,7 @@ export type ComboboxVirtualRowsProps = {
 	optionCount: number;
 	scrollElement: HTMLDivElement | null;
 	scrollerRef: MutableRefObject<ComboboxVirtualScroller | null>;
+	reportRenderedItems: RenderedItemsReport | undefined;
 	comboboxTestId: string | undefined;
 	multiple: boolean;
 	createLabel: ((query: string) => ReactNode) | undefined;
@@ -43,6 +51,7 @@ export function ComboboxVirtualRows({
 	optionCount,
 	scrollElement,
 	scrollerRef,
+	reportRenderedItems,
 	...rowProps
 }: ComboboxVirtualRowsProps): ReactNode {
 	// TanStack Virtual hands back one mutable instance whose methods change what they return on
@@ -75,6 +84,29 @@ export function ComboboxVirtualRows({
 		overscan: 8,
 	});
 
+	const virtualRows = virtualizer.getVirtualItems();
+
+	const values = itemRowValues(virtualRows.map((virtualRow) => rows[virtualRow.index]));
+	// The first render of an open runs before the viewport is measured, and the virtualizer hands
+	// back no rows at all until it is. That empty slice is not what anyone sees.
+	const measured = virtualRows.length > 0 || rows.length === 0;
+	// While a scroll runs, the slice moves on every frame, and an open with a highlighted row far
+	// down the list renders the top rows, then scrolls. Reporting waits for the virtualizer to stop
+	// scrolling, and for a frame with no further commit, so each of those slices is not checked.
+	const settled = measured && !virtualizer.isScrolling;
+
+	// No dependency list: the slice is a new array on every scroll frame, and every commit has to
+	// cancel the frame the one before it asked for.
+	useEffect(() => {
+		if (!settled || reportRenderedItems === undefined) {
+			return undefined;
+		}
+
+		const frame = requestAnimationFrame(() => reportRenderedItems(values));
+
+		return () => cancelAnimationFrame(frame);
+	});
+
 	useImperativeHandle(
 		scrollerRef,
 		() => ({
@@ -95,7 +127,7 @@ export function ComboboxVirtualRows({
 			className={styles['combobox__virtual-list']}
 			style={{ blockSize: virtualizer.getTotalSize() }}
 		>
-			{virtualizer.getVirtualItems().map((virtualRow) => {
+			{virtualRows.map((virtualRow) => {
 				const row = rows[virtualRow.index];
 
 				if (row === undefined) {

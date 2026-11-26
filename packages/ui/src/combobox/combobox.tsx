@@ -61,6 +61,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			readOnly = false,
 			readOnlyTooltip,
 			virtualized = false,
+			onRenderedItemsChange,
 			contentMaxWidth,
 			contentMaxHeight,
 			container,
@@ -344,6 +345,8 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 						entries={entries}
 						optionCount={flatOptions.length}
 						virtualized={virtualized}
+						open={open}
+						onRenderedItemsChange={onRenderedItemsChange}
 						scrollerRef={scrollerRef}
 						loading={loading}
 						loadingContent={loadingContent}

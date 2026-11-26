@@ -1,8 +1,14 @@
 import { Combobox as BaseCombobox } from '@base-ui/react/combobox';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { partTestId } from '../../lib/utils.js';
 import styles from '../combobox.module.scss';
-import type { ComboboxEntry, ComboboxGroupEntry } from '../utils.js';
+import type { RenderedItemsReport } from '../use-rendered-items-report.js';
+import {
+	type ComboboxEntry,
+	type ComboboxGroupEntry,
+	flattenComboboxOptions,
+	itemRowValues,
+} from '../utils.js';
 import { ComboboxRow } from './combobox-row.js';
 
 /**
@@ -13,6 +19,13 @@ export type ComboboxRowsProps = {
 	comboboxTestId: string | undefined;
 	multiple: boolean;
 	createLabel: ((query: string) => ReactNode) | undefined;
+};
+
+/**
+ * @access private
+ */
+export type ComboboxRowsRootProps = ComboboxRowsProps & {
+	reportRenderedItems: RenderedItemsReport | undefined;
 };
 
 function ComboboxSeparator(): ReactNode {
@@ -56,7 +69,17 @@ function ComboboxGroup({
  *
  * @access private
  */
-export function ComboboxRows({ entries, ...rowProps }: ComboboxRowsProps): ReactNode {
+export function ComboboxRows({
+	entries,
+	reportRenderedItems,
+	...rowProps
+}: ComboboxRowsRootProps): ReactNode {
+	// The values are worked out here rather than during render, so a combobox without
+	// `onRenderedItemsChange` does not walk its rows again on every keystroke.
+	useEffect(() => {
+		reportRenderedItems?.(itemRowValues(flattenComboboxOptions(entries)));
+	}, [entries, reportRenderedItems]);
+
 	return entries.map((entry) => {
 		if (entry.kind === 'separator') {
 			return <ComboboxSeparator key={entry.key} />;

@@ -318,6 +318,32 @@ plain rows of the list.
 />
 ```
 
+`onRenderedItemsChange` tells you which rows the open list renders, so per-row work runs only for
+those. It is called when the popup opens, when the search filters the rows and when a scroll
+brings other rows in, never while the popup is closed. A permission check per row, for example,
+keeps the rows it has not answered yet disabled:
+
+```tsx
+const [renderedHostIds, setRenderedHostIds] = useState<string[]>([]);
+const permissions = useHostPermissions(renderedHostIds); // caches what it already checked
+
+<Combobox
+	aria-label="Host"
+	placeholder="Select a host..."
+	searchInputProps={{ placeholder: 'Search hosts' }}
+	items={hosts.map((host) => ({
+		type: 'item',
+		value: host.id,
+		label: host.name,
+		disabled: permissions[host.id] !== 'granted',
+		disabledTooltip:
+			permissions[host.id] === 'denied' ? 'You cannot use this host' : 'Checking access…',
+	}))}
+	virtualized
+	onRenderedItemsChange={setRenderedHostIds}
+/>;
+```
+
 ## Inside a popover, dialog or drawer
 
 Inside a `Dialog` or `Drawer` the popup goes into the panel on its own. Inside a `Popover` it needs

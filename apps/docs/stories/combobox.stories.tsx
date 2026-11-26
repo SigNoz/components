@@ -52,6 +52,7 @@ export const Default: Story = {
 		'aria-label': 'Framework',
 		searchInputProps: { placeholder: 'Search frameworks' },
 		onChange: fn(),
+		onRenderedItemsChange: fn(),
 	},
 	parameters: {
 		// Playground: every state the trigger and the popup can be driven into is held at once by

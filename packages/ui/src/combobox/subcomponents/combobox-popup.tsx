@@ -20,6 +20,7 @@ import type {
 	ComboboxProps,
 	ComboboxSearchInputProps,
 } from '../types.js';
+import { useRenderedItemsReport } from '../use-rendered-items-report.js';
 import { type ComboboxEntry, flattenComboboxRows } from '../utils.js';
 import { ComboboxFooterAction } from './combobox-footer-action.js';
 import { ComboboxRows } from './combobox-rows.js';
@@ -42,6 +43,8 @@ export type ComboboxPopupProps = {
 	entries: readonly ComboboxEntry[];
 	optionCount: number;
 	virtualized: boolean;
+	open: boolean;
+	onRenderedItemsChange: ((values: string[]) => void) | undefined;
 	scrollerRef: MutableRefObject<ComboboxVirtualScroller | null>;
 	loading: boolean;
 	loadingContent: ReactNode;
@@ -71,6 +74,8 @@ export function ComboboxPopup({
 	entries,
 	optionCount,
 	virtualized,
+	open,
+	onRenderedItemsChange,
 	scrollerRef,
 	loading,
 	loadingContent,
@@ -94,6 +99,7 @@ export function ComboboxPopup({
 		() => (virtualized ? flattenComboboxRows(entries) : []),
 		[virtualized, entries],
 	);
+	const reportRenderedItems = useRenderedItemsReport(open, onRenderedItemsChange);
 
 	const popupStyle = {
 		...(contentMaxWidth != null && {
@@ -152,10 +158,15 @@ export function ComboboxPopup({
 									optionCount={optionCount}
 									scrollElement={viewportElement}
 									scrollerRef={scrollerRef}
+									reportRenderedItems={reportRenderedItems}
 									{...rowProps}
 								/>
 							) : (
-								<ComboboxRows entries={entries} {...rowProps} />
+								<ComboboxRows
+									entries={entries}
+									reportRenderedItems={reportRenderedItems}
+									{...rowProps}
+								/>
 							)}
 						</BaseCombobox.List>
 					</div>
