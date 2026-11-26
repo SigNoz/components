@@ -2,6 +2,7 @@ import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import * as React from 'react';
 import { cn } from '../../lib/utils.js';
 import { useTooltipContentId } from '../tooltip-content-id-context.js';
+import { TooltipToneProvider, useTooltipTones } from '../tooltip-tone-context.js';
 import styles from '../tooltip.module.scss';
 
 /**
@@ -21,6 +22,7 @@ export type TooltipPopupProps = Omit<
 export const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
 	function TooltipPopup({ className, id, testId, children, ...props }, ref) {
 		const contentId = useTooltipContentId();
+		const [tones, setTones] = useTooltipTones();
 
 		return (
 			<TooltipPrimitive.Popup
@@ -33,10 +35,11 @@ export const TooltipPopup = React.forwardRef<HTMLDivElement, TooltipPopupProps>(
 				data-testid={testId}
 				{...props}
 				// After the spread: a `data-*` from the call site may not take the slot the
-				// component is found by.
+				// component is found by, nor the tone its content asked for.
 				data-slot="tooltip-content"
+				data-tone={tones[0]}
 			>
-				{children}
+				<TooltipToneProvider setTones={setTones}>{children}</TooltipToneProvider>
 			</TooltipPrimitive.Popup>
 		);
 	},

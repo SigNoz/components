@@ -49,9 +49,8 @@
 	-webkit-line-clamp: var(--tooltip-max-lines, 6);
 	overflow: var(--tooltip-overflow, hidden);
 
-	// The tone is set from the content, so it reaches the popup of any prop that renders a tooltip
-	// without a prop of its own. One marker anywhere in the popup tones every entry of a stack.
-	&:has(.tooltip__tone[data-tone='danger']) {
+	// Set by the `TooltipTone`s rendered in this popup, never by one in a popup portalled into it.
+	&[data-tone='danger'] {
 		--tooltip-internal-background-color: var(--tooltip-danger-background-color, var(--tooltip-danger-background));
 		--tooltip-internal-border-color: var(--tooltip-danger-border-color, var(--tooltip-danger-border));
 		--tooltip-internal-foreground: var(--tooltip-danger-foreground, var(--tooltip-danger-label));

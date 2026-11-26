@@ -173,4 +173,91 @@ describe('TooltipTone', () => {
 		expect(outer).toContainElement(inner);
 		expect(colours(inner)).toEqual(NEUTRAL);
 	});
+
+	it('does not tone a popup that a danger popup is portalled into', () => {
+		const { rerender } = render(
+			<Tooltip testId="outer" title="Helpful information">
+				<button type="button">Outer</button>
+			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
+		);
+		const outer = screen.getByTestId('outer');
+
+		rerender(
+			<>
+				<Tooltip testId="outer" title="Helpful information">
+					<button type="button">Outer</button>
+				</Tooltip>
+				<Tooltip
+					testId="inner"
+					title={<TooltipTone tone="danger">Permission denied</TooltipTone>}
+					container={outer}
+				>
+					<button type="button">Inner</button>
+				</Tooltip>
+			</>,
+		);
+
+		const inner = screen.getByTestId('inner');
+		expect(outer).toContainElement(inner);
+		expect(colours(inner)).toEqual(DANGER);
+		expect(colours(outer)).toEqual(NEUTRAL);
+		expect(outer).not.toHaveAttribute('data-tone');
+	});
+
+	it('mirrors the tone on the popup and drops it with the last TooltipTone', () => {
+		const { rerender } = render(
+			<Tooltip title={<TooltipTone tone="danger">Permission denied</TooltipTone>}>
+				<button type="button">Hover</button>
+			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
+		);
+
+		expect(screen.getByRole('tooltip')).toHaveAttribute('data-tone', 'danger');
+
+		rerender(
+			<Tooltip title="Helpful information">
+				<button type="button">Hover</button>
+			</Tooltip>,
+		);
+
+		expect(screen.getByRole('tooltip')).not.toHaveAttribute('data-tone');
+		expect(colours(screen.getByRole('tooltip'))).toEqual(NEUTRAL);
+	});
+
+	it('keeps the popup toned while one entry of a stack still holds a TooltipTone', () => {
+		function Stack({ outerTone }: { outerTone: boolean }) {
+			const outerTitle = outerTone ? (
+				<TooltipTone tone="danger">Removes every rule</TooltipTone>
+			) : (
+				'Removes every rule'
+			);
+
+			return (
+				<Tooltip title={outerTitle}>
+					<Tooltip title={<TooltipTone tone="danger">You cannot delete this rule</TooltipTone>}>
+						<button type="button">Hover</button>
+					</Tooltip>
+				</Tooltip>
+			);
+		}
+
+		const { rerender } = render(<Stack outerTone />, { wrapper: ForceOpenProvider });
+
+		rerender(<Stack outerTone={false} />);
+
+		expect(colours(screen.getByRole('tooltip'))).toEqual(DANGER);
+	});
+
+	it('does not tone a popup when a data-tone comes from the call site', () => {
+		render(
+			<Tooltip title="Helpful information" data-tone="danger">
+				<button type="button">Hover</button>
+			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
+		);
+
+		expect(screen.getByRole('tooltip')).not.toHaveAttribute('data-tone');
+		expect(colours(screen.getByRole('tooltip'))).toEqual(NEUTRAL);
+	});
 });
