@@ -135,6 +135,7 @@ export const ComboboxTrigger = forwardRef<HTMLElement, ComboboxTriggerProps>(
 					values={values}
 					resolveLabel={resolveLabel}
 					maxDisplayed={maxDisplayedPills}
+					options={options}
 					removable={!disabled && !readOnly}
 					onRemove={onRemove}
 					comboboxTestId={testId}

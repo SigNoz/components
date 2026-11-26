@@ -20,16 +20,24 @@ export type ComboboxItemKindType = (typeof ComboboxItemKind)[keyof typeof Combob
 export type ComboboxItemDisabledType =
 	| {
 			/**
-			 * When true, the row cannot be picked.
+			 * When true, the row cannot change state: an unselected row cannot be picked, and a
+			 * selected one cannot be removed. Its chip has no remove button and shows
+			 * `disabledTooltip`, and the clear button and `Delete` leave it selected.
 			 *
 			 * @note Requires `disabledTooltip`.
 			 *
 			 * @note The row is marked `aria-disabled` rather than removed from the keyboard, so the
 			 * reason stays reachable. Arrow keys still land on it.
+			 *
+			 * @note For a permission that differs between adding and removing, set it from the
+			 * selection, `selected ? !canRemove : !canAdd`, with the matching reason.
+			 *
+			 * @note A single combobox whose selected row is disabled cannot switch to another row.
 			 */
 			disabled: boolean;
 			/**
-			 * Why this row cannot be picked. Only renders while `disabled` is true.
+			 * Why this row cannot be picked or, once selected, removed. Only renders while `disabled`
+			 * is true.
 			 *
 			 * @note Only allowed alongside `disabled`. Pass `undefined` when there is no reason to
 			 * give.

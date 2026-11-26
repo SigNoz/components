@@ -9,7 +9,7 @@ import {
 import { ForceOpenProvider } from '@signozhq/ui/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, type ReactNode, useEffect, useState } from 'react';
-import { expect, fireEvent, fn, waitFor } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './combobox.stories.module.css';
 import { comboboxArgTypes } from './shared/combobox-arg-types.js';
@@ -431,6 +431,27 @@ const TRIGGER_ROWS: TriggerRow[] = [
 			defaultValue: ['react', 'vue'],
 			disabled: true,
 			disabledTooltip: undefined,
+		},
+	},
+	{
+		id: 'trigger-locked-values',
+		label: 'disabled row, multiple',
+		note: (
+			<>
+				The chip of a selected <code>disabled</code> row has no remove button and shows the row's{' '}
+				<code>disabledTooltip</code> on hover. The clear button and <code>Delete</code> leave it.
+			</>
+		),
+		props: {
+			items: [
+				option('react', 'React', { disabled: true, disabledTooltip: 'You cannot detach React' }),
+				...FRAMEWORKS.slice(1),
+			],
+			placeholder: 'Select frameworks...',
+			searchInputProps: { placeholder: 'Search frameworks' },
+			multiple: true,
+			defaultValue: ['react', 'vue'],
+			allowClear: true,
 		},
 	},
 	{
@@ -875,6 +896,67 @@ function TriggerRowView({ id, label, note, props, pseudo }: TriggerRow): ReactEl
 		</>
 	);
 }
+
+const ROLES = [
+	{ value: 'viewer', label: 'Viewer', canAttach: true, canDetach: true },
+	{ value: 'editor', label: 'Editor', canAttach: true, canDetach: false },
+	{ value: 'admin', label: 'Admin', canAttach: false, canDetach: true },
+	{ value: 'billing', label: 'Billing', canAttach: false, canDetach: false },
+];
+
+function PermissionsView(): ReactElement {
+	const [roles, setRoles] = useState(['editor', 'admin']);
+
+	return (
+		<div className="story-container">
+			<Combobox
+				multiple
+				allowClear
+				aria-label="Roles"
+				placeholder="Select roles..."
+				searchInputProps={{ placeholder: 'Search roles' }}
+				testId="roles"
+				value={roles}
+				onChange={setRoles}
+				items={ROLES.map(({ value, label, canAttach, canDetach }) => {
+					const selected = roles.includes(value);
+					const allowed = selected ? canDetach : canAttach;
+
+					return allowed
+						? option(value, label)
+						: option(value, label, {
+								disabled: true,
+								disabledTooltip: selected
+									? `You cannot detach ${label}`
+									: `You cannot attach ${label}`,
+							});
+				})}
+			/>
+		</div>
+	);
+}
+
+/**
+ * Adding and removing behind different permissions. Each row is `disabled` from the permission
+ * that applies to its current state: attach while it is not selected, detach once it is.
+ */
+export const Permissions: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		await expect(canvas.getByTestId('roles-chip-editor')).toHaveAttribute('data-disabled');
+		await expect(canvas.queryByTestId('roles-chip-editor-remove')).toBeNull();
+
+		await userEvent.click(canvas.getByTestId('roles-chip-admin-remove'));
+
+		await expect(canvas.queryByTestId('roles-chip-admin')).toBeNull();
+		await expect(canvas.getByTestId('roles-chip-editor')).toBeInTheDocument();
+	},
+	render: () => <PermissionsView />,
+};
 
 /**
  * Every state the trigger can show, and every popup held open at once in one snapshot, with the

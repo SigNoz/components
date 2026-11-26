@@ -33,6 +33,8 @@ import {
 	flattenComboboxOptions,
 	indexComboboxOptions,
 	isComboboxMarker,
+	keepLockedValues,
+	lockedValues,
 } from './utils.js';
 
 type ComboboxChangeDetails = BaseCombobox.Root.ChangeEventDetails;
@@ -122,6 +124,10 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		const scrollerRef = useRef<ComboboxVirtualScroller | null>(null);
 
 		const options = useMemo(() => indexComboboxOptions(items), [items]);
+		// A selected value whose row is `disabled` stays selected: the chips, the clear button,
+		// `Delete` and the popup all leave it in place.
+		const locked = lockedValues(selectedValues, options);
+		const hasRemovableValue = selectedValues.length > locked.length;
 		const entries = useMemo(
 			() =>
 				buildComboboxEntries({
@@ -193,6 +199,11 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 					return;
 				}
 
+				if (!multiple && locked.length > 0) {
+					eventDetails.cancel();
+					return;
+				}
+
 				commit(multiple ? [...selectedValues, created] : [created]);
 				return;
 			}
@@ -213,6 +224,24 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 				return;
 			}
 
+			if (locked.some((entry) => !nextValues.includes(entry))) {
+				// A single combobox has room for one value, so a locked one cannot make way for another.
+				const kept = multiple
+					? keepLockedValues(selectedValues, nextValues, locked)
+					: selectedValues;
+
+				if (
+					kept.length === selectedValues.length &&
+					kept.every((entry) => selectedValues.includes(entry))
+				) {
+					eventDetails.cancel();
+					return;
+				}
+
+				commit(kept);
+				return;
+			}
+
 			commit(nextValues);
 		}
 
@@ -230,15 +259,15 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 			if (
 				allowClear &&
 				!isInert &&
-				selectedValues.length > 0 &&
+				hasRemovableValue &&
 				(event.key === 'Delete' || event.key === 'Backspace')
 			) {
 				event.preventDefault();
-				commit([]);
+				commit(locked);
 			}
 		}
 
-		const showClear = allowClear && !isInert && !loading && selectedValues.length > 0;
+		const showClear = allowClear && !isInert && !loading && hasRemovableValue;
 		// State, not a ref: the popup reads the layer the trigger sits in when it mounts.
 		const [triggerElement, setTriggerElement] = useState<HTMLElement | null>(null);
 		// A `Field` points its `<label for>` at the id Base UI gives the trigger, one commit after it

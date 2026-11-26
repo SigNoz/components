@@ -149,6 +149,36 @@ export function indexComboboxOptions(
 }
 
 /**
+ * The selected values whose row is `disabled`, which no control may remove. A value with no row
+ * in `items` is never locked.
+ *
+ * @access private
+ */
+export function lockedValues(
+	selectedValues: readonly string[],
+	options: ReadonlyMap<string, ComboboxOptionItemType>,
+): string[] {
+	return selectedValues.filter((value) => options.get(value)?.disabled === true);
+}
+
+/**
+ * The values a change from Base UI leaves selected once every locked value is put back where it
+ * was. New values go after the ones that stay.
+ *
+ * @access private
+ */
+export function keepLockedValues(
+	selectedValues: readonly string[],
+	nextValues: readonly string[],
+	locked: readonly string[],
+): string[] {
+	return [
+		...selectedValues.filter((value) => locked.includes(value) || nextValues.includes(value)),
+		...nextValues.filter((value) => !selectedValues.includes(value)),
+	];
+}
+
+/**
  * @access private
  */
 export function shouldShowHints(items: readonly ComboboxItemType[], query: string): boolean {

@@ -122,6 +122,31 @@ A multiple combobox shows a chip per value. `maxDisplayedPills` folds the rest i
 whose tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them. The
 chevron stays on the first row.
 
+A selected row that is `disabled` stays selected. Its chip has no remove button and shows the
+row's `disabledTooltip`, the clear button and `Delete` leave it, and the popup will not untick it.
+When adding and removing sit behind different permissions, set `disabled` from the one that applies
+to the row's current state:
+
+```tsx
+items={roles.map((role) => {
+	const selected = value.includes(role.id);
+	const allowed = selected ? canDetach(role) : canAttach(role);
+
+	return allowed
+		? { type: 'item', value: role.id, label: role.name }
+		: {
+				type: 'item',
+				value: role.id,
+				label: role.name,
+				disabled: true,
+				disabledTooltip: selected ? 'You cannot detach this role' : 'You cannot attach this role',
+			};
+})}
+```
+
+A selected value with no row in `items` can always be removed, so keep the selected rows in
+`items` to lock them. The `Permissions` story shows both.
+
 `displayValue` decides what a single trigger shows for the selected row, in place of the row's
 `prefix`, `displayValue` and label. It also runs while nothing is selected, with `undefined`.
 
