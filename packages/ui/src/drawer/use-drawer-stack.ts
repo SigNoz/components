@@ -128,7 +128,8 @@ export function useDrawerStack({
 
 	const requestCloseFromPanel = (reason: DrawerCloseReasonType): void => {
 		if (reason === 'escape-key' && steps.length > 0) {
-			onTrailSelect?.(steps.length - 1, reason);
+			// The step asks the drawers nested in this one first, as a click on its crumb does.
+			trail.at(-2)?.select?.(reason);
 			return;
 		}
 		if (trail.length === 1 || reason === 'escape-key') {

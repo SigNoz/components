@@ -235,11 +235,8 @@ export function closeTopFirst(
 			asked.add(entry.isOpen);
 
 			const answer = flushSync(() => entry.close(reason, asked));
-			if (typeof answer !== 'boolean') {
-				return answer.then((agreed) => (agreed ? askFrom(index + 1) : false));
-			}
-			if (!answer) {
-				return false;
+			if (answer !== true) {
+				return afterAnswer(answer, (agreed) => agreed && askFrom(index + 1));
 			}
 		}
 

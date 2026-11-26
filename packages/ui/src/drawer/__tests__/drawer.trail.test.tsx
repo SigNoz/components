@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import { forwardRef, Fragment, type MouseEvent, type ReactNode, useEffect, useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent as browserUser } from 'vitest/browser';
@@ -751,6 +751,40 @@ describe('Drawer with a controlled trail', () => {
 
 		expect(seen).toEqual([{ defaultPrevented: false }]);
 		expect(onTrailSelect).not.toHaveBeenCalled();
+	});
+
+	it('waits for a pending close before a crumb or Escape can change steps', async () => {
+		let finish!: () => void;
+		const waiting = new Promise<void>((resolve) => {
+			finish = resolve;
+		});
+		const onTrailSelect = vi.fn();
+		render(
+			<Drawer
+				type="task"
+				stack="breadcrumb"
+				title="Log"
+				testId="log"
+				open
+				trail={[{ title: 'Pod', href: '#pod' }]}
+				onTrailSelect={onTrailSelect}
+				onClose={async (_reason, { cancel }) => {
+					await waiting;
+					cancel();
+				}}
+			>
+				Log details
+			</Drawer>,
+		);
+
+		await browserUser.click(await screen.findByTestId('log-close'));
+		await browserUser.click(screen.getByRole('link', { name: 'Pod' }));
+		await browserUser.keyboard('{Escape}');
+		expect(onTrailSelect).not.toHaveBeenCalled();
+
+		await act(async () => finish());
+		await browserUser.keyboard('{Escape}');
+		expect(onTrailSelect).toHaveBeenCalledExactlyOnceWith(0, 'escape-key');
 	});
 
 	it('steps back to the last step on Esc, and closes on Esc with no step left', async () => {

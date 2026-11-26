@@ -127,7 +127,7 @@ export const drawerArgTypes: Meta<typeof Drawer>['argTypes'] = {
 			category: 'Events',
 			type: {
 				summary:
-					"(reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press' | 'parent-close') => void",
+					"(reason: 'escape-key' | 'outside-press' | 'close-press' | 'swipe' | 'crumb-press' | 'parent-close', details: { cancel: () => void }) => void | Promise<void>",
 			},
 		},
 	},

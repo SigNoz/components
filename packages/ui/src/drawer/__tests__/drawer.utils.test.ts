@@ -3,6 +3,7 @@ import type { AskedDrawers, DrawerTrailEntry } from '../drawer-stack-context.js'
 import type { DrawerCloseReasonType } from '../types.js';
 import {
 	afterAnswer,
+	afterNextTask,
 	buildTrail,
 	closeTopFirst,
 	displayTitle,
@@ -385,6 +386,22 @@ describe('afterAnswer', () => {
 		expect(next).not.toHaveBeenCalled();
 		await expect(answer).resolves.toBe(true);
 		expect(next).toHaveBeenCalledExactlyOnceWith(true);
+	});
+});
+
+describe('afterNextTask', () => {
+	it('hands on the value in a task of its own, after the microtasks that follow it', async () => {
+		const log: string[] = [];
+
+		const handedOn = afterNextTask('agreed').then((value) => {
+			log.push(value);
+		});
+		await Promise.resolve();
+		await Promise.resolve();
+
+		expect(log).toEqual([]);
+		await handedOn;
+		expect(log).toEqual(['agreed']);
 	});
 });
 

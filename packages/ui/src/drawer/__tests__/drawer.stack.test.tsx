@@ -462,6 +462,43 @@ describe('Drawer closing with drawers open over it', () => {
 		});
 	});
 
+	it.each([true, false])('waits for an async close decision (cancel = %s)', async (refuses) => {
+		let finish = (): void => {};
+		const gate = new Promise<void>((resolve) => {
+			finish = resolve;
+		});
+		const onParentClose = vi.fn();
+		const onChildClose = vi.fn(
+			async (_reason: DrawerCloseReasonType, { cancel }: DrawerCloseDetailsType) => {
+				await gate;
+				if (refuses) {
+					cancel();
+				}
+			},
+		);
+		render(
+			<NestedDrawer level="root" type="task" stack="overlay" open onClose={onParentClose}>
+				<NestedDrawer level="child" type="inspector" stack="overlay" open onClose={onChildClose} />
+			</NestedDrawer>,
+		);
+		await waitForSettled();
+		await closeRoot();
+		await closeRoot();
+		expect(onChildClose).toHaveBeenCalledOnce();
+		expect(onParentClose).not.toHaveBeenCalled();
+
+		await act(async () => {
+			finish();
+			// The answer reaches the drawer below one task after the promise settles.
+			await new Promise((resolve) => {
+				setTimeout(resolve, 20);
+			});
+		});
+
+		expect(onParentClose).toHaveBeenCalledTimes(refuses ? 0 : 1);
+		expect(onChildClose).toHaveBeenCalledOnce();
+	});
+
 	it('stays open when a drawer over it cancels', async () => {
 		const onClose = vi.fn();
 		await renderChain({ rootType: 'task', cancel: ['child'], onClose });

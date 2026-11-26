@@ -107,10 +107,12 @@ export function useNestedDrawers({
 	// tells it from a close made after this drawer opened again, which clears it.
 	const pendingRef = useRef<object | null>(null);
 
+	// A step of the trail asks this too, so a crumb or `Esc` does nothing while a close waits.
 	const closeNested = (
 		reason: DrawerCloseReasonType,
 		asked: AskedDrawers = new Set(),
-	): CloseAnswer => closeTopFirst([...nestedRef.current], reason, asked);
+	): CloseAnswer =>
+		pendingRef.current === null && closeTopFirst([...nestedRef.current], reason, asked);
 
 	const closeWithNested = (
 		reason: DrawerCloseReasonType,
