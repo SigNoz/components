@@ -50,13 +50,19 @@ function describeRow(
 ): RowContent {
 	switch (entry.kind) {
 		case 'item':
+			// A selected row is locked by what removing it needs, an unselected one by what picking
+			// it needs.
 			return {
 				label: entry.item.label,
 				prefix: entry.item.prefix,
 				suffix: entry.item.suffix,
 				testId: entry.item.testId ?? partTestId(comboboxTestId, `item-${entry.item.value}`),
-				disabled: entry.item.disabled === true,
-				disabledTooltip: entry.item.disabledTooltip,
+				disabled: entry.selected
+					? entry.item.removeDisabled === true
+					: entry.item.disabled === true,
+				disabledTooltip: entry.selected
+					? entry.item.removeDisabledTooltip
+					: entry.item.disabledTooltip,
 				selectable: true,
 			};
 		case 'hint':

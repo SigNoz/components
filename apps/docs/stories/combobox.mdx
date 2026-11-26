@@ -66,9 +66,10 @@ Every row carries a `type`:
 | `group`     | A heading and the rows under it. A group cannot hold another group.                             |
 | `separator` | A rule between two runs of rows. Dropped when it would land first, last or next to another one. |
 
-An `item` takes a `prefix` and a `suffix` around the label, and `disabled` + `disabledTooltip`. A
-disabled row stays reachable with the arrow keys, so its reason shows on hover. `displayValue` is the
-text the trigger and the chips show in place of the label. A single trigger also shows the selected
+An `item` takes a `prefix` and a `suffix` around the label, `disabled` + `disabledTooltip`, and
+`removeDisabled` + `removeDisabledTooltip` for a selected row that cannot be removed. A disabled row
+stays reachable with the arrow keys, so its reason shows on hover. `displayValue` is the text the
+trigger and the chips show in place of the label. A single trigger also shows the selected
 row's `prefix` before the value, so put an icon there rather than inside a node label.
 
 ```tsx
@@ -121,6 +122,27 @@ const [tags, setTags] = useState<string[]>([]);
 A multiple combobox shows a chip per value. `maxDisplayedPills` folds the rest into a `+N` chip,
 whose tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them. The
 chevron stays on the first row.
+
+`disabled` stops a row being added, and `removeDisabled` + `removeDisabledTooltip` stop it being
+removed once selected. A row that cannot be removed has a chip with no remove button that shows
+`removeDisabledTooltip`; the clear button and `Delete` skip it, and the popup will not untick it.
+The two are independent, so adding and removing can sit behind different permissions, and `items`
+does not change when the selection does:
+
+```tsx
+items={roles.map((role) => ({
+	type: 'item',
+	value: role.id,
+	label: role.name,
+	disabled: !canAttach(role),
+	disabledTooltip: 'You cannot attach this role',
+	removeDisabled: !canDetach(role),
+	removeDisabledTooltip: 'You cannot detach this role',
+}))}
+```
+
+A selected value with no row in `items` can always be removed, so keep the selected rows in
+`items` to lock them. The `Permissions` story shows both.
 
 `displayValue` decides what a single trigger shows for the selected row, in place of the row's
 `prefix`, `displayValue` and label. It also runs while nothing is selected, with `undefined`.

@@ -3,7 +3,10 @@ import type { MouseEvent, PointerEvent, ReactNode } from 'react';
 import { toSearchText } from '../../lib/search-text.js';
 import { partTestId } from '../../lib/utils.js';
 import { TooltipAnchor } from '../../tooltip/subcomponents/tooltip-anchor.js';
+import { hasTooltipContent } from '../../tooltip/tooltip-content-stack-context.js';
+import { TooltipTriggerBoundary } from '../../tooltip/tooltip-trigger-context.js';
 import styles from '../combobox.module.scss';
+import type { ComboboxOptionItemType } from '../types.js';
 
 /**
  * @access private
@@ -12,6 +15,10 @@ export type ComboboxChipsProps = {
 	values: readonly string[];
 	resolveLabel: (value: string) => ReactNode;
 	maxDisplayed: number | undefined;
+	options: ReadonlyMap<string, ComboboxOptionItemType>;
+	/**
+	 * False while the whole combobox is disabled or read-only, whose own reason the trigger shows.
+	 */
 	removable: boolean;
 	onRemove: (value: string) => void;
 	comboboxTestId: string | undefined;
@@ -29,12 +36,16 @@ function stopPress(event: MouseEvent | PointerEvent): void {
  * A remove button is not a focus stop, so the trigger stays the only one. From the keyboard, a
  * value is removed by unticking its row in the popup.
  *
+ * A value whose row is `removeDisabled` is locked: its chip has no remove button and shows the
+ * row's `removeDisabledTooltip` instead.
+ *
  * @access private
  */
 export function ComboboxChips({
 	values,
 	resolveLabel,
 	maxDisplayed,
+	options,
 	removable,
 	onRemove,
 	comboboxTestId,
@@ -47,16 +58,19 @@ export function ComboboxChips({
 			{shown.map((value) => {
 				const label = resolveLabel(value);
 				const testId = partTestId(comboboxTestId, `chip-${value}`);
+				const option = options.get(value);
+				const isLocked = option?.removeDisabled === true;
 
-				return (
+				const chip = (
 					<span
 						key={value}
 						data-slot="combobox-chip"
+						data-disabled={isLocked || undefined}
 						className={styles['combobox__chip']}
 						{...(testId === undefined ? {} : { 'data-testid': testId })}
 					>
 						<span className={styles['combobox__chip-label']}>{label}</span>
-						{removable && (
+						{removable && !isLocked && (
 							<button
 								type="button"
 								tabIndex={-1}
@@ -75,6 +89,18 @@ export function ComboboxChips({
 							</button>
 						)}
 					</span>
+				);
+
+				if (!removable || !isLocked || !hasTooltipContent(option.removeDisabledTooltip)) {
+					return chip;
+				}
+
+				// The trigger's own tooltip only has content while the combobox is disabled or
+				// read-only, when no chip shows a reason, so the two never open on the same hover.
+				return (
+					<TooltipTriggerBoundary key={value}>
+						<TooltipAnchor content={option.removeDisabledTooltip}>{chip}</TooltipAnchor>
+					</TooltipTriggerBoundary>
 				);
 			})}
 			{hidden.length > 0 && (

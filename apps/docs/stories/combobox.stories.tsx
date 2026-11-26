@@ -9,7 +9,7 @@ import {
 import { ForceOpenProvider } from '@signozhq/ui/testing';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ReactElement, type ReactNode, useEffect, useState } from 'react';
-import { expect, fireEvent, fn, waitFor } from 'storybook/test';
+import { expect, fireEvent, fn, userEvent, waitFor, within } from 'storybook/test';
 import { allModes } from '../.storybook/modes.js';
 import styles from './combobox.stories.module.css';
 import { comboboxArgTypes } from './shared/combobox-arg-types.js';
@@ -431,6 +431,31 @@ const TRIGGER_ROWS: TriggerRow[] = [
 			defaultValue: ['react', 'vue'],
 			disabled: true,
 			disabledTooltip: undefined,
+		},
+	},
+	{
+		id: 'trigger-locked-values',
+		label: 'removeDisabled row',
+		note: (
+			<>
+				The chip of a selected <code>removeDisabled</code> row has no remove button and shows the
+				row's <code>removeDisabledTooltip</code> on hover. The clear button and <code>Delete</code>{' '}
+				leave it.
+			</>
+		),
+		props: {
+			items: [
+				option('react', 'React', {
+					removeDisabled: true,
+					removeDisabledTooltip: 'You cannot detach React',
+				}),
+				...FRAMEWORKS.slice(1),
+			],
+			placeholder: 'Select frameworks...',
+			searchInputProps: { placeholder: 'Search frameworks' },
+			multiple: true,
+			defaultValue: ['react', 'vue'],
+			allowClear: true,
 		},
 	},
 	{
@@ -875,6 +900,65 @@ function TriggerRowView({ id, label, note, props, pseudo }: TriggerRow): ReactEl
 		</>
 	);
 }
+
+// Built once: what each row needs to be added or removed does not depend on the selection.
+const ROLE_ITEMS: ComboboxOptionItemType[] = [
+	option('viewer', 'Viewer'),
+	option('editor', 'Editor', {
+		removeDisabled: true,
+		removeDisabledTooltip: 'You cannot detach Editor',
+	}),
+	option('admin', 'Admin', { disabled: true, disabledTooltip: 'You cannot attach Admin' }),
+	option('billing', 'Billing', {
+		disabled: true,
+		disabledTooltip: 'You cannot attach Billing',
+		removeDisabled: true,
+		removeDisabledTooltip: 'You cannot detach Billing',
+	}),
+];
+
+function PermissionsView(): ReactElement {
+	const [roles, setRoles] = useState(['editor', 'admin']);
+
+	return (
+		<div className="story-container">
+			<Combobox
+				multiple
+				allowClear
+				aria-label="Roles"
+				placeholder="Select roles..."
+				searchInputProps={{ placeholder: 'Search roles' }}
+				testId="roles"
+				value={roles}
+				onChange={setRoles}
+				items={ROLE_ITEMS}
+			/>
+		</div>
+	);
+}
+
+/**
+ * Adding and removing behind different permissions: `disabled` stops a row being added,
+ * `removeDisabled` stops it being removed once selected. Editor cannot be detached, Admin cannot be
+ * attached again once removed, Billing can do neither.
+ */
+export const Permissions: Story = {
+	parameters: {
+		chromatic: { disableSnapshot: true },
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		await expect(canvas.getByTestId('roles-chip-editor')).toHaveAttribute('data-disabled');
+		await expect(canvas.queryByTestId('roles-chip-editor-remove')).toBeNull();
+
+		await userEvent.click(canvas.getByTestId('roles-chip-admin-remove'));
+
+		await expect(canvas.queryByTestId('roles-chip-admin')).toBeNull();
+		await expect(canvas.getByTestId('roles-chip-editor')).toBeInTheDocument();
+	},
+	render: () => <PermissionsView />,
+};
 
 /**
  * Every state the trigger can show, and every popup held open at once in one snapshot, with the
