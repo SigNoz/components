@@ -231,7 +231,7 @@ describe('Drawer props', () => {
 	test('accepts an onClose that reads the details, and one that takes the reason only', () => {
 		expectTypeOf<DrawerCloseDetailsType>().toEqualTypeOf<{ cancel: () => void }>();
 		expectTypeOf<NonNullable<DrawerProps['onClose']>>().toEqualTypeOf<
-			(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => void | Promise<void>
+			(reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => unknown
 		>();
 		assertType(
 			<Drawer
@@ -308,6 +308,27 @@ describe('Drawer props', () => {
 				onClose={(): Promise<void> => Promise.resolve()}
 				title="T"
 			>
+				Body
+			</Drawer>,
+		);
+	});
+
+	test('accepts an onClose that returns what the call in it returns', () => {
+		const dispatch = (action: { type: string }): { type: string } => action;
+		const push = async (_url: string): Promise<boolean> => true;
+		assertType(
+			<Drawer
+				type="task"
+				stack="overlay"
+				open
+				onClose={() => dispatch({ type: 'drawer/close' })}
+				title="T"
+			>
+				Body
+			</Drawer>,
+		);
+		assertType(
+			<Drawer type="task" stack="overlay" open onClose={() => push('/pods')} title="T">
 				Body
 			</Drawer>,
 		);
@@ -741,32 +762,14 @@ describe('Drawer value types', () => {
 		const readsDialogReasons = (_reason: DialogCloseReasonType) => noop();
 
 		assertType(
-			// @ts-expect-error - `onClose` is called with five reasons
+			// @ts-expect-error - `onClose` is called with six reasons
 			<Drawer type="task" stack="overlay" open onClose={readsEscape} title="T">
 				Body
 			</Drawer>,
 		);
 		assertType(
-			// @ts-expect-error - the reasons of a Dialog miss `swipe` and `crumb-press`
+			// @ts-expect-error - the reasons of a Dialog miss `swipe`, `crumb-press` and `parent-close`
 			<Drawer type="task" stack="overlay" open onClose={readsDialogReasons} title="T">
-				Body
-			</Drawer>,
-		);
-	});
-
-	test('rejects an onClose that returns a value', () => {
-		const savesName = async (): Promise<string> => 'saved';
-		const countsCloses = (): number => 1;
-
-		assertType(
-			// @ts-expect-error - a promise from `onClose` resolves to nothing
-			<Drawer type="task" stack="overlay" open onClose={savesName} title="T">
-				Body
-			</Drawer>,
-		);
-		assertType(
-			// @ts-expect-error - `onClose` returns nothing, or a promise
-			<Drawer type="task" stack="overlay" open onClose={countsCloses} title="T">
 				Body
 			</Drawer>,
 		);

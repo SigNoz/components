@@ -492,8 +492,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * `onClose` may return a promise, for a check that takes time, such as a confirm or a save:
 		 * the drawers under it wait for it, and `cancel()` counts until it settles. A promise that
 		 * rejects counts as `cancel()`, and its error is reported as an uncaught error. While it
-		 * waits, more requests to close this drawer are ignored, and a promise that never settles
-		 * keeps ignoring them until the drawer opens again.
+		 * waits, more requests from the user to close this drawer are ignored, and a promise that
+		 * never settles keeps ignoring them until the drawer opens again. `parent-close` still
+		 * reaches it, since it unmounts with the drawer below anyway. Any value with a `then`
+		 * method counts as a promise, and any other value returned is ignored, such as the action
+		 * `dispatch` returns.
 		 *
 		 * @note Required with `open`, rejected with a `handle`: a drawer on a handle closes itself on
 		 * every request, with no `cancel()`, and `useDrawerHandle(onOpenChange)` reports it. A
@@ -502,7 +505,8 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note To keep the drawer open for one reason, call `cancel()` for that reason, leave `open`
 		 * as it is, and say why in the code. A drawer that neither cancels nor closes counts as
 		 * closing, and unmounts with the drawer below without hearing of it. An `inspector` never
-		 * reports `outside-press`: the page behind it stays usable.
+		 * reports `outside-press` for a press beside itself, as the page behind it stays usable.
+		 * Nested in a `task`, it gets the reason the task closes for, `outside-press` included.
 		 *
 		 * @note In a breadcrumb trail, a drawer that calls `cancel()` stops the leave: the drawers
 		 * under it stay open.
@@ -510,6 +514,11 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * @note Drawers nested in it that are open get the same request first, the one on top
 		 * first, and one that calls `cancel()` keeps this one open too. One that returns a promise
 		 * is waited for.
+		 *
+		 * @note A drawer nested in it whose `onClose` closes this one too in a transition, such as
+		 * `router.push` in Next.js, in a timer, or after an `await` in a promise it does not return,
+		 * leaves this one reading open, so this one gets its own `onClose` for the same press: make
+		 * both handlers safe to run together, by setting state rather than calling `history.back()`.
 		 *
 		 * @note When the app closes it instead, with `open={false}` or `handle.close()`, or removes
 		 * it from the tree while it is open, each drawer nested in it that is open gets
@@ -522,10 +531,7 @@ export type DrawerProps<Payload = unknown> = Pick<ComponentProps<'div'>, 'id'> &
 		 * this drawer's flag, `setView((view) => ({ ...view, logOpen: false }))`: a copy of the
 		 * object the handler rendered with puts back the flag the drawer before it cleared.
 		 */
-		onClose?: (
-			reason: DrawerCloseReasonType,
-			details: DrawerCloseDetailsType,
-		) => void | Promise<void>;
+		onClose?: (reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => unknown;
 		/**
 		 * The name of the record or the job, and the accessible name of the panel. One line: a name
 		 * longer than the header is cut with `…`, and the full text shows in a tooltip.

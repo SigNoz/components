@@ -1170,3 +1170,112 @@ describe('Drawer closed from the app with drawers over it that share one state o
 		expect(document.querySelector('[data-testid="trace"]') !== null).toBe(traceBack);
 	});
 });
+
+/**
+ * A pod with a log over it and a trace over the log. The trace's `onClose` throws on
+ * `parent-close`, the way a handler that reads the selection the app just cleared does.
+ */
+function ThrowingTracePage({
+	failure,
+	onClosed,
+	onApp,
+}: {
+	failure: Error;
+	onClosed: (name: 'log' | 'trace', reason: DrawerCloseReasonType) => void;
+	onApp: (close: () => void, remove: () => void) => void;
+}): ReactNode {
+	const [podOpen, setPodOpen] = useState(true);
+	const [rendered, setRendered] = useState(true);
+
+	useEffect(() => {
+		onApp(
+			() => setPodOpen(false),
+			() => setRendered(false),
+		);
+	});
+
+	return (
+		<>
+			<button type="button">Page</button>
+			{rendered ? (
+				<Drawer
+					type="task"
+					stack="overlay"
+					open={podOpen}
+					onClose={() => setPodOpen(false)}
+					title="Pod"
+					testId="pod"
+				>
+					<Drawer
+						type="inspector"
+						stack="overlay"
+						open
+						onClose={(reason) => onClosed('log', reason)}
+						title="Log"
+						testId="log"
+					>
+						<Drawer
+							type="inspector"
+							stack="overlay"
+							open
+							onClose={(reason) => {
+								onClosed('trace', reason);
+								if (reason === 'parent-close') {
+									throw failure;
+								}
+							}}
+							title="Trace"
+							testId="trace"
+						>
+							The trace.
+						</Drawer>
+					</Drawer>
+				</Drawer>
+			) : null}
+		</>
+	);
+}
+
+describe('Drawer closed from the app with a drawer over it whose onClose throws on parent-close', () => {
+	it.each([
+		['closes', 'close'],
+		['removes', 'remove'],
+	] as const)(
+		'reports the error and still tells the drawer below it when the app %s the pod',
+		async (_name, action) => {
+			const reported = vi.spyOn(globalThis, 'reportError').mockImplementation(() => {});
+			try {
+				const failure = new Error('No pod is selected');
+				const onClosed = vi.fn();
+				const app = { close: () => {}, remove: () => {} };
+				render(
+					<ThrowingTracePage
+						failure={failure}
+						onClosed={onClosed}
+						onApp={(close, remove) => {
+							app.close = close;
+							app.remove = remove;
+						}}
+					/>,
+				);
+				await waitForSettled();
+
+				act(() => {
+					app[action]();
+				});
+				await waitFor(() => {
+					expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+				});
+
+				expect(screen.getByRole('button', { name: 'Page' })).toBeInTheDocument();
+				expect(reported).toHaveBeenCalledExactlyOnceWith(failure);
+				expect(onClosed.mock.calls).toEqual([
+					['trace', 'parent-close'],
+					['log', 'parent-close'],
+				]);
+			} finally {
+				reported.mockRestore();
+			}
+		},
+	);
+});

@@ -195,6 +195,22 @@ describe('Drawer closing with a drawer over it that closes after its onClose ret
 		]);
 	});
 
+	it('calls the pod onClose for the same press when the log removes the pod in a transition, once', async () => {
+		const { onClosed } = await openPage({
+			logHandler: (_reason, _details, actions) => {
+				startTransition(actions.removePod);
+			},
+		});
+
+		await userEvent.click(screen.getByTestId('pod-close'));
+		await waitForGone('pod', 'log');
+
+		expect(onClosed.mock.calls).toEqual([
+			['log', 'close-press'],
+			['pod', 'close-press'],
+		]);
+	});
+
 	it('leaves the trail on the same press when the log closes in a transition, with no parent-close for the log', async () => {
 		const { onClosed } = await openPage({
 			stack: 'breadcrumb',
@@ -368,4 +384,132 @@ describe('Drawer cancel()', () => {
 		expect(queryPanel('pod')).toHaveAttribute('data-open');
 		expect(queryPanel('log')).toBeNull();
 	});
+});
+
+type SiblingName = 'pod' | 'form' | 'log';
+
+/**
+ * A pod with two drawers over it, side by side: a form opened first and a log opened after it, on
+ * top. What each `onClose` does is up to the test; a drawer with no handler stays open without
+ * cancelling, which agrees to the close.
+ */
+function SiblingsPage({
+	handlers,
+	onClosed,
+	onClosePod,
+}: {
+	handlers: Partial<Record<SiblingName, (details: DrawerCloseDetailsType) => void>>;
+	onClosed: (name: SiblingName, reason: DrawerCloseReasonType) => void;
+	onClosePod: (close: () => void) => void;
+}): ReactNode {
+	const [podOpen, setPodOpen] = useState(true);
+	const onClose =
+		(name: SiblingName) => (reason: DrawerCloseReasonType, details: DrawerCloseDetailsType) => {
+			onClosed(name, reason);
+			handlers[name]?.(details);
+		};
+
+	useEffect(() => {
+		onClosePod(() => setPodOpen(false));
+	});
+
+	return (
+		<Drawer
+			type="task"
+			stack="overlay"
+			open={podOpen}
+			onClose={onClose('pod')}
+			title="Pod"
+			testId="pod"
+		>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={onClose('form')}
+				title="Form"
+				testId="form"
+			>
+				The form.
+			</Drawer>
+			<Drawer
+				type="inspector"
+				stack="overlay"
+				open
+				onClose={onClose('log')}
+				title="Log"
+				testId="log"
+			>
+				The log.
+			</Drawer>
+		</Drawer>
+	);
+}
+
+describe('Drawer that agreed to a press another drawer refused', () => {
+	it('gets parent-close when a drawer opened before it refused, once the app closes the drawer below', async () => {
+		const onClosed = vi.fn();
+		let closePod = (): void => {};
+		render(
+			<SiblingsPage
+				handlers={{ form: (details) => details.cancel() }}
+				onClosed={onClosed}
+				onClosePod={(close) => {
+					closePod = close;
+				}}
+			/>,
+		);
+		await waitForSettled();
+
+		await userEvent.click(screen.getByTestId('pod-close'));
+		await waitForSettled();
+		expect(onClosed.mock.calls).toEqual([
+			['log', 'close-press'],
+			['form', 'close-press'],
+		]);
+
+		act(closePod);
+		await waitFor(() => {
+			expect(document.querySelector('[data-testid="pod"]')).toBeNull();
+		});
+
+		expect(onClosed.mock.calls).toEqual([
+			['log', 'close-press'],
+			['form', 'close-press'],
+			['log', 'parent-close'],
+			['form', 'parent-close'],
+		]);
+	});
+
+	it.each([
+		['its close button', 'overlay', 'pod-close'],
+		['the trail', 'breadcrumb', 'log-close'],
+	] as const)(
+		'gets parent-close when the drawer below refused a press on %s, once the app closes it',
+		async (_name, stack, closeButton) => {
+			const { onClosed, closeFromApp } = await openPage({
+				stack,
+				logHandler: () => {},
+				podHandler: (_reason, details) => {
+					details.cancel();
+				},
+			});
+
+			await userEvent.click(screen.getByTestId(closeButton));
+			await waitForSettled();
+			expect(onClosed.mock.calls).toEqual([
+				['log', 'close-press'],
+				['pod', 'close-press'],
+			]);
+
+			closeFromApp();
+			await waitForGone('pod', 'log');
+
+			expect(onClosed.mock.calls).toEqual([
+				['log', 'close-press'],
+				['pod', 'close-press'],
+				['log', 'parent-close'],
+			]);
+		},
+	);
 });

@@ -94,8 +94,9 @@ export function isPromiseLike(value: unknown): value is PromiseLike<unknown> {
 }
 
 /**
- * Reports the error of an `onClose` promise that rejected as an uncaught error. The request that
- * called it has gone on by then, so nothing is left to throw into, and the app should still see it.
+ * Reports an error of an `onClose` as an uncaught error, when nothing is left to throw into: a
+ * promise that rejected after its request went on, or a throw on `parent-close`, which runs in
+ * React's commit. The app should still see it.
  *
  * @access private
  */
@@ -136,6 +137,38 @@ export function afterAnswer(
 	next: (agreed: boolean) => CloseAnswer,
 ): CloseAnswer {
 	return typeof answer === 'boolean' ? next(answer) : answer.then(next);
+}
+
+const refusedPresses = new WeakSet<AskedDrawers>();
+
+/**
+ * Hands on the answer to the press `asked`, and remembers the press as refused when it is `false`.
+ *
+ * @access private
+ */
+export function answerPress(asked: AskedDrawers, answer: CloseAnswer): CloseAnswer {
+	if (answer === false) {
+		refusedPresses.add(asked);
+	} else if (answer !== true) {
+		// Kept out of the chain, so the caller's own handlers on `answer` run no later.
+		void answer.then((agreed) => {
+			if (!agreed) {
+				refusedPresses.add(asked);
+			}
+		});
+	}
+
+	return answer;
+}
+
+/**
+ * Whether a drawer refused the press `asked`, or the press stopped at a drawer whose close waits.
+ * A drawer that agreed to a refused press may stay open, so it gets `parent-close` again.
+ *
+ * @access private
+ */
+export function wasRefused(asked: AskedDrawers): boolean {
+	return refusedPresses.has(asked);
 }
 
 /**

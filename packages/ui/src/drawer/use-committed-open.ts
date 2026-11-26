@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 
 /**
@@ -12,17 +12,24 @@ import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.j
  * @access private
  */
 export function useCommittedOpen(isOpen: boolean): () => boolean {
-	// Trail entries retain their reader across async closes. Each opening needs its own identity.
-	const opening = useMemo(() => (isOpen ? Symbol() : null), [isOpen]);
+	// Trail entries retain their reader across async closes, so each opening needs its own identity.
+	// It lives in state, which only an opening or a close replaces: a memo may be dropped, and Fast
+	// Refresh runs it again, which would make an open drawer read as closed to its old readers.
+	const [opening, setOpening] = useState(() => ({ isOpen, token: isOpen ? Symbol() : null }));
+	let { token } = opening;
+	if (opening.isOpen !== isOpen) {
+		token = isOpen ? Symbol() : null;
+		setOpening({ isOpen, token });
+	}
 	const committedRef = useRef<symbol | null>(null);
 
 	useIsomorphicLayoutEffect(() => {
-		committedRef.current = opening;
+		committedRef.current = token;
 
 		return () => {
 			committedRef.current = null;
 		};
-	}, [opening]);
+	}, [token]);
 
-	return useCallback(() => opening !== null && committedRef.current === opening, [opening]);
+	return useCallback(() => token !== null && committedRef.current === token, [token]);
 }

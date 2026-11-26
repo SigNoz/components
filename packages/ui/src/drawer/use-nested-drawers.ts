@@ -2,7 +2,14 @@ import { useEffect, useRef } from 'react';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import type { AskedDrawers, CloseAnswer, NestedDrawerEntry } from './drawer-stack-context.js';
 import type { DrawerCloseReasonType } from './types.js';
-import { afterAnswer, afterNextTask, closeTopFirst } from './utils.js';
+import {
+	afterAnswer,
+	afterNextTask,
+	answerPress,
+	closeTopFirst,
+	reportAsyncError,
+	wasRefused,
+} from './utils.js';
 
 type UseNestedDrawersOptions = {
 	/**
@@ -47,8 +54,9 @@ type NestedDrawers = {
  * When the app closes the drawer instead, with `open={false}` or `handle.close()`, the drawers
  * still open over it get `parent-close` in the same commit, the one on top first, so they slide out
  * with it rather than vanish when it unmounts. That reaches every drawer over it, even past one
- * whose app keeps it open, but a drawer that agreed to a close already is not asked again. A drawer
- * the app removes from the tree while it is open sends it as it goes, with nothing to slide out.
+ * whose app keeps it open, but a drawer that agreed to a close already is not asked again, unless a
+ * drawer below it refused that close. A drawer the app removes from the tree while it is open sends
+ * it as it goes, with nothing to slide out.
  *
  * @access private
  */
@@ -73,24 +81,25 @@ export function useNestedDrawers({
 	// `onClose` of this render may read state that is gone by then.
 	const requestCloseRef = useRef(requestClose);
 
-	// This drawer agreed to a close, and its app closes it, maybe later: in a transition, a timer or
+	// The press this drawer agreed to, and its app closes it, maybe later: in a transition, a timer or
 	// after an `await`, which React commits in a task of its own. A `parent-close` meanwhile, such as
 	// from an `onClose` that went back and so removed the drawer below, would be a second `onClose`
-	// for one close. Kept until it commits closed, opens again, or is asked again.
-	const agreedRef = useRef(false);
+	// for one close. Kept until it commits closed, opens again, or is asked again, and no longer
+	// counts once a drawer below refused that press, as its app may keep it open then.
+	const agreedRef = useRef<AskedDrawers | null>(null);
 	// The request of this opening that is waiting for its answer. A drawer that closes and opens
 	// again while its old `onClose` promise waits is a new opening, and that answer is not its own.
 	const askRef = useRef<{ invoking: boolean } | null>(null);
-	const askToClose = (reason: DrawerCloseReasonType): CloseAnswer => {
+	const askToClose = (reason: DrawerCloseReasonType, asked: AskedDrawers): CloseAnswer => {
 		const ask = { invoking: true };
 		askRef.current = ask;
-		agreedRef.current = false;
+		agreedRef.current = null;
 
 		const settle = (agreed: boolean): boolean => {
 			if (askRef.current !== ask) {
 				return false;
 			}
-			agreedRef.current = agreed;
+			agreedRef.current = agreed ? asked : null;
 
 			return agreed;
 		};
@@ -125,14 +134,17 @@ export function useNestedDrawers({
 		asked: AskedDrawers = new Set(),
 	): CloseAnswer => {
 		if (pendingRef.current !== null) {
-			return false;
+			return answerPress(asked, false);
 		}
 
 		const opening = openingRef.current;
-		return closeTopFirst(
-			() => (openingRef.current === opening && readIsOpen() ? nestedRef.current : []),
-			reason,
+		return answerPress(
 			asked,
+			closeTopFirst(
+				() => (openingRef.current === opening && readIsOpen() ? nestedRef.current : []),
+				reason,
+				asked,
+			),
 		);
 	};
 
@@ -141,7 +153,7 @@ export function useNestedDrawers({
 		asked: AskedDrawers = new Set(),
 	): CloseAnswer => {
 		if (pendingRef.current !== null) {
-			return false;
+			return answerPress(asked, false);
 		}
 
 		const token = {};
@@ -155,24 +167,29 @@ export function useNestedDrawers({
 			}
 			// The `onClose` of a drawer over this one may close this one too, such as by clearing the
 			// selection that renders both, and so may the app while one decides. Asking again would
-			// run its close twice.
+			// run its close twice. This sees a close committed in the `flushSync` that asked that
+			// drawer, or after its returned promise settled and a task passed, but not one still
+			// waiting in a transition or a timer.
 			if (!readIsOpen()) {
 				return true;
 			}
 
-			return askToClose(reason);
+			return askToClose(reason, asked);
 		});
 		if (typeof answer === 'boolean') {
-			return answer;
+			return answerPress(asked, answer);
 		}
 
 		pendingRef.current = token;
 
-		return answer.finally(() => {
-			if (pendingRef.current === token) {
-				pendingRef.current = null;
-			}
-		});
+		return answerPress(
+			asked,
+			answer.finally(() => {
+				if (pendingRef.current === token) {
+					pendingRef.current = null;
+				}
+			}),
+		);
 	};
 
 	// The drawers over this one go first, and each passes it on before its own `onClose`: one whose
@@ -192,7 +209,7 @@ export function useNestedDrawers({
 	const reopenUnder = (): void => {
 		openingRef.current += 1;
 		parentClosedRef.current = false;
-		agreedRef.current = false;
+		agreedRef.current = null;
 		askRef.current = null;
 		pendingRef.current = null;
 		for (const entry of nestedRef.current) {
@@ -206,9 +223,15 @@ export function useNestedDrawers({
 		parentClosedRef.current = true;
 		closeNestedWithParent();
 		// A synchronous navigation can remove the parent inside the original onClose.
-		if (!agreedRef.current && !askRef.current?.invoking) {
-			// It cannot refuse, and nothing waits for it.
-			void requestClose('parent-close');
+		const agreed = agreedRef.current;
+		if ((agreed === null || wasRefused(agreed)) && !askRef.current?.invoking) {
+			// It cannot refuse, and nothing waits for it. This runs in React's commit, where a throw
+			// unmounts the app up to the nearest error boundary and skips the drawers below this one.
+			try {
+				void requestClose('parent-close');
+			} catch (error) {
+				reportAsyncError(error);
+			}
 		}
 	};
 
@@ -223,7 +246,7 @@ export function useNestedDrawers({
 			return;
 		}
 
-		agreedRef.current = false;
+		agreedRef.current = null;
 		// A close the user asked for has closed every drawer over this one already.
 		closeNestedWithParent();
 	}, [isOpen]);
