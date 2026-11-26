@@ -24,6 +24,7 @@ import { Switch } from './switch/switch.js';
 import { ForceOpenProvider } from './testing/index.js';
 import { ToggleGroup } from './toggle-group/index.js';
 import { Tooltip } from './tooltip/presets/tooltip.js';
+import { TooltipTone } from './tooltip/subcomponents/tooltip-tone.js';
 
 // The types reject `className` and `style` on these components. This is the value that gets past
 // them anyway: a cast, an untyped spread, a JavaScript caller.
@@ -400,6 +401,24 @@ describe('className and style that get past the types', () => {
 
 		expectNoStrayStyle(screen.getByRole('tooltip'));
 		expectNoStrayStyle(screen.getByRole('button'));
+	});
+
+	it('do not reach TooltipTone', () => {
+		render(
+			<Tooltip
+				title={
+					<TooltipTone tone="danger" {...STRAY}>
+						Permission denied
+					</TooltipTone>
+				}
+			>
+				<button type="button">Hover</button>
+			</Tooltip>,
+			{ wrapper: ForceOpenProvider },
+		);
+
+		expectNoStrayStyle(document.querySelector('[data-slot="tooltip-tone"]'));
+		expectNoStrayStyle(screen.getByRole('tooltip'));
 	});
 
 	it('do not reach the Dropdown popup', async () => {

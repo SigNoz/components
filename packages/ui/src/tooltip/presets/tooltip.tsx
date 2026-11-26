@@ -43,6 +43,8 @@ import type { TooltipProps } from '../types.js';
  * - Portalled into `container`, else the provider's container, else the panel of the `Dialog` or
  *   `Drawer` it sits in, else `document.body`.
  * - Clamped to 6 lines (`--tooltip-max-lines`) at 26.25rem. Longer content wants a popover.
+ * - A `TooltipTone` in `title` sets the tone of the whole popup, such as `danger`, and mirrors it
+ *   in `data-tone`.
  *
  * ### A disabled trigger never opens
  *

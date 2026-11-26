@@ -45,6 +45,14 @@
 	padding-block-start: 6rem;
 }
 
+.toneColumn {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 8rem;
+	padding-block-start: 6rem;
+}
+
 .triggerColumn {
 	display: flex;
 	flex-direction: column;

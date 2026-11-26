@@ -12,9 +12,14 @@
 }
 
 .tooltip__content {
+	// Every popup sets its own colours, so the tone of one never reaches a popup inside it.
+	--tooltip-internal-background-color: var(--tooltip-background-color, var(--tooltip-background));
+	--tooltip-internal-border-color: var(--tooltip-border-color, var(--tooltip-border));
+	--tooltip-internal-foreground: var(--tooltip-foreground, var(--tooltip-label));
+	--tooltip-internal-divider: var(--tooltip-divider-background-color, var(--tooltip-divider));
 	box-sizing: border-box;
-	background-color: var(--tooltip-background-color, var(--tooltip-background));
-	color: var(--tooltip-foreground, var(--tooltip-label));
+	background-color: var(--tooltip-internal-background-color);
+	color: var(--tooltip-internal-foreground);
 	width: var(--tooltip-width, fit-content);
 	max-width: var(--tooltip-max-width, 26.25rem);
 	// for now, I won't enable this because this has potential to break many places on signoz/signoz
@@ -35,7 +40,7 @@
 	text-align: var(--tooltip-text-align, start);
 	border-width: var(--tooltip-border-width, 1px);
 	border-style: var(--tooltip-border-style, solid);
-	border-color: var(--tooltip-border-color, var(--tooltip-border));
+	border-color: var(--tooltip-internal-border-color);
 	box-shadow: var(--tooltip-box-shadow, var(--tooltip-shadow));
 	backdrop-filter: var(--tooltip-backdrop-filter, blur(30px));
 	// Backstop: past six lines the content belongs in a popover.
@@ -43,6 +48,21 @@
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: var(--tooltip-max-lines, 6);
 	overflow: var(--tooltip-overflow, hidden);
+
+	// Set by the `TooltipTone`s rendered in this popup, never by one in a popup portalled into it.
+	&[data-tone='danger'] {
+		--tooltip-internal-background-color: var(--tooltip-danger-background-color, var(--tooltip-danger-background));
+		--tooltip-internal-border-color: var(--tooltip-danger-border-color, var(--tooltip-danger-border));
+		--tooltip-internal-foreground: var(--tooltip-danger-foreground, var(--tooltip-danger-label));
+		--tooltip-internal-divider: var(
+			--tooltip-danger-divider-background-color,
+			var(--tooltip-danger-divider)
+		);
+	}
+}
+
+.tooltip__tone {
+	display: var(--tooltip-tone-display, contents);
 }
 
 .tooltip__trigger {
@@ -61,6 +81,6 @@
 
 .tooltip__divider {
 	block-size: var(--tooltip-divider-block-size, 1px);
-	background-color: var(--tooltip-divider-background-color, var(--tooltip-divider));
+	background-color: var(--tooltip-internal-divider);
 	margin-inline: var(--tooltip-divider-margin-inline, calc(-1 * var(--spacing-4)));
 }
