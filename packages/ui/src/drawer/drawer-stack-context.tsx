@@ -62,6 +62,10 @@ export type DrawerTrailEntry = Omit<DrawerCrumbType, 'title'> & {
  */
 export type NestedDrawerEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> & {
 	/**
+	 * Current registrations, so a press can find drawers opened inside this one after it agreed.
+	 */
+	getNested: () => Iterable<NestedDrawerEntry>;
+	/**
 	 * Asks it to close with `parent-close`. It unmounts with the drawer below whatever its app
 	 * does, and one the app keeps open is back when the drawer below opens again.
 	 */

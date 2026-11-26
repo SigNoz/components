@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { useIsomorphicLayoutEffect } from '../lib/use-isomorphic-layout-effect.js';
 import type { AskedDrawers, CloseAnswer, NestedDrawerEntry } from './drawer-stack-context.js';
 import type { DrawerCloseReasonType } from './types.js';
@@ -128,36 +129,24 @@ export function useNestedDrawers({
 	// tells it from a close made after this drawer opened again, which clears it.
 	const pendingRef = useRef<object | null>(null);
 
-	// A step of the trail asks this too, so a crumb or `Esc` does nothing while a close waits.
-	const closeNested = (
+	// A trail step and a full close both wait on this drawer, even if the inspector that is
+	// deciding has already removed itself from the nested stack.
+	const runClose = (
 		reason: DrawerCloseReasonType,
-		asked: AskedDrawers = new Set(),
-	): CloseAnswer => {
-		if (pendingRef.current !== null) {
-			return answerPress(asked, false);
-		}
-
-		const opening = openingRef.current;
-		return answerPress(
-			asked,
-			closeTopFirst(
-				() => (openingRef.current === opening && readIsOpen() ? nestedRef.current : []),
-				reason,
-				asked,
-			),
-		);
-	};
-
-	const closeWithNested = (
-		reason: DrawerCloseReasonType,
-		asked: AskedDrawers = new Set(),
+		asked: AskedDrawers,
+		includeSelf: boolean,
 	): CloseAnswer => {
 		if (pendingRef.current !== null) {
 			return answerPress(asked, false);
 		}
 
 		const token = {};
-		const nested = closeNested(reason, asked);
+		const opening = openingRef.current;
+		const nested = closeTopFirst(
+			() => (openingRef.current === opening && readIsOpen() ? nestedRef.current : []),
+			reason,
+			asked,
+		);
 		const answer = afterAnswer(nested, (nestedAgreed) => {
 			if (!nestedAgreed) {
 				return false;
@@ -170,11 +159,15 @@ export function useNestedDrawers({
 			// run its close twice. This sees a close committed in the `flushSync` that asked that
 			// drawer, or after its returned promise settled and a task passed, but not one still
 			// waiting in a transition or a timer.
-			if (!readIsOpen()) {
+			if (!includeSelf || !readIsOpen()) {
 				return true;
 			}
 
-			return askToClose(reason, asked);
+			// A promise resumes outside the flush that asked this drawer. Commit what its own
+			// handler does before the next ancestor reads whether it is still open.
+			return typeof nested === 'boolean'
+				? askToClose(reason, asked)
+				: flushSync(() => askToClose(reason, asked));
 		});
 		if (typeof answer === 'boolean') {
 			return answerPress(asked, answer);
@@ -191,6 +184,11 @@ export function useNestedDrawers({
 			}),
 		);
 	};
+
+	const closeNested: NestedDrawers['closeNested'] = (reason, asked = new Set()) =>
+		runClose(reason, asked, false);
+	const closeWithNested: NestedDrawers['closeWithNested'] = (reason, asked = new Set()) =>
+		runClose(reason, asked, true);
 
 	// The drawers over this one go first, and each passes it on before its own `onClose`: one whose
 	// app keeps it open after `parent-close` still unmounts with this one, and so do the drawers over
@@ -290,6 +288,7 @@ export function useNestedDrawers({
 		}
 
 		return nestInParent({
+			getNested: () => nestedRef.current,
 			close: (reason, asked) => closeRef.current(reason, asked),
 			closeWithParent: () => {
 				closeWithParentRef.current();

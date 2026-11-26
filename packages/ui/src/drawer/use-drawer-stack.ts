@@ -112,9 +112,21 @@ export function useDrawerStack({
 		readIsOpen,
 		requestClose,
 	});
-	// The drawers nested in this one close in a `flushSync` that renders the app again, so the
-	// `onTrailSelect` of the render a step was built in may read state that is gone by then.
-	const selectStep = useLatestCallback(onTrailSelect);
+	// The nested close can re-render the trail before this runs. Apps often rebuild the step
+	// objects on each render, so check the link destination, or the label and custom link.
+	const selectStep = useLatestCallback(
+		(index: number, reason: DrawerTrailSelectReasonType, step: DrawerTrailStepType) => {
+			const current = steps[index];
+			if (
+				current &&
+				current.href === step.href &&
+				(step.href !== undefined ||
+					(current.title === step.title && current.render === step.render))
+			) {
+				onTrailSelect?.(index, reason);
+			}
+		},
+	);
 	const trail = buildTrail({
 		parentTrail: trailParent?.trail ?? [],
 		steps,

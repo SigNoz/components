@@ -2,7 +2,12 @@ import type { Drawer } from '@base-ui/react/drawer';
 import type { ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { hasTitle } from '../breadcrumb/utils.js';
-import type { AskedDrawers, CloseAnswer, DrawerTrailEntry } from './drawer-stack-context.js';
+import type {
+	AskedDrawers,
+	CloseAnswer,
+	DrawerTrailEntry,
+	NestedDrawerEntry,
+} from './drawer-stack-context.js';
 import type {
 	DrawerCloseReasonType,
 	DrawerCrumbType,
@@ -147,18 +152,13 @@ const refusedPresses = new WeakSet<AskedDrawers>();
  * @access private
  */
 export function answerPress(asked: AskedDrawers, answer: CloseAnswer): CloseAnswer {
-	if (answer === false) {
-		refusedPresses.add(asked);
-	} else if (answer !== true) {
-		// Kept out of the chain, so the caller's own handlers on `answer` run no later.
-		void answer.then((agreed) => {
-			if (!agreed) {
-				refusedPresses.add(asked);
-			}
-		});
-	}
+	return afterAnswer(answer, (agreed) => {
+		if (!agreed) {
+			refusedPresses.add(asked);
+		}
 
-	return answer;
+		return agreed;
+	});
 }
 
 /**
@@ -213,7 +213,9 @@ export function buildTrail({
 	 */
 	closeNested: (reason: DrawerCloseReasonType, asked?: AskedDrawers) => CloseAnswer;
 	isOpen: DrawerTrailEntry['isOpen'];
-	onTrailSelect: ((index: number, reason: DrawerTrailSelectReasonType) => void) | undefined;
+	onTrailSelect:
+		| ((index: number, reason: DrawerTrailSelectReasonType, step: DrawerTrailStepType) => void)
+		| undefined;
 }): DrawerTrailEntry[] {
 	return [
 		...parentTrail,
@@ -226,7 +228,7 @@ export function buildTrail({
 					// A drawer nested in this one may close this one as it closes, and the app may
 					// close it while one decides.
 					if (agreed && isOpen()) {
-						onTrailSelect?.(index, reason);
+						onTrailSelect?.(index, reason, step);
 					}
 
 					return agreed;
@@ -237,7 +239,8 @@ export function buildTrail({
 	];
 }
 
-type CloseEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'>;
+type CloseEntry = Pick<DrawerTrailEntry, 'close' | 'isOpen'> &
+	Partial<Pick<NestedDrawerEntry, 'getNested'>>;
 
 /**
  * Asks each open drawer of `entries` to close, the one on top first, each once, and stops at the
@@ -266,11 +269,20 @@ export function closeTopFirst(
 	const nextOpen = (): CloseEntry | undefined => {
 		const remaining = typeof entries === 'function' ? [...entries()] : trail;
 		let entry = remaining.pop();
-		while (entry && (asked.has(entry.isOpen) || !entry.isOpen())) {
+		while (entry) {
+			if (entry.isOpen()) {
+				if (!asked.has(entry.isOpen)) {
+					return entry;
+				}
+				// An inspector can agree, stay mounted, and gain another drawer while the press waits.
+				if (entry.getNested) {
+					remaining.push(...entry.getNested());
+				}
+			}
 			entry = remaining.pop();
 		}
 
-		return entry;
+		return undefined;
 	};
 	const askNext = (): CloseAnswer => {
 		for (;;) {

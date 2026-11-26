@@ -156,7 +156,7 @@ describe('buildTrail', () => {
 
 		trail[2]?.select?.('crumb-press');
 
-		expect(onTrailSelect).toHaveBeenCalledExactlyOnceWith(1, 'crumb-press');
+		expect(onTrailSelect).toHaveBeenCalledExactlyOnceWith(1, 'crumb-press', { title: 'namespace' });
 	});
 
 	it('closes the drawers nested in its own before it selects a step', () => {
