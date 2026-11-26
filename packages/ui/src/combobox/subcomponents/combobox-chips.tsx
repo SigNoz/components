@@ -36,8 +36,8 @@ function stopPress(event: MouseEvent | PointerEvent): void {
  * A remove button is not a focus stop, so the trigger stays the only one. From the keyboard, a
  * value is removed by unticking its row in the popup.
  *
- * A value whose row is `disabled` is locked: its chip has no remove button and shows the row's
- * `disabledTooltip` instead.
+ * A value whose row is `removeDisabled` is locked: its chip has no remove button and shows the
+ * row's `removeDisabledTooltip` instead.
  *
  * @access private
  */
@@ -59,7 +59,7 @@ export function ComboboxChips({
 				const label = resolveLabel(value);
 				const testId = partTestId(comboboxTestId, `chip-${value}`);
 				const option = options.get(value);
-				const isLocked = option?.disabled === true;
+				const isLocked = option?.removeDisabled === true;
 
 				const chip = (
 					<span
@@ -91,7 +91,7 @@ export function ComboboxChips({
 					</span>
 				);
 
-				if (!removable || !isLocked || !hasTooltipContent(option.disabledTooltip)) {
+				if (!removable || !isLocked || !hasTooltipContent(option.removeDisabledTooltip)) {
 					return chip;
 				}
 
@@ -99,7 +99,7 @@ export function ComboboxChips({
 				// read-only, when no chip shows a reason, so the two never open on the same hover.
 				return (
 					<TooltipTriggerBoundary key={value}>
-						<TooltipAnchor content={option.disabledTooltip}>{chip}</TooltipAnchor>
+						<TooltipAnchor content={option.removeDisabledTooltip}>{chip}</TooltipAnchor>
 					</TooltipTriggerBoundary>
 				);
 			})}

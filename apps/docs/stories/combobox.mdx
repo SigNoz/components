@@ -66,9 +66,10 @@ Every row carries a `type`:
 | `group`     | A heading and the rows under it. A group cannot hold another group.                             |
 | `separator` | A rule between two runs of rows. Dropped when it would land first, last or next to another one. |
 
-An `item` takes a `prefix` and a `suffix` around the label, and `disabled` + `disabledTooltip`. A
-disabled row stays reachable with the arrow keys, so its reason shows on hover. `displayValue` is the
-text the trigger and the chips show in place of the label. A single trigger also shows the selected
+An `item` takes a `prefix` and a `suffix` around the label, `disabled` + `disabledTooltip`, and
+`removeDisabled` + `removeDisabledTooltip` for a selected row that cannot be removed. A disabled row
+stays reachable with the arrow keys, so its reason shows on hover. `displayValue` is the text the
+trigger and the chips show in place of the label. A single trigger also shows the selected
 row's `prefix` before the value, so put an icon there rather than inside a node label.
 
 ```tsx
@@ -122,26 +123,22 @@ A multiple combobox shows a chip per value. `maxDisplayedPills` folds the rest i
 whose tooltip lists them. Chips that do not fit wrap, and the trigger grows to hold them. The
 chevron stays on the first row.
 
-A selected row that is `disabled` stays selected. Its chip has no remove button and shows the
-row's `disabledTooltip`, the clear button and `Delete` leave it, and the popup will not untick it.
-When adding and removing sit behind different permissions, set `disabled` from the one that applies
-to the row's current state:
+`disabled` stops a row being added, and `removeDisabled` + `removeDisabledTooltip` stop it being
+removed once selected. A row that cannot be removed has a chip with no remove button that shows
+`removeDisabledTooltip`; the clear button and `Delete` skip it, and the popup will not untick it.
+The two are independent, so adding and removing can sit behind different permissions, and `items`
+does not change when the selection does:
 
 ```tsx
-items={roles.map((role) => {
-	const selected = value.includes(role.id);
-	const allowed = selected ? canDetach(role) : canAttach(role);
-
-	return allowed
-		? { type: 'item', value: role.id, label: role.name }
-		: {
-				type: 'item',
-				value: role.id,
-				label: role.name,
-				disabled: true,
-				disabledTooltip: selected ? 'You cannot detach this role' : 'You cannot attach this role',
-			};
-})}
+items={roles.map((role) => ({
+	type: 'item',
+	value: role.id,
+	label: role.name,
+	disabled: !canAttach(role),
+	disabledTooltip: 'You cannot attach this role',
+	removeDisabled: !canDetach(role),
+	removeDisabledTooltip: 'You cannot detach this role',
+}))}
 ```
 
 A selected value with no row in `items` can always be removed, so keep the selected rows in

@@ -435,16 +435,20 @@ const TRIGGER_ROWS: TriggerRow[] = [
 	},
 	{
 		id: 'trigger-locked-values',
-		label: 'disabled row, multiple',
+		label: 'removeDisabled row',
 		note: (
 			<>
-				The chip of a selected <code>disabled</code> row has no remove button and shows the row's{' '}
-				<code>disabledTooltip</code> on hover. The clear button and <code>Delete</code> leave it.
+				The chip of a selected <code>removeDisabled</code> row has no remove button and shows the
+				row's <code>removeDisabledTooltip</code> on hover. The clear button and <code>Delete</code>{' '}
+				leave it.
 			</>
 		),
 		props: {
 			items: [
-				option('react', 'React', { disabled: true, disabledTooltip: 'You cannot detach React' }),
+				option('react', 'React', {
+					removeDisabled: true,
+					removeDisabledTooltip: 'You cannot detach React',
+				}),
 				...FRAMEWORKS.slice(1),
 			],
 			placeholder: 'Select frameworks...',
@@ -897,11 +901,20 @@ function TriggerRowView({ id, label, note, props, pseudo }: TriggerRow): ReactEl
 	);
 }
 
-const ROLES = [
-	{ value: 'viewer', label: 'Viewer', canAttach: true, canDetach: true },
-	{ value: 'editor', label: 'Editor', canAttach: true, canDetach: false },
-	{ value: 'admin', label: 'Admin', canAttach: false, canDetach: true },
-	{ value: 'billing', label: 'Billing', canAttach: false, canDetach: false },
+// Built once: what each row needs to be added or removed does not depend on the selection.
+const ROLE_ITEMS: ComboboxOptionItemType[] = [
+	option('viewer', 'Viewer'),
+	option('editor', 'Editor', {
+		removeDisabled: true,
+		removeDisabledTooltip: 'You cannot detach Editor',
+	}),
+	option('admin', 'Admin', { disabled: true, disabledTooltip: 'You cannot attach Admin' }),
+	option('billing', 'Billing', {
+		disabled: true,
+		disabledTooltip: 'You cannot attach Billing',
+		removeDisabled: true,
+		removeDisabledTooltip: 'You cannot detach Billing',
+	}),
 ];
 
 function PermissionsView(): ReactElement {
@@ -918,27 +931,16 @@ function PermissionsView(): ReactElement {
 				testId="roles"
 				value={roles}
 				onChange={setRoles}
-				items={ROLES.map(({ value, label, canAttach, canDetach }) => {
-					const selected = roles.includes(value);
-					const allowed = selected ? canDetach : canAttach;
-
-					return allowed
-						? option(value, label)
-						: option(value, label, {
-								disabled: true,
-								disabledTooltip: selected
-									? `You cannot detach ${label}`
-									: `You cannot attach ${label}`,
-							});
-				})}
+				items={ROLE_ITEMS}
 			/>
 		</div>
 	);
 }
 
 /**
- * Adding and removing behind different permissions. Each row is `disabled` from the permission
- * that applies to its current state: attach while it is not selected, detach once it is.
+ * Adding and removing behind different permissions: `disabled` stops a row being added,
+ * `removeDisabled` stops it being removed once selected. Editor cannot be detached, Admin cannot be
+ * attached again once removed, Billing can do neither.
  */
 export const Permissions: Story = {
 	parameters: {

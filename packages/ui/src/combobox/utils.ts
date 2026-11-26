@@ -38,7 +38,7 @@ const CREATE_MARKER: ComboboxMarker = Object.freeze({ marker: 'create' });
  * @access private
  */
 export type ComboboxOptionEntry =
-	| { kind: 'item'; key: string; value: string; item: ComboboxOptionItemType }
+	| { kind: 'item'; key: string; value: string; item: ComboboxOptionItemType; selected: boolean }
 	| { kind: 'hint'; key: string; value: ComboboxMarker; item: ComboboxHintItemType }
 	| { kind: 'create'; key: string; value: ComboboxMarker; query: string }
 	| { kind: 'custom'; key: string; value: string };
@@ -149,8 +149,8 @@ export function indexComboboxOptions(
 }
 
 /**
- * The selected values whose row is `disabled`, which no control may remove. A value with no row
- * in `items` is never locked.
+ * The selected values whose row is `removeDisabled`, which no control may remove. A value with no
+ * row in `items` is never locked.
  *
  * @access private
  */
@@ -158,7 +158,7 @@ export function lockedValues(
 	selectedValues: readonly string[],
 	options: ReadonlyMap<string, ComboboxOptionItemType>,
 ): string[] {
-	return selectedValues.filter((value) => options.get(value)?.disabled === true);
+	return selectedValues.filter((value) => options.get(value)?.removeDisabled === true);
 }
 
 /**
@@ -211,6 +211,7 @@ function toEntries(
 	items: readonly ComboboxItemType[],
 	matches: (row: ComboboxOptionItemType | ComboboxHintItemType) => boolean,
 	showHints: boolean,
+	selected: ReadonlySet<string>,
 ): ComboboxEntry[] {
 	const entries: ComboboxEntry[] = [];
 
@@ -222,7 +223,7 @@ function toEntries(
 
 		if (item.type === ComboboxItemKind.Group) {
 			const children = cleanupSeparators(
-				toEntries(item.items, matches, showHints) as Array<
+				toEntries(item.items, matches, showHints, selected) as Array<
 					ComboboxOptionEntry | ComboboxSeparatorEntry
 				>,
 				isSeparatorEntry,
@@ -249,7 +250,13 @@ function toEntries(
 		}
 
 		if (matches(item)) {
-			entries.push({ kind: 'item', key: `item:${item.value}`, value: item.value, item });
+			entries.push({
+				kind: 'item',
+				key: `item:${item.value}`,
+				value: item.value,
+				item,
+				selected: selected.has(item.value),
+			});
 		}
 	}
 
@@ -312,7 +319,7 @@ export function buildComboboxEntries({
 		normalized === '' || rowSearchText(row).includes(normalized);
 
 	const rows = cleanupSeparators(
-		toEntries(items, matches, shouldShowHints(items, query)),
+		toEntries(items, matches, shouldShowHints(items, query), new Set(selectedValues)),
 		isSeparatorEntry,
 	);
 	const lead: ComboboxEntry[] = [];

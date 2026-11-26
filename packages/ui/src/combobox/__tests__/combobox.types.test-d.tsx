@@ -561,6 +561,44 @@ describe('rows', () => {
 		assertType(row);
 	});
 
+	test('rejects a removeDisabled row with no reason', () => {
+		// @ts-expect-error - a row that cannot be removed has to tell the user why
+		const row: ComboboxOptionItemType = {
+			type: 'item',
+			value: 'a',
+			label: 'A',
+			removeDisabled: true,
+		};
+
+		assertType(row);
+	});
+
+	test('rejects a removal reason with no removeDisabled', () => {
+		// @ts-expect-error - `removeDisabledTooltip` only renders while `removeDisabled` is set
+		const row: ComboboxOptionItemType = {
+			type: 'item',
+			value: 'a',
+			label: 'A',
+			removeDisabledTooltip: 'Why',
+		};
+
+		assertType(row);
+	});
+
+	test('accepts adding and removing locked apart on one row', () => {
+		const row: ComboboxOptionItemType = {
+			type: 'item',
+			value: 'a',
+			label: 'A',
+			disabled: true,
+			disabledTooltip: 'Cannot attach',
+			removeDisabled: false,
+			removeDisabledTooltip: undefined,
+		};
+
+		assertType(row);
+	});
+
 	test('rejects a hint with no insertValue', () => {
 		// @ts-expect-error - a hint writes `insertValue` into the search row
 		const row: ComboboxHintItemType = { type: 'hint', value: 's', label: 'status:' };

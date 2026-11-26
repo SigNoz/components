@@ -359,6 +359,7 @@ export type {
 	ComboboxHintItemType,
 	ComboboxItemDisabledType,
 	ComboboxItemKindType,
+	ComboboxItemRemoveDisabledType,
 	ComboboxItemType,
 	ComboboxOptionItemType,
 	ComboboxProps,

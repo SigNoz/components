@@ -20,24 +20,18 @@ export type ComboboxItemKindType = (typeof ComboboxItemKind)[keyof typeof Combob
 export type ComboboxItemDisabledType =
 	| {
 			/**
-			 * When true, the row cannot change state: an unselected row cannot be picked, and a
-			 * selected one cannot be removed. Its chip has no remove button and shows
-			 * `disabledTooltip`, and the clear button and `Delete` leave it selected.
+			 * When true, the row cannot be picked while it is not selected. Removing it once selected
+			 * is `removeDisabled`'s job.
 			 *
 			 * @note Requires `disabledTooltip`.
 			 *
 			 * @note The row is marked `aria-disabled` rather than removed from the keyboard, so the
 			 * reason stays reachable. Arrow keys still land on it.
-			 *
-			 * @note For a permission that differs between adding and removing, set it from the
-			 * selection, `selected ? !canRemove : !canAdd`, with the matching reason.
-			 *
-			 * @note A single combobox whose selected row is disabled cannot switch to another row.
 			 */
 			disabled: boolean;
 			/**
-			 * Why this row cannot be picked or, once selected, removed. Only renders while `disabled`
-			 * is true.
+			 * Why this row cannot be picked. Only renders while `disabled` is true and the row is not
+			 * selected.
 			 *
 			 * @note Only allowed alongside `disabled`. Pass `undefined` when there is no reason to
 			 * give.
@@ -49,6 +43,37 @@ export type ComboboxItemDisabledType =
 	| {
 			disabled?: never;
 			disabledTooltip?: never;
+	  };
+
+/**
+ * `removeDisabled` and `removeDisabledTooltip` travel together on a row.
+ */
+export type ComboboxItemRemoveDisabledType =
+	| {
+			/**
+			 * When true, the row cannot be removed while it is selected: its chip has no remove
+			 * button, the popup will not untick it, the clear button and `Delete` leave it, and a
+			 * single combobox cannot switch to another row.
+			 *
+			 * @note Requires `removeDisabledTooltip`.
+			 *
+			 * @note Independent of `disabled`, so adding and removing can sit behind different
+			 * permissions without `items` changing on every pick.
+			 */
+			removeDisabled: boolean;
+			/**
+			 * Why this row cannot be removed. Shown on its chip and its row while `removeDisabled`
+			 * is true and the row is selected.
+			 *
+			 * @note Only allowed alongside `removeDisabled`. Pass `undefined` when there is no
+			 * reason to give.
+			 */
+			removeDisabledTooltip: ReactNode;
+	  }
+	// Last, for the same reason as in `ComboboxItemDisabledType`.
+	| {
+			removeDisabled?: never;
+			removeDisabledTooltip?: never;
 	  };
 
 /**
@@ -97,7 +122,8 @@ type ComboboxRowBaseType = {
  * One value the user can pick. The row a combobox is mostly made of.
  */
 export type ComboboxOptionItemType = ComboboxRowBaseType &
-	ComboboxItemDisabledType & {
+	ComboboxItemDisabledType &
+	ComboboxItemRemoveDisabledType & {
 		// Required on the plain row too. On a union where one member declares `type?: never`,
 		// TypeScript cannot narrow an excess property check and blames the first member.
 		type: typeof ComboboxItemKind.Item;

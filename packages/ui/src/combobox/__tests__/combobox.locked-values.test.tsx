@@ -9,7 +9,13 @@ import { openCombobox } from './combobox.test-utils.js';
 // `vue` is selected and locked, `react` is selected and free.
 const ITEMS: ComboboxItemType[] = [
 	{ type: 'item', value: 'react', label: 'React' },
-	{ type: 'item', value: 'vue', label: 'Vue', disabled: true, disabledTooltip: 'Owned by admin' },
+	{
+		type: 'item',
+		value: 'vue',
+		label: 'Vue',
+		removeDisabled: true,
+		removeDisabledTooltip: 'Owned by admin',
+	},
 	{ type: 'item', value: 'angular', label: 'Angular' },
 ];
 
@@ -18,7 +24,7 @@ function trigger(): HTMLElement {
 }
 
 describe('Combobox locked values', () => {
-	it('drops the remove button from the chip of a disabled row', () => {
+	it('drops the remove button from the chip of a removeDisabled row', () => {
 		render(
 			<Combobox
 				placeholder="Select a framework..."
@@ -213,64 +219,120 @@ describe('Combobox locked values', () => {
 		expect(onChange).toHaveBeenLastCalledWith(['vue']);
 	});
 
-	it('locks adding and removing apart when disabled follows the selection', async () => {
-		const canAttach = new Set(['react']);
-		const canDetach = new Set(['vue']);
-		const rows = [
-			{ value: 'react', label: 'React' },
-			{ value: 'vue', label: 'Vue' },
-			{ value: 'angular', label: 'Angular' },
+	it('keeps adding and removing apart on a row that does not change', async () => {
+		// Editor: cannot be removed. Admin: cannot be added again. Viewer: free.
+		const items: ComboboxItemType[] = [
+			{ type: 'item', value: 'viewer', label: 'Viewer' },
+			{
+				type: 'item',
+				value: 'editor',
+				label: 'Editor',
+				removeDisabled: true,
+				removeDisabledTooltip: 'Cannot detach',
+			},
+			{
+				type: 'item',
+				value: 'admin',
+				label: 'Admin',
+				disabled: true,
+				disabledTooltip: 'Cannot attach',
+			},
 		];
 
 		function Roles(): ReactNode {
-			const [value, setValue] = useState(['vue', 'angular']);
+			const [value, setValue] = useState(['editor', 'admin']);
 
 			return (
 				<Combobox
-					placeholder="Select a framework..."
+					placeholder="Select a role..."
 					searchInputProps={{ placeholder: 'Search' }}
 					multiple
 					aria-label="Framework"
 					testId="cb"
 					value={value}
 					onChange={setValue}
-					items={rows.map((row): ComboboxItemType => {
-						const selected = value.includes(row.value);
-						const denied = selected ? !canDetach.has(row.value) : !canAttach.has(row.value);
-
-						return denied
-							? {
-									type: 'item',
-									...row,
-									disabled: true,
-									disabledTooltip: selected ? 'Cannot detach' : 'Cannot attach',
-								}
-							: { type: 'item', ...row };
-					})}
+					items={items}
 				/>
 			);
 		}
 
 		render(<Roles />);
 
-		expect(screen.getByTestId('cb-chip-vue-remove')).toBeInTheDocument();
-		expect(screen.queryByTestId('cb-chip-angular-remove')).toBeNull();
-
-		await userEvent.click(screen.getByTestId('cb-chip-vue-remove'));
-
-		expect(screen.queryByTestId('cb-chip-vue')).toBeNull();
+		expect(screen.queryByTestId('cb-chip-editor-remove')).toBeNull();
+		expect(screen.getByTestId('cb-chip-admin-remove')).toBeInTheDocument();
 
 		await openCombobox();
 
-		expect(screen.getByRole('option', { name: 'Vue' })).toHaveAttribute('aria-disabled', 'true');
+		// Selected: removing is what counts, so Editor is locked and Admin is not.
+		expect(screen.getByRole('option', { name: 'Editor' })).toHaveAttribute('aria-disabled', 'true');
+		expect(screen.getByRole('option', { name: 'Admin' })).not.toHaveAttribute('aria-disabled');
 
-		await userEvent.click(screen.getByRole('option', { name: 'Vue' }));
-		await userEvent.click(screen.getByRole('option', { name: 'React' }));
+		await userEvent.click(screen.getByRole('option', { name: 'Admin' }));
 
 		await waitFor(() => {
-			expect(screen.getByTestId('cb-chip-react')).toBeInTheDocument();
+			expect(screen.queryByTestId('cb-chip-admin')).toBeNull();
 		});
-		expect(screen.queryByTestId('cb-chip-vue')).toBeNull();
-		expect(screen.getByTestId('cb-chip-angular')).toBeInTheDocument();
+		// Not selected any more: adding is what counts, so Admin is locked now.
+		expect(screen.getByRole('option', { name: 'Admin' })).toHaveAttribute('aria-disabled', 'true');
+
+		await userEvent.click(screen.getByRole('option', { name: 'Admin' }));
+		await userEvent.click(screen.getByRole('option', { name: 'Editor' }));
+		await userEvent.click(screen.getByRole('option', { name: 'Viewer' }));
+
+		await waitFor(() => {
+			expect(screen.getByTestId('cb-chip-viewer')).toBeInTheDocument();
+		});
+		expect(screen.queryByTestId('cb-chip-admin')).toBeNull();
+		expect(screen.getByTestId('cb-chip-editor')).toBeInTheDocument();
+	});
+
+	it('locks the chip of a removeDisabled row once it is picked', async () => {
+		render(
+			<Combobox
+				placeholder="Select a framework..."
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				aria-label="Framework"
+				items={ITEMS}
+				testId="cb"
+			/>,
+		);
+		await openCombobox();
+
+		expect(screen.getByRole('option', { name: 'Vue' })).not.toHaveAttribute('aria-disabled');
+
+		await userEvent.click(screen.getByRole('option', { name: 'Vue' }));
+
+		await waitFor(() => {
+			expect(screen.getByTestId('cb-chip-vue')).toHaveAttribute('data-disabled');
+		});
+		expect(screen.queryByTestId('cb-chip-vue-remove')).toBeNull();
+		expect(screen.getByRole('option', { name: 'Vue' })).toHaveAttribute('aria-disabled', 'true');
+	});
+
+	it('ignores disabled on a selected row, which only stops it being picked', async () => {
+		const onChange = vi.fn();
+		render(
+			<Combobox
+				placeholder="Select a framework..."
+				searchInputProps={{ placeholder: 'Search' }}
+				multiple
+				aria-label="Framework"
+				items={[
+					{ type: 'item', value: 'react', label: 'React', disabled: true, disabledTooltip: 'No' },
+					{ type: 'item', value: 'vue', label: 'Vue' },
+				]}
+				defaultValue={['react', 'vue']}
+				onChange={onChange}
+				allowClear
+				testId="cb"
+			/>,
+		);
+
+		expect(screen.getByTestId('cb-chip-react-remove')).toBeInTheDocument();
+
+		await userEvent.click(screen.getByTestId('cb-clear'));
+
+		expect(onChange).toHaveBeenLastCalledWith([]);
 	});
 });

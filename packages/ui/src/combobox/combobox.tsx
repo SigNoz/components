@@ -124,7 +124,7 @@ const ComboboxImpl = forwardRef<HTMLElement, ComboboxProps & RejectedProps>(
 		const scrollerRef = useRef<ComboboxVirtualScroller | null>(null);
 
 		const options = useMemo(() => indexComboboxOptions(items), [items]);
-		// A selected value whose row is `disabled` stays selected: the chips, the clear button,
+		// A selected value whose row is `removeDisabled` stays selected: the chips, the clear button,
 		// `Delete` and the popup all leave it in place.
 		const locked = lockedValues(selectedValues, options);
 		const hasRemovableValue = selectedValues.length > locked.length;
