@@ -1,6 +1,7 @@
 import { Meta, Controls, Primary } from '@storybook/addon-docs/blocks';
 import * as TooltipStories from './tooltip.stories';
 import * as TooltipProviderStories from './tooltip-provider.stories';
+import * as TooltipToneStories from './tooltip-tone.stories';
 
 <Meta of={TooltipStories} />
 
@@ -143,6 +144,26 @@ covers the page it is anchored over without anyone having asked for it. `Tooltip
 </Tooltip>
 ```
 
+## Tone
+
+Wrap the content in `TooltipTone` to give the popup a tone. It takes no prop on the component that
+owns the tooltip, so it works anywhere a tooltip takes content, such as the `disabledTooltip` of a
+`Button`:
+
+```tsx
+import { Button, TooltipTone } from '@signozhq/ui';
+
+<Button
+	disabled
+	disabledTooltip={<TooltipTone tone="danger">You cannot delete this rule</TooltipTone>}
+>
+	Delete
+</Button>;
+```
+
+The whole popup takes the tone, every entry of a stacked one included. The tone is visual only,
+so the text still has to say what is wrong.
+
 ## Inside a modal
 
 Tooltips are portalled to `document.body`. Inside a `Dialog` or a `Drawer` they go into the panel on
@@ -218,3 +239,7 @@ Stacking exists so a tooltip is never hidden behind another one, not as a patter
 ## TooltipProvider Props
 
 <Controls of={TooltipProviderStories.Default} />
+
+## TooltipTone Props
+
+<Controls of={TooltipToneStories.Default} />

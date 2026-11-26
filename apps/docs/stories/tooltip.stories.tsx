@@ -7,6 +7,7 @@ import {
 	ButtonVariant,
 	Tooltip,
 	TooltipProvider,
+	TooltipTone,
 	Typography,
 } from '@signozhq/ui';
 import { ForceOpenProvider } from '@signozhq/ui/testing';
@@ -533,6 +534,58 @@ export const TooltipShowcase: Story = {
 										Empty inner title
 									</Button>
 								</Tooltip>
+							</Tooltip>
+						</div>
+					</div>
+
+					<div className="story-section">
+						<Typography
+							variant="paragraph"
+							size="base"
+							weight="bold"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
+							Tone
+						</Typography>
+						<Typography
+							variant="paragraph"
+							size="small"
+							weight="regular"
+							color="inherit"
+							as="p"
+							textOverflow="wrap"
+						>
+							Wrapping the content in <code>TooltipTone</code> gives the whole popup its tone, so it
+							works in any prop that ends up in a tooltip, such as the <code>disabledTooltip</code>{' '}
+							of a <code>Button</code>. In a stack, one toned entry tones the whole popup.
+						</Typography>
+						<div className={styles.toneColumn}>
+							<Tooltip
+								title={<TooltipTone tone="danger">Permission denied</TooltipTone>}
+								align="start"
+							>
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Secondary}
+									size={ButtonSize.MD}
+								>
+									Danger title
+								</Button>
+							</Tooltip>
+							<Tooltip title="Removes the rule, cannot be undone" align="start">
+								<Button
+									variant={ButtonVariant.Solid}
+									color={ButtonColor.Danger}
+									size={ButtonSize.MD}
+									disabled
+									disabledTooltip={
+										<TooltipTone tone="danger">You cannot delete this rule</TooltipTone>
+									}
+								>
+									Danger entry in a stack
+								</Button>
 							</Tooltip>
 						</div>
 					</div>

@@ -7,6 +7,7 @@ import { TooltipPopup } from '../subcomponents/tooltip-popup.js';
 import { TooltipPortal } from '../subcomponents/tooltip-portal.js';
 import { TooltipPositioner } from '../subcomponents/tooltip-positioner.js';
 import { TooltipRoot } from '../subcomponents/tooltip-root.js';
+import { TooltipTone } from '../subcomponents/tooltip-tone.js';
 import { TooltipTrigger } from '../subcomponents/tooltip-trigger.js';
 
 describe('Tooltip forwardRef', () => {
@@ -122,5 +123,17 @@ describe('Tooltip forwardRef', () => {
 
 		expect(positionerRef.current).toHaveAttribute('data-slot', 'tooltip-positioner');
 		expect(popupRef.current).toBe(screen.getByRole('tooltip'));
+	});
+
+	it('TooltipTone forwards its ref to the span it renders', () => {
+		const ref = createRef<HTMLSpanElement>();
+		render(
+			<TooltipTone ref={ref} tone="danger">
+				Permission denied
+			</TooltipTone>,
+		);
+
+		expect(ref.current).toBeInstanceOf(HTMLSpanElement);
+		expect(ref.current).toHaveAttribute('data-slot', 'tooltip-tone');
 	});
 });

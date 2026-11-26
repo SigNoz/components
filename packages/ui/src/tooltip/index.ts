@@ -14,6 +14,14 @@
  * | `--tooltip-border-style` | `solid` |
  * | `--tooltip-border-width` | `1px` |
  * | `--tooltip-box-shadow` | `var(--tooltip-shadow)` |
+ * | `--tooltip-danger-background` | `-` |
+ * | `--tooltip-danger-background-color` | `var(--tooltip-danger-background)` |
+ * | `--tooltip-danger-border` | `-` |
+ * | `--tooltip-danger-border-color` | `var(--tooltip-danger-border)` |
+ * | `--tooltip-danger-divider` | `-` |
+ * | `--tooltip-danger-divider-background-color` | `var(--tooltip-danger-divider)` |
+ * | `--tooltip-danger-foreground` | `var(--tooltip-danger-label)` |
+ * | `--tooltip-danger-label` | `-` |
  * | `--tooltip-divider` | `-` |
  * | `--tooltip-divider-background-color` | `var(--tooltip-divider)` |
  * | `--tooltip-divider-block-size` | `1px` |
@@ -37,12 +45,14 @@
  * | `--tooltip-text-align` | `start` |
  * | `--tooltip-text-transform` | `var(--paragraph-base-400-text-transform)` |
  * | `--tooltip-text-wrap` | `balance` |
+ * | `--tooltip-tone-display` | `contents` |
  * | `--tooltip-width` | `fit-content` |
  * | `--tooltip-z-index` | `50` |
  */
 // #endregion css-tokens
 
 export { Tooltip } from './presets/tooltip.js';
-export { type TooltipProps } from './types.js';
+export type { TooltipProps, TooltipToneProps, TooltipToneType } from './types.js';
 export { TooltipProvider, type TooltipProviderProps } from './subcomponents/tooltip-provider.js';
+export { TooltipTone } from './subcomponents/tooltip-tone.js';
 export { type TooltipContainer } from './tooltip-config-context.js';

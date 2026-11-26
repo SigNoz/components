@@ -5,11 +5,12 @@
  */
 import { createRef } from 'react';
 import { assertType, describe, test } from 'vitest';
-import { Tooltip, TooltipProvider } from '../index.js';
+import { Tooltip, TooltipProvider, TooltipTone } from '../index.js';
 
 const trigger = <button type="button">Hover</button>;
 const buttonRef = createRef<HTMLButtonElement>();
 const divRef = createRef<HTMLDivElement>();
+const spanRef = createRef<HTMLSpanElement>();
 
 describe('title and children', () => {
 	test('accepts any node as title, including nothing', () => {
@@ -191,6 +192,51 @@ describe('TooltipProvider', () => {
 		assertType(
 			// @ts-expect-error - delays are milliseconds, not strings
 			<TooltipProvider delay="300">{trigger}</TooltipProvider>,
+		);
+	});
+});
+
+describe('TooltipTone', () => {
+	test('accepts the danger tone around any node, in a title', () => {
+		assertType(<TooltipTone tone="danger">Permission denied</TooltipTone>);
+		assertType(
+			<TooltipTone tone="danger" ref={spanRef}>
+				<strong>Permission denied</strong>
+			</TooltipTone>,
+		);
+		assertType(
+			<Tooltip title={<TooltipTone tone="danger">Permission denied</TooltipTone>}>
+				{trigger}
+			</Tooltip>,
+		);
+	});
+
+	test('tone is required', () => {
+		assertType(
+			// @ts-expect-error - a tone wrapper without a tone changes nothing
+			<TooltipTone>Permission denied</TooltipTone>,
+		);
+	});
+
+	test('rejects a tone outside the set', () => {
+		assertType(
+			// @ts-expect-error - `warning` is not a tone
+			<TooltipTone tone="warning">Permission denied</TooltipTone>,
+		);
+	});
+
+	test('rejects className and style, the popup is styled by its tokens', () => {
+		assertType(
+			// @ts-expect-error - `className` is not a prop
+			<TooltipTone tone="danger" className="x">
+				Permission denied
+			</TooltipTone>,
+		);
+		assertType(
+			// @ts-expect-error - `style` is not a prop
+			<TooltipTone tone="danger" style={{}}>
+				Permission denied
+			</TooltipTone>,
 		);
 	});
 });

@@ -60,3 +60,21 @@ export interface TooltipProps {
 	 */
 	[dataAttribute: `data-${string}`]: unknown;
 }
+
+/**
+ * The look a `TooltipTone` gives the popup it sits in. `danger` is for a reason that blocks the
+ * action, such as a missing permission.
+ */
+export type TooltipToneType = 'danger';
+
+export interface TooltipToneProps {
+	/**
+	 * The look of the popup that holds this content. One `TooltipTone` anywhere in the popup sets it
+	 * for the whole popup, every entry of a stacked one included.
+	 */
+	tone: TooltipToneType;
+	/**
+	 * The content to show in the tooltip. It renders as it would without the wrapper.
+	 */
+	children: React.ReactNode;
+}
